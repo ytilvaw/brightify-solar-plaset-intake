@@ -183,13 +183,18 @@ export default function SolarForm() {
 
   return (
     <div className="w-full max-w-2xl px-4 py-10 mx-auto">
-      <div className="mb-8">
+      <div className="mb-8 text-center">
+        <img
+          src="/brightify-logo.png"
+          alt="Brightify Logo"
+          className="h-16 mx-auto mb-4"
+        />
         <h1 className="text-3xl font-black tracking-tight mb-2">
           Solar Installation Survey
         </h1>
         <p className="text-gray-600">
           Fill out the details below so we can assess your site for solar panel installation.
-          Fields marked <span className="text-red-500">*</span> are required.
+          Please fill out the details below.
         </p>
       </div>
 
@@ -215,7 +220,7 @@ export default function SolarForm() {
           <div className="space-y-5">
             <div>
               <label htmlFor="siteAddress" className="block text-sm font-semibold mb-1">
-                Site Address <span className="text-red-500">*</span>
+                Site Address
               </label>
               <input
                 type="text"
@@ -223,7 +228,6 @@ export default function SolarForm() {
                 name="siteAddress"
                 value={fields.siteAddress}
                 onChange={handleChange}
-                required
                 placeholder="123 Main St, City, State, ZIP"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -231,7 +235,7 @@ export default function SolarForm() {
 
             <div>
               <label htmlFor="mainPanelRating" className="block text-sm font-semibold mb-1">
-                Main Panel Rating (Amps) <span className="text-red-500">*</span>
+                Main Panel Rating (Amps)
               </label>
               <input
                 type="text"
@@ -239,7 +243,6 @@ export default function SolarForm() {
                 name="mainPanelRating"
                 value={fields.mainPanelRating}
                 onChange={handleChange}
-                required
                 placeholder="e.g. 200A"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -256,19 +259,16 @@ export default function SolarForm() {
               name="mainPanelPhoto"
               label="Picture of Main Panel"
               hint="Show whether there is a slot available for an additional breaker."
-              required
             />
             <FileUploadField
               id="frontHousePhoto"
               name="frontHousePhoto"
               label="Front Picture of the House"
-              required
             />
             <FileUploadField
               id="sidewallPhoto"
               name="sidewallPhoto"
               label="Picture of Sidewall of the House"
-              required
             />
           </div>
         </section>
@@ -279,7 +279,7 @@ export default function SolarForm() {
           <div className="space-y-5">
             <div>
               <label htmlFor="solarPanel" className="block text-sm font-semibold mb-1">
-                Which Solar Panel are you planning to use? <span className="text-red-500">*</span>
+                Which Solar Panel are you planning to use?
               </label>
               <input
                 type="text"
@@ -287,7 +287,6 @@ export default function SolarForm() {
                 name="solarPanel"
                 value={fields.solarPanel}
                 onChange={handleChange}
-                required
                 placeholder="e.g. Qcells Q.PEAK DUO 400W"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -295,7 +294,7 @@ export default function SolarForm() {
 
             <div>
               <label htmlFor="inverter" className="block text-sm font-semibold mb-1">
-                Which Inverter are you planning to use? <span className="text-red-500">*</span>
+                Which Inverter are you planning to use?
               </label>
               <input
                 type="text"
@@ -303,7 +302,6 @@ export default function SolarForm() {
                 name="inverter"
                 value={fields.inverter}
                 onChange={handleChange}
-                required
                 placeholder="e.g. Enphase IQ8+"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
