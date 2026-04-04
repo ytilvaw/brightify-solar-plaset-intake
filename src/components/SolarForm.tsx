@@ -5,9 +5,20 @@ interface FilePreview {
   url: string
 }
 
+const roofTypeOptions = [
+  'Shingles',
+  'Tile Roof',
+  'Metal Roof',
+  'Flat Roof',
+  'Slate',
+  'Wood Shake',
+  'Other',
+]
+
 interface FormState {
   siteAddress: string
   mainPanelRating: string
+  roofType: string
   solarPanel: string
   inverter: string
   battery: string
@@ -130,6 +141,7 @@ export default function SolarForm() {
   const [fields, setFields] = useState<FormState>({
     siteAddress: '',
     mainPanelRating: '',
+    roofType: '',
     solarPanel: '',
     inverter: '',
     battery: '',
@@ -138,7 +150,7 @@ export default function SolarForm() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFields({ ...fields, [e.target.name]: e.target.value })
   }
 
@@ -246,6 +258,26 @@ export default function SolarForm() {
                 placeholder="e.g. 200A"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+            </div>
+
+            <div>
+              <label htmlFor="roofType" className="block text-sm font-semibold mb-1">
+                Roof Type
+              </label>
+              <select
+                id="roofType"
+                name="roofType"
+                value={fields.roofType}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select roof type...</option>
+                {roofTypeOptions.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </section>
