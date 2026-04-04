@@ -149,7 +149,7 @@ export default function SolarForm() {
 
     const form = e.currentTarget
     const formData = new FormData(form)
-    formData.set('form-name', 'solar-installation-survey')
+    formData.set('form-name', 'solar-planset-request')
 
     try {
       const res = await fetch('/form-solar.html', {
@@ -175,7 +175,7 @@ export default function SolarForm() {
         </div>
         <h2 className="text-2xl font-bold mb-2">Submission Received!</h2>
         <p className="text-gray-600">
-          Your solar installation survey has been submitted. We'll review the details and be in touch soon.
+          Your solar planset request has been submitted. We'll review the details and be in touch soon.
         </p>
       </div>
     )
@@ -190,16 +190,16 @@ export default function SolarForm() {
           className="h-16 mx-auto mb-4"
         />
         <h1 className="text-3xl font-black tracking-tight mb-2">
-          Solar Installation Survey
+          Solar Planset Request
         </h1>
         <p className="text-gray-600">
-          Fill out the details below so we can assess your site for solar panel installation.
+          Fill out the details below so we can prepare your solar planset.
           Please fill out the details below.
         </p>
       </div>
 
       <form
-        name="solar-installation-survey"
+        name="solar-planset-request"
         method="POST"
         encType="multipart/form-data"
         data-netlify="true"
@@ -207,7 +207,7 @@ export default function SolarForm() {
         className="space-y-8"
         onSubmit={handleSubmit}
       >
-        <input type="hidden" name="form-name" value="solar-installation-survey" />
+        <input type="hidden" name="form-name" value="solar-planset-request" />
         <p className="hidden" aria-hidden="true">
           <label>
             Don't fill this out: <input name="bot-field" tabIndex={-1} />
@@ -335,7 +335,7 @@ export default function SolarForm() {
           disabled={submitting}
           className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg transition-colors"
         >
-          {submitting ? 'Submitting…' : 'Submit Survey'}
+          {submitting ? 'Submitting…' : 'Submit Request'}
         </button>
       </form>
     </div>
