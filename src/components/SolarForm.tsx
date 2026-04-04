@@ -270,6 +270,23 @@ export default function SolarForm() {
               name="sidewallPhoto"
               label="Picture of Sidewall of the House"
             />
+            <FileUploadField
+              id="roofPhoto"
+              name="roofPhoto"
+              label="Picture of the Roof"
+              hint="Show the roof area where panels will be installed."
+            />
+            <FileUploadField
+              id="meterPhoto"
+              name="meterPhoto"
+              label="Picture of the Electric Meter"
+            />
+            <FileUploadField
+              id="additionalPhoto"
+              name="additionalPhoto"
+              label="Additional Photo"
+              hint="Any other relevant photo of the site."
+            />
           </div>
         </section>
 
