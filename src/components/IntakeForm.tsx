@@ -212,22 +212,8 @@ export default function IntakeForm() {
   const isWorking = status === 'uploading' || status === 'submitting'
 
   return (
-    <section className="rounded-[36px] border border-white/10 bg-[#08111f]/85 p-6 shadow-[0_30px_120px_rgba(4,10,22,0.55)] backdrop-blur md:p-8">
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#f1b24a]">
-            Planset Intake
-          </p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">
-            Collect everything the design team needs in one pass.
-          </h2>
-        </div>
-        <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300">
-          {progressLabel}
-        </div>
-      </div>
-
-      <form className="mt-8 space-y-10" onSubmit={handleSubmit}>
+    <section className="rounded-[36px] border border-[#efd8c2] bg-[rgba(255,255,255,0.94)] p-6 shadow-[0_30px_90px_rgba(236,160,74,0.12)] backdrop-blur md:p-8">
+      <form className="space-y-10" onSubmit={handleSubmit}>
         <input autoComplete="off" className="hidden" name="website" tabIndex={-1} />
 
         <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
@@ -275,18 +261,6 @@ export default function IntakeForm() {
                 />
               </div>
 
-              <div className="md:col-span-2">
-                <label className="field-label" htmlFor="companyName">
-                  Company
-                </label>
-                <input
-                  className="field-input"
-                  id="companyName"
-                  name="companyName"
-                  placeholder="Installer, EPC, or homeowner name"
-                  type="text"
-                />
-              </div>
             </section>
 
             <section className="grid gap-4 md:grid-cols-2">
@@ -386,11 +360,11 @@ export default function IntakeForm() {
             </section>
           </div>
 
-          <div className="rounded-[32px] border border-white/10 bg-white/4 p-5">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#f1b24a]">
+          <div className="rounded-[32px] border border-[#efd8c2] bg-[#fff7f1] p-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#ef9f33]">
               Intake Notes
             </p>
-            <p className="mt-3 text-sm leading-6 text-slate-300">
+            <p className="mt-3 text-sm leading-6 text-[#6f5b69]">
               Call out service upgrades, trenching, detached structures, HOA review, or anything that could change engineering assumptions.
             </p>
             <textarea
@@ -405,10 +379,10 @@ export default function IntakeForm() {
         <section>
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#f1b24a]">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#ef9f33]">
                 Site Photos
               </p>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#6f5b69]">
                 Upload the best available field photos. Files upload directly to Vercel Blob before the intake metadata is saved, which avoids large request payloads hitting a single serverless function.
               </p>
             </div>
@@ -430,20 +404,24 @@ export default function IntakeForm() {
         </section>
 
         {error ? (
-          <div className="rounded-[24px] border border-rose-500/30 bg-rose-500/10 px-5 py-4 text-sm leading-6 text-rose-100">
+          <div className="rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-4 text-sm leading-6 text-rose-700">
             {error}
           </div>
         ) : null}
 
         {status === 'success' ? (
-          <div className="rounded-[24px] border border-emerald-400/30 bg-emerald-400/10 px-5 py-4 text-sm leading-6 text-emerald-50">
+          <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm leading-6 text-emerald-700">
             Submission received{submissionId ? ` with ID ${submissionId}` : ''}. The intake packet and file references are now stored in Vercel Blob.
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-4 border-t border-white/10 pt-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 border-t border-[#f0ddd0] pt-6 md:flex-row md:items-center md:justify-between">
+          <div className="rounded-full border border-[#f0ddd0] bg-[#fff7f2] px-4 py-2 text-sm text-[#7c6875]">
+            {progressLabel}
+          </div>
+
           <button
-            className="inline-flex items-center justify-center rounded-full bg-[#f1b24a] px-6 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-slate-950 transition hover:bg-[#ffc96a] disabled:cursor-not-allowed disabled:bg-[#f1b24a]/50"
+            className="inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff6f7d,#f7ab41)] px-6 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-white shadow-[0_14px_34px_rgba(255,116,122,0.28)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
             disabled={isWorking}
             type="submit"
           >
