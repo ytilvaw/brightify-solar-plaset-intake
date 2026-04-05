@@ -57,11 +57,12 @@ async function sendNotificationEmail(input: {
   }
 }) {
   const apiKey = process.env.RESEND_API_KEY
-  const to = process.env.INTAKE_NOTIFICATION_EMAIL
+  const to =
+    process.env.INTAKE_NOTIFICATION_EMAIL ?? 'yrtilvawala@gmail.com'
   const from =
     process.env.INTAKE_FROM_EMAIL ?? 'Brightify Intake <onboarding@resend.dev>'
 
-  if (!apiKey || !to) {
+  if (!apiKey) {
     return { sent: false as const, skipped: true as const }
   }
 
