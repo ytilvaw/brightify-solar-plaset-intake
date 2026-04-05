@@ -8,6 +8,7 @@ interface FilePreview {
 interface FormState {
   siteAddress: string
   mainPanelRating: string
+  desiredSystemSize: string
   solarPanel: string
   inverter: string
   battery: string
@@ -130,6 +131,7 @@ export default function SolarForm() {
   const [fields, setFields] = useState<FormState>({
     siteAddress: '',
     mainPanelRating: '',
+    desiredSystemSize: '',
     solarPanel: '',
     inverter: '',
     battery: '',
@@ -277,6 +279,22 @@ export default function SolarForm() {
         <section>
           <h2 className="text-lg font-bold mb-4 pb-2 border-b">Planned Equipment</h2>
           <div className="space-y-5">
+            <div>
+              <label htmlFor="desiredSystemSize" className="block text-sm font-semibold mb-1">
+                Desired System Size (kW) <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="desiredSystemSize"
+                name="desiredSystemSize"
+                value={fields.desiredSystemSize}
+                onChange={handleChange}
+                required
+                placeholder="e.g. 8kW"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
             <div>
               <label htmlFor="solarPanel" className="block text-sm font-semibold mb-1">
                 Which Solar Panel are you planning to use? <span className="text-red-500">*</span>
