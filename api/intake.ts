@@ -1,4 +1,5 @@
 import { put } from '@vercel/blob'
+import { Resend } from 'resend'
 import { z } from 'zod'
 
 import { fileFields, type FileFieldName } from '../src/lib/intake'
@@ -34,6 +35,120 @@ const submissionSchema = z.object({
   uploads: z.array(uploadSchema).max(fileFields.length),
 })
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
+function renderField(label: string, value: string) {
+  return `<tr><td style="padding:10px 14px;border:1px solid #dbe4f0;font-weight:600;background:#f8fafc;">${escapeHtml(label)}</td><td style="padding:10px 14px;border:1px solid #dbe4f0;">${escapeHtml(value || '—')}</td></tr>`
+}
+
+async function sendNotificationEmail(input: {
+  manifest: z.infer<typeof submissionSchema> & {
+    source: string
+    submissionId: string
+    submittedAt: string
+    userAgent: string
+  }
+}) {
+  const apiKey = process.env.RESEND_API_KEY
+  const to = process.env.INTAKE_NOTIFICATION_EMAIL
+  const from =
+    process.env.INTAKE_FROM_EMAIL ?? 'Brightify Intake <onboarding@resend.dev>'
+
+  if (!apiKey || !to) {
+    return { sent: false as const, skipped: true as const }
+  }
+
+  const resend = new Resend(apiKey)
+  const { manifest } = input
+  const uploadList = manifest.uploads.length
+    ? manifest.uploads
+        .map(
+          (upload) =>
+            `<li style="margin:0 0 8px;"><a href="${escapeHtml(upload.url)}">${escapeHtml(upload.label)}</a> <span style="color:#475569;">(${escapeHtml(upload.originalName)})</span></li>`,
+        )
+        .join('')
+    : '<li>No files uploaded.</li>'
+
+  const textUploads = manifest.uploads.length
+    ? manifest.uploads
+        .map((upload) => `${upload.label}: ${upload.originalName} - ${upload.url}`)
+        .join('\n')
+    : 'No files uploaded.'
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:760px;margin:0 auto;padding:24px;color:#0f172a;">
+      <h1 style="margin:0 0 8px;font-size:28px;">New Brightify intake submission</h1>
+      <p style="margin:0 0 20px;color:#475569;">Submission ID: ${escapeHtml(manifest.submissionId)}</p>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+        ${renderField('Submitted', manifest.submittedAt)}
+        ${renderField('Primary contact', manifest.contactName)}
+        ${renderField('Email', manifest.email)}
+        ${renderField('Phone', manifest.phone)}
+        ${renderField('Company', manifest.companyName)}
+        ${renderField('Site address', manifest.siteAddress)}
+        ${renderField('Main panel rating', manifest.mainPanelRating)}
+        ${renderField('Roof type', manifest.roofType)}
+        ${renderField('Desired system size', manifest.desiredSystemSize)}
+        ${renderField('Solar panel', manifest.solarPanel)}
+        ${renderField('Inverter', manifest.inverter)}
+        ${renderField('Battery', manifest.battery)}
+        ${renderField('Notes', manifest.notes)}
+      </table>
+      <h2 style="margin:0 0 12px;font-size:20px;">Uploaded files</h2>
+      <ul style="padding-left:20px;margin:0 0 24px;">
+        ${uploadList}
+      </ul>
+    </div>
+  `
+
+  const text = `New Brightify intake submission
+
+Submission ID: ${manifest.submissionId}
+Submitted: ${manifest.submittedAt}
+Primary contact: ${manifest.contactName}
+Email: ${manifest.email}
+Phone: ${manifest.phone}
+Company: ${manifest.companyName || '—'}
+Site address: ${manifest.siteAddress}
+Main panel rating: ${manifest.mainPanelRating || '—'}
+Roof type: ${manifest.roofType || '—'}
+Desired system size: ${manifest.desiredSystemSize}
+Solar panel: ${manifest.solarPanel || '—'}
+Inverter: ${manifest.inverter || '—'}
+Battery: ${manifest.battery || '—'}
+Notes: ${manifest.notes || '—'}
+
+Uploaded files:
+${textUploads}
+`
+
+  const { data, error } = await resend.emails.send({
+    from,
+    html,
+    replyTo: manifest.email,
+    subject: `New intake: ${manifest.contactName} - ${manifest.siteAddress}`,
+    text,
+    to,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return {
+    id: data?.id ?? null,
+    sent: true as const,
+    skipped: false as const,
+  }
+}
+
 export async function POST(request: Request) {
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return Response.json(
@@ -65,7 +180,10 @@ export async function POST(request: Request) {
       access: 'private',
     })
 
+    const emailResult = await sendNotificationEmail({ manifest })
+
     return Response.json({
+      emailSent: emailResult.sent,
       ok: true,
       submissionId,
       submittedAt,

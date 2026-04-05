@@ -442,10 +442,6 @@ export default function IntakeForm() {
         ) : null}
 
         <div className="flex flex-col gap-4 border-t border-white/10 pt-6 md:flex-row md:items-center md:justify-between">
-          <p className="max-w-xl text-sm leading-6 text-slate-300">
-            This form depends on a connected Vercel Blob store. In local development, set <code>BLOB_READ_WRITE_TOKEN</code>. In Vercel, attach a Blob store to the project and the environment variable is injected automatically.
-          </p>
-
           <button
             className="inline-flex items-center justify-center rounded-full bg-[#f1b24a] px-6 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-slate-950 transition hover:bg-[#ffc96a] disabled:cursor-not-allowed disabled:bg-[#f1b24a]/50"
             disabled={isWorking}
