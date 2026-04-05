@@ -5,9 +5,20 @@ interface FilePreview {
   url: string
 }
 
+const roofTypeOptions = [
+  'Shingles',
+  'Tile Roof',
+  'Metal Roof',
+  'Flat Roof',
+  'Slate',
+  'Wood Shake',
+  'Other',
+]
+
 interface FormState {
   siteAddress: string
   mainPanelRating: string
+  roofType: string
   desiredSystemSize: string
   solarPanel: string
   inverter: string
@@ -131,6 +142,7 @@ export default function SolarForm() {
   const [fields, setFields] = useState<FormState>({
     siteAddress: '',
     mainPanelRating: '',
+    roofType: '',
     desiredSystemSize: '',
     solarPanel: '',
     inverter: '',
@@ -140,7 +152,7 @@ export default function SolarForm() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFields({ ...fields, [e.target.name]: e.target.value })
   }
 
@@ -151,7 +163,7 @@ export default function SolarForm() {
 
     const form = e.currentTarget
     const formData = new FormData(form)
-    formData.set('form-name', 'solar-installation-survey')
+    formData.set('form-name', 'solar-planset-request')
 
     try {
       const res = await fetch('/form-solar.html', {
@@ -177,7 +189,7 @@ export default function SolarForm() {
         </div>
         <h2 className="text-2xl font-bold mb-2">Submission Received!</h2>
         <p className="text-gray-600">
-          Your solar installation survey has been submitted. We'll review the details and be in touch soon.
+          Your solar planset request has been submitted. We'll review the details and be in touch soon.
         </p>
       </div>
     )
@@ -185,18 +197,23 @@ export default function SolarForm() {
 
   return (
     <div className="w-full max-w-2xl px-4 py-10 mx-auto">
-      <div className="mb-8">
+      <div className="mb-8 text-center">
+        <img
+          src="/brightify-logo.png"
+          alt="Brightify Logo"
+          className="h-16 mx-auto mb-4"
+        />
         <h1 className="text-3xl font-black tracking-tight mb-2">
-          Solar Installation Survey
+          Solar Planset Request
         </h1>
         <p className="text-gray-600">
-          Fill out the details below so we can assess your site for solar panel installation.
-          Fields marked <span className="text-red-500">*</span> are required.
+          Fill out the details below so we can prepare your solar planset.
+          Please fill out the details below.
         </p>
       </div>
 
       <form
-        name="solar-installation-survey"
+        name="solar-planset-request"
         method="POST"
         encType="multipart/form-data"
         data-netlify="true"
@@ -204,7 +221,7 @@ export default function SolarForm() {
         className="space-y-8"
         onSubmit={handleSubmit}
       >
-        <input type="hidden" name="form-name" value="solar-installation-survey" />
+        <input type="hidden" name="form-name" value="solar-planset-request" />
         <p className="hidden" aria-hidden="true">
           <label>
             Don't fill this out: <input name="bot-field" tabIndex={-1} />
@@ -217,7 +234,7 @@ export default function SolarForm() {
           <div className="space-y-5">
             <div>
               <label htmlFor="siteAddress" className="block text-sm font-semibold mb-1">
-                Site Address <span className="text-red-500">*</span>
+                Site Address
               </label>
               <input
                 type="text"
@@ -225,7 +242,6 @@ export default function SolarForm() {
                 name="siteAddress"
                 value={fields.siteAddress}
                 onChange={handleChange}
-                required
                 placeholder="123 Main St, City, State, ZIP"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -233,7 +249,7 @@ export default function SolarForm() {
 
             <div>
               <label htmlFor="mainPanelRating" className="block text-sm font-semibold mb-1">
-                Main Panel Rating (Amps) <span className="text-red-500">*</span>
+                Main Panel Rating (Amps)
               </label>
               <input
                 type="text"
@@ -241,10 +257,29 @@ export default function SolarForm() {
                 name="mainPanelRating"
                 value={fields.mainPanelRating}
                 onChange={handleChange}
-                required
                 placeholder="e.g. 200A"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+            </div>
+
+            <div>
+              <label htmlFor="roofType" className="block text-sm font-semibold mb-1">
+                Roof Type
+              </label>
+              <select
+                id="roofType"
+                name="roofType"
+                value={fields.roofType}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select roof type...</option>
+                {roofTypeOptions.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </section>
@@ -258,19 +293,33 @@ export default function SolarForm() {
               name="mainPanelPhoto"
               label="Picture of Main Panel"
               hint="Show whether there is a slot available for an additional breaker."
-              required
             />
             <FileUploadField
               id="frontHousePhoto"
               name="frontHousePhoto"
               label="Front Picture of the House"
-              required
             />
             <FileUploadField
               id="sidewallPhoto"
               name="sidewallPhoto"
               label="Picture of Sidewall of the House"
-              required
+            />
+            <FileUploadField
+              id="roofPhoto"
+              name="roofPhoto"
+              label="Picture of the Roof"
+              hint="Show the roof area where panels will be installed."
+            />
+            <FileUploadField
+              id="meterPhoto"
+              name="meterPhoto"
+              label="Picture of the Electric Meter"
+            />
+            <FileUploadField
+              id="additionalPhoto"
+              name="additionalPhoto"
+              label="Additional Photo"
+              hint="Any other relevant photo of the site."
             />
           </div>
         </section>
@@ -297,7 +346,7 @@ export default function SolarForm() {
 
             <div>
               <label htmlFor="solarPanel" className="block text-sm font-semibold mb-1">
-                Which Solar Panel are you planning to use? <span className="text-red-500">*</span>
+                Which Solar Panel are you planning to use?
               </label>
               <input
                 type="text"
@@ -305,7 +354,6 @@ export default function SolarForm() {
                 name="solarPanel"
                 value={fields.solarPanel}
                 onChange={handleChange}
-                required
                 placeholder="e.g. Qcells Q.PEAK DUO 400W"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -313,7 +361,7 @@ export default function SolarForm() {
 
             <div>
               <label htmlFor="inverter" className="block text-sm font-semibold mb-1">
-                Which Inverter are you planning to use? <span className="text-red-500">*</span>
+                Which Inverter are you planning to use?
               </label>
               <input
                 type="text"
@@ -321,7 +369,6 @@ export default function SolarForm() {
                 name="inverter"
                 value={fields.inverter}
                 onChange={handleChange}
-                required
                 placeholder="e.g. Enphase IQ8+"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -355,7 +402,7 @@ export default function SolarForm() {
           disabled={submitting}
           className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg transition-colors"
         >
-          {submitting ? 'Submitting…' : 'Submit Survey'}
+          {submitting ? 'Submitting…' : 'Submit Request'}
         </button>
       </form>
     </div>
