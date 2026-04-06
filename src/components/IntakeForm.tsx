@@ -37,25 +37,31 @@ type AddressPrediction = {
   place_id: string
 }
 
+type PlacesLibrary = {
+  AutocompleteSessionToken: new () => unknown
+  AutocompleteSuggestion: {
+    fetchAutocompleteSuggestions: (request: Record<string, unknown>) => Promise<{
+      suggestions?: Array<{
+        placePrediction?: {
+          placeId?: string
+          text?: {
+            toString: () => string
+          }
+        }
+      }>
+    }>
+  }
+}
+
 declare global {
   interface Window {
     google?: {
       maps: {
         places?: {
-          AutocompleteService: new () => {
-            getPlacePredictions: (
-              request: Record<string, unknown>,
-              callback: (
-                predictions: AddressPrediction[] | null,
-                status: string,
-              ) => void,
-            ) => void
-          }
-          PlacesServiceStatus: {
-            OK: string
-            ZERO_RESULTS: string
-          }
+          AutocompleteSessionToken?: PlacesLibrary['AutocompleteSessionToken']
+          AutocompleteSuggestion?: PlacesLibrary['AutocompleteSuggestion']
         }
+        importLibrary?: (name: string) => Promise<PlacesLibrary>
       }
     }
     __googleMapsLoadError?: string
@@ -129,7 +135,7 @@ function loadGoogleMapsPlacesLibrary() {
     return Promise.resolve()
   }
 
-  if (window.google?.maps?.places?.AutocompleteService) {
+  if (window.google?.maps?.importLibrary) {
     return Promise.resolve()
   }
 
@@ -188,9 +194,9 @@ export default function IntakeForm() {
   const [submissionId, setSubmissionId] = useState<string | null>(null)
   const selectedFilesRef = useRef(selectedFiles)
   const siteAddressInputRef = useRef<HTMLInputElement | null>(null)
-  const autocompleteServiceRef = useRef<InstanceType<
-    NonNullable<NonNullable<typeof window.google>['maps']['places']>['AutocompleteService']
-  > | null>(null)
+  const placesLibraryRef = useRef<PlacesLibrary | null>(null)
+  const sessionTokenRef = useRef<unknown | null>(null)
+  const newestPredictionRequestIdRef = useRef(0)
   const addressBlurTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
@@ -226,11 +232,18 @@ export default function IntakeForm() {
       try {
         await loadGoogleMapsPlacesLibrary()
 
-        if (!active || !window.google?.maps?.places?.AutocompleteService) {
+        if (!active || !window.google?.maps?.importLibrary) {
           return
         }
 
-        autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService()
+        const placesLibrary = await window.google.maps.importLibrary('places')
+
+        if (!active) {
+          return
+        }
+
+        placesLibraryRef.current = placesLibrary
+        sessionTokenRef.current = new placesLibrary.AutocompleteSessionToken()
         setAddressAutocompleteStatus('ready')
         setAddressAutocompleteMessage(
           'Google Places Autocomplete is enabled for U.S. street addresses.',
@@ -254,7 +267,8 @@ export default function IntakeForm() {
   useEffect(() => {
     if (
       addressAutocompleteStatus !== 'ready' ||
-      !autocompleteServiceRef.current
+      !placesLibraryRef.current ||
+      !sessionTokenRef.current
     ) {
       return
     }
@@ -268,39 +282,48 @@ export default function IntakeForm() {
     }
 
     const timeoutId = window.setTimeout(() => {
-      autocompleteServiceRef.current?.getPlacePredictions(
-        {
-          componentRestrictions: { country: 'us' },
-          input: query,
-          types: ['address'],
-        },
-        (predictions, predictionStatus) => {
-          if (!window.google?.maps?.places?.PlacesServiceStatus) {
+      const requestId = ++newestPredictionRequestIdRef.current
+
+      void placesLibraryRef.current?.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        includedRegionCodes: ['us'],
+        input: query,
+        language: 'en-US',
+        region: 'us',
+        sessionToken: sessionTokenRef.current,
+      })
+        .then((result) => {
+          if (requestId !== newestPredictionRequestIdRef.current) {
             return
           }
 
-          if (
-            predictionStatus === window.google.maps.places.PlacesServiceStatus.OK &&
-            predictions?.length
-          ) {
-            setAddressPredictions(predictions)
-            setActivePredictionIndex(0)
-            return
-          }
+          const predictions = (result.suggestions ?? [])
+            .map((suggestion) => suggestion.placePrediction)
+            .filter(Boolean)
+            .map((prediction) => ({
+              description: prediction?.text?.toString().trim() ?? '',
+              place_id: prediction?.placeId ?? '',
+            }))
+            .filter((prediction) => prediction.description && prediction.place_id)
 
-          if (
-            predictionStatus ===
-            window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS
-          ) {
-            setAddressPredictions([])
-            setActivePredictionIndex(-1)
+          setAddressPredictions(predictions)
+          setActivePredictionIndex(predictions.length ? 0 : -1)
+        })
+        .catch((predictionError) => {
+          console.error(predictionError)
+
+          if (requestId !== newestPredictionRequestIdRef.current) {
             return
           }
 
           setAddressPredictions([])
           setActivePredictionIndex(-1)
-        },
-      )
+          setAddressAutocompleteStatus('error')
+          setAddressAutocompleteMessage(
+            predictionError instanceof Error
+              ? predictionError.message
+              : 'Google address suggestions could not be loaded.',
+          )
+        })
     }, 200)
 
     return () => {
@@ -347,6 +370,10 @@ export default function IntakeForm() {
     setShowAddressPredictions(false)
     setAddressPredictions([])
     setActivePredictionIndex(-1)
+
+    if (placesLibraryRef.current) {
+      sessionTokenRef.current = new placesLibraryRef.current.AutocompleteSessionToken()
+    }
   }
 
   const handleAddressKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
