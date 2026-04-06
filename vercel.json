@@ -1,5 +1,20 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/planset",
+      "permanent": false
+    }
+  ],
   "rewrites": [
+    {
+      "source": "/planset",
+      "destination": "/"
+    },
+    {
+      "source": "/planset/(.*)",
+      "destination": "/"
+    },
     {
       "source": "/admin",
       "destination": "/"
