@@ -1,8 +1,23 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 
-import { fileFields, uploadContentTypes } from './_shared/intake.js'
+const fileFields = [
+  'mainPanelPhoto',
+  'frontHousePhoto',
+  'sidewallPhoto',
+  'roofPhoto',
+  'meterPhoto',
+  'additionalPhoto',
+] as const
 
-const allowedFieldNames = new Set(fileFields.map((field) => field.name))
+const uploadContentTypes = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+] as const
+
+const allowedFieldNames = new Set(fileFields)
 
 export async function POST(request: Request) {
   const body = (await request.json()) as HandleUploadBody

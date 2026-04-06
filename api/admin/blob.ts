@@ -1,6 +1,33 @@
 import { get } from '@vercel/blob'
 
-import { isAuthorizedAdminRequest, unauthorizedResponse } from '../_admin.js'
+function readAdminKey(request: Request) {
+  const authHeader = request.headers.get('authorization')
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.slice('Bearer '.length).trim()
+  }
+
+  const url = new URL(request.url)
+  return url.searchParams.get('key')?.trim() ?? ''
+}
+
+function isAuthorizedAdminRequest(request: Request) {
+  const configuredKey = process.env.ADMIN_ACCESS_KEY?.trim()
+
+  if (!configuredKey) {
+    return false
+  }
+
+  return readAdminKey(request) === configuredKey
+}
+
+function unauthorizedResponse() {
+  return Response.json(
+    {
+      error: 'Unauthorized',
+    },
+    { status: 401 },
+  )
+}
 
 export async function GET(request: Request) {
   if (!isAuthorizedAdminRequest(request)) {
