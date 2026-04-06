@@ -123,3 +123,7 @@ textarea {
   line-height: 1.4;
   color: var(--muted);
 }
+
+.field-hint-error {
+  color: #b42318;
+}

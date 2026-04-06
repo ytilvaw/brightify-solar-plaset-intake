@@ -17,6 +17,7 @@ import {
 
 const acceptedUploadTypes = 'image/jpeg,image/png,image/webp,image/heic,image/heif'
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY?.trim()
+const googleMapsCallbackName = '__initGoogleMapsPlaces'
 const googleMapsScriptId = 'google-maps-places-script'
 const requestTimeoutMs = 10_000
 
@@ -34,25 +35,22 @@ declare global {
   interface Window {
     google?: {
       maps: {
-        importLibrary: (name: string) => Promise<{
-          Autocomplete?: new (
+        places?: {
+          Autocomplete: new (
             input: HTMLInputElement,
             options?: Record<string, unknown>,
           ) => {
             addListener: (eventName: string, handler: () => void) => void
             getPlace: () => {
-              address_components?: Array<{
-                long_name: string
-                short_name: string
-                types: string[]
-              }>
               formatted_address?: string
             }
           }
-        }>
+        }
       }
     }
+    __googleMapsLoadError?: string
     __googleMapsPlacesPromise?: Promise<void>
+    __initGoogleMapsPlaces?: () => void
   }
 }
 
@@ -107,6 +105,7 @@ function getSubmissionErrorMessage(error: unknown) {
 
 function buildGoogleMapsScriptUrl() {
   const params = new URLSearchParams({
+    callback: googleMapsCallbackName,
     key: googleMapsApiKey,
     libraries: 'places',
     loading: 'async',
@@ -120,7 +119,7 @@ function loadGoogleMapsPlacesLibrary() {
     return Promise.resolve()
   }
 
-  if (window.google?.maps?.importLibrary) {
+  if (window.google?.maps?.places?.Autocomplete) {
     return Promise.resolve()
   }
 
@@ -133,6 +132,10 @@ function loadGoogleMapsPlacesLibrary() {
     | null
 
   window.__googleMapsPlacesPromise = new Promise<void>((resolve, reject) => {
+    window[googleMapsCallbackName] = () => {
+      resolve()
+    }
+
     const script = existingScript ?? document.createElement('script')
 
     script.id = googleMapsScriptId
@@ -140,8 +143,10 @@ function loadGoogleMapsPlacesLibrary() {
     script.async = true
     script.defer = true
 
-    script.onload = () => resolve()
-    script.onerror = () => reject(new Error('Failed to load Google Maps Places.'))
+    script.onerror = () => {
+      window.__googleMapsLoadError = 'Failed to load the Google Maps script.'
+      reject(new Error(window.__googleMapsLoadError))
+    }
 
     if (!existingScript) {
       document.head.appendChild(script)
@@ -154,7 +159,14 @@ function loadGoogleMapsPlacesLibrary() {
 export default function IntakeForm() {
   const [selectedFiles, setSelectedFiles] =
     useState<Record<FileFieldName, SelectedFileState>>(createEmptySelectedFiles)
-  const [addressAutocompleteReady, setAddressAutocompleteReady] = useState(false)
+  const [addressAutocompleteStatus, setAddressAutocompleteStatus] = useState<
+    'disabled' | 'loading' | 'ready' | 'error'
+  >(googleMapsApiKey ? 'loading' : 'disabled')
+  const [addressAutocompleteMessage, setAddressAutocompleteMessage] = useState(
+    googleMapsApiKey
+      ? 'Loading Google address suggestions...'
+      : 'Set VITE_GOOGLE_MAPS_API_KEY to enable Google address suggestions.',
+  )
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] =
     useState<'idle' | 'uploading' | 'submitting' | 'success'>('idle')
@@ -188,22 +200,18 @@ export default function IntakeForm() {
       try {
         await loadGoogleMapsPlacesLibrary()
 
-        if (!active || !window.google?.maps?.importLibrary || !siteAddressInputRef.current) {
+        if (!active || !window.google?.maps?.places?.Autocomplete || !siteAddressInputRef.current) {
           return
         }
 
-        const placesLibrary = await window.google.maps.importLibrary('places')
-        const Autocomplete = placesLibrary.Autocomplete
-
-        if (!Autocomplete || !active || !siteAddressInputRef.current) {
-          return
-        }
-
-        const autocomplete = new Autocomplete(siteAddressInputRef.current, {
+        const autocomplete = new window.google.maps.places.Autocomplete(
+          siteAddressInputRef.current,
+          {
           componentRestrictions: { country: 'us' },
-          fields: ['address_components', 'formatted_address'],
+          fields: ['formatted_address'],
           types: ['address'],
-        })
+        },
+        )
 
         autocomplete.addListener('place_changed', () => {
           const place = autocomplete.getPlace()
@@ -215,9 +223,18 @@ export default function IntakeForm() {
             place.formatted_address?.trim() || siteAddressInputRef.current.value
         })
 
-        setAddressAutocompleteReady(true)
+        setAddressAutocompleteStatus('ready')
+        setAddressAutocompleteMessage(
+          'Google Places Autocomplete is enabled for U.S. street addresses.',
+        )
       } catch (mapsError) {
         console.error(mapsError)
+        setAddressAutocompleteStatus('error')
+        setAddressAutocompleteMessage(
+          mapsError instanceof Error
+            ? mapsError.message
+            : 'Google address suggestions could not be initialized.',
+        )
       }
     })()
 
@@ -470,12 +487,10 @@ export default function IntakeForm() {
                   spellCheck={false}
                   type="text"
                 />
-                <p className="field-hint">
-                  {googleMapsApiKey
-                    ? addressAutocompleteReady
-                      ? 'Google Places Autocomplete is enabled for U.S. street addresses.'
-                      : 'Loading Google address suggestions...'
-                    : 'Set VITE_GOOGLE_MAPS_API_KEY to enable Google address suggestions.'}
+                <p
+                  className={`field-hint ${addressAutocompleteStatus === 'error' ? 'field-hint-error' : ''}`}
+                >
+                  {addressAutocompleteMessage}
                 </p>
               </div>
 
