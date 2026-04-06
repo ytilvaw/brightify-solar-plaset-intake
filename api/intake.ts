@@ -190,6 +190,8 @@ export async function POST(request: Request) {
       submittedAt,
     })
   } catch (error) {
+    console.error('intake submission failed', error)
+
     if (error instanceof z.ZodError) {
       return Response.json(
         {

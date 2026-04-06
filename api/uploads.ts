@@ -38,6 +38,8 @@ export async function POST(request: Request) {
 
     return Response.json(response)
   } catch (error) {
+    console.error('blob upload authorization failed', error)
+
     return Response.json(
       {
         error:

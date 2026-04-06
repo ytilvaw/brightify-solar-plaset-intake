@@ -34,6 +34,22 @@ function getText(formData: FormData, key: string) {
   return typeof value === 'string' ? value.trim() : ''
 }
 
+async function parseApiResponse(response: Response) {
+  const raw = await response.text()
+
+  if (!raw) {
+    return undefined as { error?: string; submissionId?: string } | undefined
+  }
+
+  try {
+    return JSON.parse(raw) as { error?: string; submissionId?: string }
+  } catch {
+    return {
+      error: raw,
+    }
+  }
+}
+
 export default function IntakeForm() {
   const [selectedFiles, setSelectedFiles] =
     useState<Record<FileFieldName, SelectedFileState>>(createEmptySelectedFiles)
@@ -185,12 +201,12 @@ export default function IntakeForm() {
         method: 'POST',
       })
 
-      const result = (await response.json()) as
-        | { error?: string; submissionId?: string }
-        | undefined
+      const result = await parseApiResponse(response)
 
       if (!response.ok) {
-        throw new Error(result?.error ?? 'Unable to submit the intake package.')
+        throw new Error(
+          result?.error?.trim() || 'Unable to submit the intake package.',
+        )
       }
 
       setStatus('success')
