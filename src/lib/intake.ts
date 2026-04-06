@@ -48,6 +48,7 @@ export interface UploadedAsset {
   label: string
   pathname: string
   url: string
+  downloadUrl?: string
   size: number
   contentType: string
   originalName: string

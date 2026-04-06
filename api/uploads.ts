@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
     const pathname = `intake-temp/${validatedField}/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`
     const blob = await put(pathname, file, {
-      access: 'public',
+      access: 'private',
       addRandomSuffix: false,
       contentType: file.type || undefined,
     })
@@ -79,6 +79,7 @@ export async function POST(request: Request) {
       field: validatedField,
       label: fileLabels[validatedField],
       originalName: file.name,
+      downloadUrl: blob.downloadUrl,
       pathname: blob.pathname,
       size: file.size,
       url: blob.url,

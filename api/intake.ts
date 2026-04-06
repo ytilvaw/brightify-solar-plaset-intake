@@ -38,6 +38,7 @@ const allowedFieldNames = fileFields.map((field) => field.name) as [
 
 const uploadSchema = z.object({
   contentType: z.string().min(1),
+  downloadUrl: z.string().url().optional(),
   field: z.enum(allowedFieldNames),
   label: z.string().min(1),
   originalName: z.string().min(1),
@@ -99,14 +100,17 @@ async function sendNotificationEmail(input: {
     ? manifest.uploads
         .map(
           (upload) =>
-            `<li style="margin:0 0 8px;"><a href="${escapeHtml(upload.url)}">${escapeHtml(upload.label)}</a> <span style="color:#475569;">(${escapeHtml(upload.originalName)})</span></li>`,
+            `<li style="margin:0 0 8px;"><a href="${escapeHtml(upload.downloadUrl ?? upload.url)}">${escapeHtml(upload.label)}</a> <span style="color:#475569;">(${escapeHtml(upload.originalName)})</span></li>`,
         )
         .join('')
     : '<li>No files uploaded.</li>'
 
   const textUploads = manifest.uploads.length
     ? manifest.uploads
-        .map((upload) => `${upload.label}: ${upload.originalName} - ${upload.url}`)
+        .map(
+          (upload) =>
+            `${upload.label}: ${upload.originalName} - ${upload.downloadUrl ?? upload.url}`,
+        )
         .join('\n')
     : 'No files uploaded.'
 

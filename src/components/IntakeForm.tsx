@@ -188,6 +188,7 @@ export default function IntakeForm() {
         return {
           contentType:
             result?.contentType ?? file.type ?? 'application/octet-stream',
+          downloadUrl: result?.downloadUrl,
           field: (result?.field as FileFieldName | undefined) ?? item.field,
           label: result?.label ?? item.label,
           originalName: result?.originalName ?? file.name,
