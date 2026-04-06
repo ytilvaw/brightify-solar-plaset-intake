@@ -1,4 +1,3 @@
-import { upload } from '@vercel/blob/client'
 import {
   useEffect,
   useRef,
@@ -19,15 +18,20 @@ import {
 const acceptedUploadTypes = 'image/jpeg,image/png,image/webp,image/heic,image/heif'
 const requestTimeoutMs = 10_000
 
+type ApiErrorResponse = {
+  error?: string
+}
+
+type IntakeResponse = ApiErrorResponse & {
+  submissionId?: string
+}
+
+type UploadResponse = ApiErrorResponse & Partial<UploadedAsset>
+
 function createEmptySelectedFiles() {
   return Object.fromEntries(
     fileFields.map(({ name }) => [name, { file: null, previewUrl: null }]),
   ) as Record<FileFieldName, SelectedFileState>
-}
-
-function buildUploadPath(field: FileFieldName, file: File) {
-  const sanitizedName = file.name.toLowerCase().replace(/[^a-z0-9.-]+/g, '-')
-  return `intake-temp/${field}/${crypto.randomUUID()}-${sanitizedName}`
 }
 
 function getText(formData: FormData, key: string) {
@@ -35,19 +39,19 @@ function getText(formData: FormData, key: string) {
   return typeof value === 'string' ? value.trim() : ''
 }
 
-async function parseApiResponse(response: Response) {
+async function parseApiResponse<T>(response: Response) {
   const raw = await response.text()
 
   if (!raw) {
-    return undefined as { error?: string; submissionId?: string } | undefined
+    return undefined as T | undefined
   }
 
   try {
-    return JSON.parse(raw) as { error?: string; submissionId?: string }
+    return JSON.parse(raw) as T
   } catch {
     return {
       error: raw,
-    }
+    } as T
   }
 }
 
@@ -152,17 +156,26 @@ export default function IntakeForm() {
         setProgressLabel(`Uploading ${item.label.toLowerCase()}...`)
 
         const timeout = createTimeoutController(requestTimeoutMs)
-        let blob
+        let response
 
         try {
-          blob = await upload(buildUploadPath(item.field, file), file, {
-            abortSignal: timeout.signal,
-            access: 'public',
-            clientPayload: JSON.stringify({ field: item.field }),
-            handleUploadUrl: '/api/uploads',
+          const uploadFormData = new FormData()
+          uploadFormData.set('field', item.field)
+          uploadFormData.set('file', file)
+
+          response = await fetch('/api/uploads', {
+            body: uploadFormData,
+            method: 'POST',
+            signal: timeout.signal,
           })
         } finally {
           timeout.clear()
+        }
+
+        const result = await parseApiResponse<UploadResponse>(response)
+
+        if (!response.ok) {
+          throw new Error(result?.error?.trim() || 'Unable to upload photo.')
         }
 
         completedCount += 1
@@ -173,13 +186,14 @@ export default function IntakeForm() {
         )
 
         return {
-          contentType: file.type || 'application/octet-stream',
-          field: item.field,
-          label: item.label,
-          originalName: file.name,
-          pathname: blob.pathname,
-          size: file.size,
-          url: blob.url,
+          contentType:
+            result?.contentType ?? file.type ?? 'application/octet-stream',
+          field: (result?.field as FileFieldName | undefined) ?? item.field,
+          label: result?.label ?? item.label,
+          originalName: result?.originalName ?? file.name,
+          pathname: result?.pathname ?? '',
+          size: result?.size ?? file.size,
+          url: result?.url ?? '',
         } satisfies UploadedAsset
       }),
     )
@@ -240,7 +254,7 @@ export default function IntakeForm() {
         timeout.clear()
       }
 
-      const result = await parseApiResponse(response)
+      const result = await parseApiResponse<IntakeResponse>(response)
 
       if (!response.ok) {
         throw new Error(
