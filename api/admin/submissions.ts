@@ -1,7 +1,7 @@
 import { get, list } from '@vercel/blob'
 
-import { isAuthorizedAdminRequest, unauthorizedResponse } from '../_admin'
-import type { SubmissionRecord } from '../_shared/intake'
+import { isAuthorizedAdminRequest, unauthorizedResponse } from '../_admin.js'
+import type { SubmissionRecord } from '../_shared/intake.js'
 
 async function readSubmission(pathname: string) {
   const result = await get(pathname, {

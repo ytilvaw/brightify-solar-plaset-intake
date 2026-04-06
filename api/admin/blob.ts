@@ -1,6 +1,6 @@
 import { get } from '@vercel/blob'
 
-import { isAuthorizedAdminRequest, unauthorizedResponse } from '../_admin'
+import { isAuthorizedAdminRequest, unauthorizedResponse } from '../_admin.js'
 
 export async function GET(request: Request) {
   if (!isAuthorizedAdminRequest(request)) {
