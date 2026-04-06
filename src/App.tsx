@@ -15,21 +15,21 @@ export default function App() {
   }
 
   return (
-      <>
+    <>
       <main className="mx-auto max-w-7xl px-4 pb-18 pt-6 sm:px-6 lg:px-8">
-        <section className="hero-shell overflow-hidden rounded-[40px] border border-[#ececf0] px-6 py-8 text-center shadow-[0_20px_60px_rgba(15,23,42,0.06)] md:px-10 md:py-12">
+        <section className="hero-shell overflow-hidden rounded-[40px] border border-[#ececf0] px-6 py-7 text-center shadow-[0_20px_60px_rgba(15,23,42,0.06)] md:px-10 md:py-10">
           <img
             alt="Brightify Solar"
-            className="mx-auto h-24 w-auto md:h-32"
+            className="mx-auto h-28 w-auto md:h-40"
             src="/brightify-logo.png"
           />
 
-          <h1 className="mx-auto mt-8 max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.04em] text-[#18181b] md:text-6xl">
+          <h1 className="mx-auto mt-6 max-w-3xl text-[2rem] font-semibold leading-tight tracking-[-0.04em] text-[#18181b] md:text-5xl">
             Solar Planset Intake
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#666674] md:text-lg">
-            Submit the project details, equipment assumptions, and site photos needed to start design and permitting review.
+          <p className="mx-auto mt-4 max-w-2xl text-[0.98rem] leading-7 text-[#666674] md:text-base">
+            Submit the project details, equipment assumptions, and site photos needed to start planset design.
           </p>
         </section>
 
