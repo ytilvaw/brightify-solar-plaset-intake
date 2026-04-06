@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import AdminPage from './components/AdminPage'
 import IntakeForm from './components/IntakeForm'
 
@@ -8,6 +9,7 @@ export default function App() {
       <>
         <AdminPage />
         <Analytics />
+        <SpeedInsights />
       </>
     )
   }
@@ -36,6 +38,7 @@ export default function App() {
         </div>
       </main>
       <Analytics />
+      <SpeedInsights />
     </>
   )
 }
