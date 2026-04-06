@@ -24,8 +24,8 @@ export default function App() {
             src="/brightify-logo.png"
           />
 
-          <h1 className="mx-auto mt-6 max-w-3xl text-[2rem] font-semibold leading-tight tracking-[-0.04em] text-[#18181b] md:text-5xl">
-            Solar Planset Intake
+          <h1 className="mx-auto mt-6 max-w-3xl text-[2rem] font-semibold leading-tight tracking-[0.06em] text-[#18181b] uppercase md:text-5xl">
+            SOLAR PLANSET INTAKE
           </h1>
 
           <p className="mx-auto mt-4 max-w-2xl text-[0.98rem] leading-7 text-[#666674] md:text-base">
