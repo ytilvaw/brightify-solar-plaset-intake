@@ -129,7 +129,7 @@ export default function IntakeForm() {
         setProgressLabel(`Uploading ${item.label.toLowerCase()}...`)
 
         const blob = await upload(buildUploadPath(item.field, file), file, {
-          access: 'private',
+          access: 'public',
           clientPayload: JSON.stringify({ field: item.field }),
           handleUploadUrl: '/api/uploads',
         })
