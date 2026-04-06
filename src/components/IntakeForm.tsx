@@ -4,6 +4,7 @@ import {
   useState,
   type ChangeEvent,
   type FormEvent,
+  type KeyboardEvent,
 } from 'react'
 
 import FileUploadCard, { type SelectedFileState } from './FileUploadCard'
@@ -31,19 +32,28 @@ type IntakeResponse = ApiErrorResponse & {
 
 type UploadResponse = ApiErrorResponse & Partial<UploadedAsset>
 
+type AddressPrediction = {
+  description: string
+  place_id: string
+}
+
 declare global {
   interface Window {
     google?: {
       maps: {
         places?: {
-          Autocomplete: new (
-            input: HTMLInputElement,
-            options?: Record<string, unknown>,
-          ) => {
-            addListener: (eventName: string, handler: () => void) => void
-            getPlace: () => {
-              formatted_address?: string
-            }
+          AutocompleteService: new () => {
+            getPlacePredictions: (
+              request: Record<string, unknown>,
+              callback: (
+                predictions: AddressPrediction[] | null,
+                status: string,
+              ) => void,
+            ) => void
+          }
+          PlacesServiceStatus: {
+            OK: string
+            ZERO_RESULTS: string
           }
         }
       }
@@ -119,7 +129,7 @@ function loadGoogleMapsPlacesLibrary() {
     return Promise.resolve()
   }
 
-  if (window.google?.maps?.places?.Autocomplete) {
+  if (window.google?.maps?.places?.AutocompleteService) {
     return Promise.resolve()
   }
 
@@ -159,6 +169,10 @@ function loadGoogleMapsPlacesLibrary() {
 export default function IntakeForm() {
   const [selectedFiles, setSelectedFiles] =
     useState<Record<FileFieldName, SelectedFileState>>(createEmptySelectedFiles)
+  const [siteAddress, setSiteAddress] = useState('')
+  const [addressPredictions, setAddressPredictions] = useState<AddressPrediction[]>([])
+  const [showAddressPredictions, setShowAddressPredictions] = useState(false)
+  const [activePredictionIndex, setActivePredictionIndex] = useState(-1)
   const [addressAutocompleteStatus, setAddressAutocompleteStatus] = useState<
     'disabled' | 'loading' | 'ready' | 'error'
   >(googleMapsApiKey ? 'loading' : 'disabled')
@@ -174,6 +188,10 @@ export default function IntakeForm() {
   const [submissionId, setSubmissionId] = useState<string | null>(null)
   const selectedFilesRef = useRef(selectedFiles)
   const siteAddressInputRef = useRef<HTMLInputElement | null>(null)
+  const autocompleteServiceRef = useRef<InstanceType<
+    NonNullable<NonNullable<typeof window.google>['maps']['places']>['AutocompleteService']
+  > | null>(null)
+  const addressBlurTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
     selectedFilesRef.current = selectedFiles
@@ -190,6 +208,14 @@ export default function IntakeForm() {
   }, [])
 
   useEffect(() => {
+    return () => {
+      if (addressBlurTimeoutRef.current) {
+        window.clearTimeout(addressBlurTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     if (!googleMapsApiKey || !siteAddressInputRef.current) {
       return
     }
@@ -200,29 +226,11 @@ export default function IntakeForm() {
       try {
         await loadGoogleMapsPlacesLibrary()
 
-        if (!active || !window.google?.maps?.places?.Autocomplete || !siteAddressInputRef.current) {
+        if (!active || !window.google?.maps?.places?.AutocompleteService) {
           return
         }
 
-        const autocomplete = new window.google.maps.places.Autocomplete(
-          siteAddressInputRef.current,
-          {
-          componentRestrictions: { country: 'us' },
-          fields: ['formatted_address'],
-          types: ['address'],
-        },
-        )
-
-        autocomplete.addListener('place_changed', () => {
-          const place = autocomplete.getPlace()
-          if (!siteAddressInputRef.current) {
-            return
-          }
-
-          siteAddressInputRef.current.value =
-            place.formatted_address?.trim() || siteAddressInputRef.current.value
-        })
-
+        autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService()
         setAddressAutocompleteStatus('ready')
         setAddressAutocompleteMessage(
           'Google Places Autocomplete is enabled for U.S. street addresses.',
@@ -242,6 +250,63 @@ export default function IntakeForm() {
       active = false
     }
   }, [])
+
+  useEffect(() => {
+    if (
+      addressAutocompleteStatus !== 'ready' ||
+      !autocompleteServiceRef.current
+    ) {
+      return
+    }
+
+    const query = siteAddress.trim()
+
+    if (query.length < 3) {
+      setAddressPredictions([])
+      setActivePredictionIndex(-1)
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      autocompleteServiceRef.current?.getPlacePredictions(
+        {
+          componentRestrictions: { country: 'us' },
+          input: query,
+          types: ['address'],
+        },
+        (predictions, predictionStatus) => {
+          if (!window.google?.maps?.places?.PlacesServiceStatus) {
+            return
+          }
+
+          if (
+            predictionStatus === window.google.maps.places.PlacesServiceStatus.OK &&
+            predictions?.length
+          ) {
+            setAddressPredictions(predictions)
+            setActivePredictionIndex(0)
+            return
+          }
+
+          if (
+            predictionStatus ===
+            window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS
+          ) {
+            setAddressPredictions([])
+            setActivePredictionIndex(-1)
+            return
+          }
+
+          setAddressPredictions([])
+          setActivePredictionIndex(-1)
+        },
+      )
+    }, 200)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [addressAutocompleteStatus, siteAddress])
 
   const handleFileChange = (
     field: FileFieldName,
@@ -275,6 +340,45 @@ export default function IntakeForm() {
 
       return createEmptySelectedFiles()
     })
+  }
+
+  const selectAddressPrediction = (prediction: AddressPrediction) => {
+    setSiteAddress(prediction.description)
+    setShowAddressPredictions(false)
+    setAddressPredictions([])
+    setActivePredictionIndex(-1)
+  }
+
+  const handleAddressKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (!showAddressPredictions || !addressPredictions.length) {
+      return
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      setActivePredictionIndex((current) =>
+        current >= addressPredictions.length - 1 ? 0 : current + 1,
+      )
+      return
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      setActivePredictionIndex((current) =>
+        current <= 0 ? addressPredictions.length - 1 : current - 1,
+      )
+      return
+    }
+
+    if (event.key === 'Enter' && activePredictionIndex >= 0) {
+      event.preventDefault()
+      selectAddressPrediction(addressPredictions[activePredictionIndex])
+      return
+    }
+
+    if (event.key === 'Escape') {
+      setShowAddressPredictions(false)
+    }
   }
 
   const uploadAssets = async () => {
@@ -354,6 +458,9 @@ export default function IntakeForm() {
       setStatus('success')
       setSubmissionId(`screened-${crypto.randomUUID().slice(0, 8)}`)
       form.reset()
+      setSiteAddress('')
+      setAddressPredictions([])
+      setShowAddressPredictions(false)
       resetSelectedFiles()
       return
     }
@@ -409,6 +516,9 @@ export default function IntakeForm() {
       setSubmissionId(result?.submissionId ?? null)
       setProgressLabel('Submission received')
       form.reset()
+      setSiteAddress('')
+      setAddressPredictions([])
+      setShowAddressPredictions(false)
       resetSelectedFiles()
     } catch (submissionError) {
       setStatus('idle')
@@ -476,17 +586,53 @@ export default function IntakeForm() {
                 <label className="field-label" htmlFor="siteAddress">
                   Site Address
                 </label>
-                <input
-                  autoComplete="street-address"
-                  className="field-input"
-                  id="siteAddress"
-                  name="siteAddress"
-                  placeholder="123 Main St, City, State, ZIP"
-                  ref={siteAddressInputRef}
-                  required
-                  spellCheck={false}
-                  type="text"
-                />
+                <div className="address-autocomplete">
+                  <input
+                    autoComplete="street-address"
+                    className="field-input"
+                    id="siteAddress"
+                    name="siteAddress"
+                    onBlur={() => {
+                      addressBlurTimeoutRef.current = window.setTimeout(() => {
+                        setShowAddressPredictions(false)
+                      }, 120)
+                    }}
+                    onChange={(event) => {
+                      setSiteAddress(event.target.value)
+                      setShowAddressPredictions(true)
+                    }}
+                    onFocus={() => {
+                      if (addressPredictions.length) {
+                        setShowAddressPredictions(true)
+                      }
+                    }}
+                    onKeyDown={handleAddressKeyDown}
+                    placeholder="123 Main St, City, State, ZIP"
+                    ref={siteAddressInputRef}
+                    required
+                    spellCheck={false}
+                    type="text"
+                    value={siteAddress}
+                  />
+                  {showAddressPredictions && addressPredictions.length > 0 ? (
+                    <div className="address-suggestions" role="listbox">
+                      {addressPredictions.map((prediction, index) => (
+                        <button
+                          aria-selected={index === activePredictionIndex}
+                          className={`address-suggestion ${index === activePredictionIndex ? 'address-suggestion-active' : ''}`}
+                          key={prediction.place_id}
+                          onMouseDown={(event) => {
+                            event.preventDefault()
+                            selectAddressPrediction(prediction)
+                          }}
+                          type="button"
+                        >
+                          {prediction.description}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
                 <p
                   className={`field-hint ${addressAutocompleteStatus === 'error' ? 'field-hint-error' : ''}`}
                 >
