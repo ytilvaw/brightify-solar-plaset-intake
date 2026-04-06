@@ -39,7 +39,7 @@ export default function FileUploadCard(props: FileUploadCardProps) {
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#f3a43a]">
+          <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[#7a7a86]">
             {label}
           </p>
           <p className="mt-2 text-sm leading-6 text-[#666674]">
@@ -47,7 +47,7 @@ export default function FileUploadCard(props: FileUploadCardProps) {
           </p>
         </div>
 
-        <div className="rounded-full border border-[#ececf0] bg-[#fafafa] px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#666674] transition group-hover:border-[#f3a43a] group-hover:text-[#18181b]">
+        <div className="rounded-full border border-[#ececf0] bg-[#fafafa] px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#666674] transition group-hover:border-[#d8d8de] group-hover:text-[#18181b]">
           {selected.file ? 'Replace' : 'Add'}
         </div>
       </div>
