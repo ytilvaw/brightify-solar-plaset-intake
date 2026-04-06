@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss" source("../");
 
 :root {
@@ -13,8 +14,8 @@
   --accent: #f3a43a;
   --accent-strong: #ff747a;
   --accent-soft: rgba(243, 164, 58, 0.1);
-  --font-display: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
-  --font-body: "Charter", "Iowan Old Style", "Palatino Linotype", serif;
+  --font-display: "Montserrat", "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: "Montserrat", "Avenir Next", "Segoe UI", sans-serif;
 }
 
 * {
@@ -32,6 +33,7 @@ body {
   background: #ffffff;
   color: var(--text);
   font-family: var(--font-body);
+  font-weight: 500;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -75,6 +77,10 @@ textarea {
 }
 
 .field-input {
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   width: 100%;
   margin-top: 0.6rem;
   border: 1px solid var(--line);
