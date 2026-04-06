@@ -20,7 +20,6 @@ const acceptedUploadTypes = 'image/jpeg,image/png,image/webp,image/heic,image/he
 const addressQueryMinLength = 4
 const addressSuggestionLimit = 5
 const addressSearchDebounceMs = 250
-const photonSearchBaseUrl = 'https://photon.komoot.io/api/'
 const requestTimeoutMs = 10_000
 
 type ApiErrorResponse = {
@@ -33,23 +32,8 @@ type IntakeResponse = ApiErrorResponse & {
 
 type UploadResponse = ApiErrorResponse & Partial<UploadedAsset>
 
-type PhotonFeature = {
-  properties?: {
-    city?: string
-    country?: string
-    countrycode?: string
-    county?: string
-    district?: string
-    housenumber?: string
-    name?: string
-    postcode?: string
-    state?: string
-    street?: string
-  }
-}
-
 type PhotonResponse = {
-  features?: PhotonFeature[]
+  suggestions?: string[]
 }
 
 function createEmptySelectedFiles() {
@@ -103,45 +87,10 @@ function getSubmissionErrorMessage(error: unknown) {
 
 function buildPhotonSearchUrl(query: string) {
   const params = new URLSearchParams({
-    lang: typeof navigator === 'undefined' ? 'en' : navigator.language,
-    limit: String(addressSuggestionLimit),
     q: query,
   })
 
-  return `${photonSearchBaseUrl}?${params.toString()}`
-}
-
-function formatPhotonAddress(feature: PhotonFeature) {
-  const details = feature.properties
-
-  if (!details) {
-    return ''
-  }
-
-  const streetLine = [details.housenumber, details.street ?? details.name]
-    .filter(Boolean)
-    .join(' ')
-    .trim()
-
-  const locality = [
-    details.city ?? details.district ?? details.county,
-    details.state,
-    details.postcode,
-  ]
-    .filter(Boolean)
-    .join(', ')
-
-  const address = [streetLine, locality].filter(Boolean).join(', ').trim()
-
-  if (!address) {
-    return ''
-  }
-
-  if (details.countrycode?.toUpperCase() === 'US' || details.country === 'United States') {
-    return address
-  }
-
-  return [address, details.country].filter(Boolean).join(', ')
+  return `/api/address-search?${params.toString()}`
 }
 
 export default function IntakeForm() {
@@ -212,7 +161,7 @@ export default function IntakeForm() {
 
         const result = (await response.json()) as PhotonResponse
         const suggestions = Array.from(
-          new Set((result.features ?? []).map(formatPhotonAddress).filter(Boolean)),
+          new Set((result.suggestions ?? []).filter(Boolean).slice(0, addressSuggestionLimit)),
         )
 
         setAddressSuggestions(suggestions)
