@@ -4,6 +4,7 @@ import {
   useState,
   type ChangeEvent,
   type FormEvent,
+  type KeyboardEvent,
 } from 'react'
 
 import FileUploadCard, { type SelectedFileState } from './FileUploadCard'
@@ -16,6 +17,10 @@ import {
 } from '../lib/intake'
 
 const acceptedUploadTypes = 'image/jpeg,image/png,image/webp,image/heic,image/heif'
+const addressQueryMinLength = 4
+const addressSuggestionLimit = 5
+const addressSearchDebounceMs = 250
+const photonSearchBaseUrl = 'https://photon.komoot.io/api/'
 const requestTimeoutMs = 10_000
 
 type ApiErrorResponse = {
@@ -27,6 +32,25 @@ type IntakeResponse = ApiErrorResponse & {
 }
 
 type UploadResponse = ApiErrorResponse & Partial<UploadedAsset>
+
+type PhotonFeature = {
+  properties?: {
+    city?: string
+    country?: string
+    countrycode?: string
+    county?: string
+    district?: string
+    housenumber?: string
+    name?: string
+    postcode?: string
+    state?: string
+    street?: string
+  }
+}
+
+type PhotonResponse = {
+  features?: PhotonFeature[]
+}
 
 function createEmptySelectedFiles() {
   return Object.fromEntries(
@@ -77,15 +101,66 @@ function getSubmissionErrorMessage(error: unknown) {
   return error.message
 }
 
+function buildPhotonSearchUrl(query: string) {
+  const params = new URLSearchParams({
+    lang: typeof navigator === 'undefined' ? 'en' : navigator.language,
+    limit: String(addressSuggestionLimit),
+    q: query,
+  })
+
+  return `${photonSearchBaseUrl}?${params.toString()}`
+}
+
+function formatPhotonAddress(feature: PhotonFeature) {
+  const details = feature.properties
+
+  if (!details) {
+    return ''
+  }
+
+  const streetLine = [details.housenumber, details.street ?? details.name]
+    .filter(Boolean)
+    .join(' ')
+    .trim()
+
+  const locality = [
+    details.city ?? details.district ?? details.county,
+    details.state,
+    details.postcode,
+  ]
+    .filter(Boolean)
+    .join(', ')
+
+  const address = [streetLine, locality].filter(Boolean).join(', ').trim()
+
+  if (!address) {
+    return ''
+  }
+
+  if (details.countrycode?.toUpperCase() === 'US' || details.country === 'United States') {
+    return address
+  }
+
+  return [address, details.country].filter(Boolean).join(', ')
+}
+
 export default function IntakeForm() {
   const [selectedFiles, setSelectedFiles] =
     useState<Record<FileFieldName, SelectedFileState>>(createEmptySelectedFiles)
+  const [siteAddress, setSiteAddress] = useState('')
+  const [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
+  const [addressSearchState, setAddressSearchState] = useState<'idle' | 'loading' | 'error'>(
+    'idle',
+  )
+  const [showAddressSuggestions, setShowAddressSuggestions] = useState(false)
+  const [activeAddressIndex, setActiveAddressIndex] = useState(-1)
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] =
     useState<'idle' | 'uploading' | 'submitting' | 'success'>('idle')
   const [progressLabel, setProgressLabel] = useState('Ready')
   const [submissionId, setSubmissionId] = useState<string | null>(null)
   const selectedFilesRef = useRef(selectedFiles)
+  const addressBlurTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
     selectedFilesRef.current = selectedFiles
@@ -100,6 +175,66 @@ export default function IntakeForm() {
       }
     }
   }, [])
+
+  useEffect(() => {
+    return () => {
+      if (addressBlurTimeoutRef.current) {
+        window.clearTimeout(addressBlurTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const query = siteAddress.trim()
+
+    if (query.length < addressQueryMinLength) {
+      setAddressSuggestions([])
+      setAddressSearchState('idle')
+      setActiveAddressIndex(-1)
+      return
+    }
+
+    const controller = new AbortController()
+    const timeoutId = window.setTimeout(async () => {
+      setAddressSearchState('loading')
+
+      try {
+        const response = await fetch(buildPhotonSearchUrl(query), {
+          headers: {
+            Accept: 'application/json',
+          },
+          signal: controller.signal,
+        })
+
+        if (!response.ok) {
+          throw new Error('Unable to load address suggestions.')
+        }
+
+        const result = (await response.json()) as PhotonResponse
+        const suggestions = Array.from(
+          new Set((result.features ?? []).map(formatPhotonAddress).filter(Boolean)),
+        )
+
+        setAddressSuggestions(suggestions)
+        setActiveAddressIndex(suggestions.length ? 0 : -1)
+        setAddressSearchState('idle')
+      } catch (fetchError) {
+        if (controller.signal.aborted) {
+          return
+        }
+
+        console.error(fetchError)
+        setAddressSuggestions([])
+        setActiveAddressIndex(-1)
+        setAddressSearchState('error')
+      }
+    }, addressSearchDebounceMs)
+
+    return () => {
+      controller.abort()
+      window.clearTimeout(timeoutId)
+    }
+  }, [siteAddress])
 
   const handleFileChange = (
     field: FileFieldName,
@@ -133,6 +268,46 @@ export default function IntakeForm() {
 
       return createEmptySelectedFiles()
     })
+  }
+
+  const selectAddressSuggestion = (suggestion: string) => {
+    setSiteAddress(suggestion)
+    setAddressSuggestions([])
+    setShowAddressSuggestions(false)
+    setAddressSearchState('idle')
+    setActiveAddressIndex(-1)
+  }
+
+  const handleAddressKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (!showAddressSuggestions || !addressSuggestions.length) {
+      return
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      setActiveAddressIndex((current) =>
+        current >= addressSuggestions.length - 1 ? 0 : current + 1,
+      )
+      return
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      setActiveAddressIndex((current) =>
+        current <= 0 ? addressSuggestions.length - 1 : current - 1,
+      )
+      return
+    }
+
+    if (event.key === 'Enter' && activeAddressIndex >= 0) {
+      event.preventDefault()
+      selectAddressSuggestion(addressSuggestions[activeAddressIndex])
+      return
+    }
+
+    if (event.key === 'Escape') {
+      setShowAddressSuggestions(false)
+    }
   }
 
   const uploadAssets = async () => {
@@ -212,6 +387,9 @@ export default function IntakeForm() {
       setStatus('success')
       setSubmissionId(`screened-${crypto.randomUUID().slice(0, 8)}`)
       form.reset()
+      setSiteAddress('')
+      setAddressSuggestions([])
+      setShowAddressSuggestions(false)
       resetSelectedFiles()
       return
     }
@@ -267,6 +445,9 @@ export default function IntakeForm() {
       setSubmissionId(result?.submissionId ?? null)
       setProgressLabel('Submission received')
       form.reset()
+      setSiteAddress('')
+      setAddressSuggestions([])
+      setShowAddressSuggestions(false)
       resetSelectedFiles()
     } catch (submissionError) {
       setStatus('idle')
@@ -334,14 +515,68 @@ export default function IntakeForm() {
                 <label className="field-label" htmlFor="siteAddress">
                   Site Address
                 </label>
-                <input
-                  className="field-input"
-                  id="siteAddress"
-                  name="siteAddress"
-                  placeholder="123 Main St, City, State, ZIP"
-                  required
-                  type="text"
-                />
+                <div className="address-autocomplete">
+                  <input
+                    autoComplete="street-address"
+                    className="field-input"
+                    id="siteAddress"
+                    name="siteAddress"
+                    onBlur={() => {
+                      addressBlurTimeoutRef.current = window.setTimeout(() => {
+                        setShowAddressSuggestions(false)
+                      }, 120)
+                    }}
+                    onChange={(event) => {
+                      setSiteAddress(event.target.value)
+                      setShowAddressSuggestions(true)
+                    }}
+                    onFocus={() => {
+                      if (addressSuggestions.length) {
+                        setShowAddressSuggestions(true)
+                      }
+                    }}
+                    onKeyDown={handleAddressKeyDown}
+                    placeholder="123 Main St, City, State, ZIP"
+                    required
+                    spellCheck={false}
+                    type="text"
+                    value={siteAddress}
+                  />
+                  {showAddressSuggestions &&
+                  (addressSuggestions.length > 0 ||
+                    siteAddress.trim().length >= addressQueryMinLength) ? (
+                    <div className="address-suggestions" role="listbox">
+                      {addressSuggestions.map((suggestion, index) => (
+                        <button
+                          aria-selected={index === activeAddressIndex}
+                          className={`address-suggestion ${index === activeAddressIndex ? 'address-suggestion-active' : ''}`}
+                          key={suggestion}
+                          onMouseDown={(event) => {
+                            event.preventDefault()
+                            selectAddressSuggestion(suggestion)
+                          }}
+                          type="button"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                      {!addressSuggestions.length && addressSearchState === 'loading' ? (
+                        <div className="address-suggestion-meta">Looking up addresses...</div>
+                      ) : null}
+                      {!addressSuggestions.length && addressSearchState === 'error' ? (
+                        <div className="address-suggestion-meta">
+                          Address lookup is temporarily unavailable.
+                        </div>
+                      ) : null}
+                      {!addressSuggestions.length && addressSearchState === 'idle' ? (
+                        <div className="address-suggestion-meta">No address matches found.</div>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+                <p className="field-hint">
+                  Suggestions are powered by OpenStreetMap search and fill the full address line.
+                </p>
               </div>
 
               <div>
