@@ -212,7 +212,7 @@ export default function IntakeForm() {
   const isWorking = status === 'uploading' || status === 'submitting'
 
   return (
-    <section className="rounded-[36px] border border-[#efd8c2] bg-[rgba(255,255,255,0.94)] p-6 shadow-[0_30px_90px_rgba(236,160,74,0.12)] backdrop-blur md:p-8">
+    <section className="rounded-[36px] border border-[#ececf0] bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.06)] md:p-8">
       <form className="space-y-10" onSubmit={handleSubmit}>
         <input autoComplete="off" className="hidden" name="website" tabIndex={-1} />
 
@@ -360,11 +360,11 @@ export default function IntakeForm() {
             </section>
           </div>
 
-          <div className="rounded-[32px] border border-[#efd8c2] bg-[#fff7f1] p-5">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#ef9f33]">
+          <div className="rounded-[32px] border border-[#ececf0] bg-[#fafafa] p-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#f3a43a]">
               Intake Notes
             </p>
-            <p className="mt-3 text-sm leading-6 text-[#6f5b69]">
+            <p className="mt-3 text-sm leading-6 text-[#666674]">
               Call out service upgrades, trenching, detached structures, HOA review, or anything that could change engineering assumptions.
             </p>
             <textarea
@@ -379,10 +379,10 @@ export default function IntakeForm() {
         <section>
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#ef9f33]">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#f3a43a]">
                 Site Photos
               </p>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#6f5b69]">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#666674]">
                 Upload the best available field photos. Files upload directly to Vercel Blob before the intake metadata is saved, which avoids large request payloads hitting a single serverless function.
               </p>
             </div>
@@ -415,13 +415,13 @@ export default function IntakeForm() {
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-4 border-t border-[#f0ddd0] pt-6 md:flex-row md:items-center md:justify-between">
-          <div className="rounded-full border border-[#f0ddd0] bg-[#fff7f2] px-4 py-2 text-sm text-[#7c6875]">
+        <div className="flex flex-col gap-4 border-t border-[#ececf0] pt-6 md:flex-row md:items-center md:justify-between">
+          <div className="rounded-full border border-[#ececf0] bg-[#fafafa] px-4 py-2 text-sm text-[#666674]">
             {progressLabel}
           </div>
 
           <button
-            className="inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff6f7d,#f7ab41)] px-6 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-white shadow-[0_14px_34px_rgba(255,116,122,0.28)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center rounded-full bg-[#f3a43a] px-6 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-white shadow-[0_12px_30px_rgba(243,164,58,0.18)] transition hover:bg-[#e8982a] disabled:cursor-not-allowed disabled:opacity-60"
             disabled={isWorking}
             type="submit"
           >

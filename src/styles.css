@@ -2,17 +2,17 @@
 
 :root {
   color-scheme: light;
-  --bg: #fffdfb;
-  --bg-soft: #fff7f1;
-  --panel: rgba(255, 255, 255, 0.92);
-  --panel-strong: rgba(255, 247, 241, 0.95);
-  --line: rgba(238, 176, 92, 0.22);
-  --line-strong: rgba(255, 119, 122, 0.22);
-  --text: #251524;
-  --muted: #6f5b69;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --panel: rgba(255, 255, 255, 0.98);
+  --panel-strong: rgba(255, 255, 255, 1);
+  --line: #e7e7ea;
+  --line-strong: #d9d9df;
+  --text: #18181b;
+  --muted: #666674;
   --accent: #f3a43a;
   --accent-strong: #ff747a;
-  --accent-soft: rgba(243, 164, 58, 0.14);
+  --accent-soft: rgba(243, 164, 58, 0.1);
   --font-display: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
   --font-body: "Charter", "Iowan Old Style", "Palatino Linotype", serif;
 }
@@ -22,17 +22,14 @@
 }
 
 html {
-  background: linear-gradient(180deg, #fffdfb 0%, #fff6ef 100%);
+  background: #ffffff;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 12% 10%, rgba(255, 190, 92, 0.18), transparent 20%),
-    radial-gradient(circle at 88% 0%, rgba(255, 116, 122, 0.12), transparent 28%),
-    linear-gradient(180deg, #fffdfb 0%, #fff6ef 100%);
+  background: #ffffff;
   color: var(--text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -51,8 +48,8 @@ textarea {
 }
 
 ::selection {
-  background: rgba(255, 116, 122, 0.22);
-  color: #2b1120;
+  background: rgba(243, 164, 58, 0.18);
+  color: #18181b;
 }
 
 #root {
@@ -60,22 +57,12 @@ textarea {
 }
 
 .hero-shell {
-  background:
-    radial-gradient(circle at top right, rgba(255, 116, 122, 0.12), transparent 28%),
-    radial-gradient(circle at left top, rgba(243, 164, 58, 0.18), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 249, 244, 0.98));
+  background: #ffffff;
   position: relative;
 }
 
 .hero-shell::after {
-  content: "";
-  position: absolute;
-  inset: auto -10% -25% 40%;
-  height: 18rem;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(255, 169, 89, 0.18), transparent 70%);
-  pointer-events: none;
-  filter: blur(18px);
+  content: none;
 }
 
 .field-label {
@@ -92,7 +79,7 @@ textarea {
   margin-top: 0.6rem;
   border: 1px solid var(--line);
   border-radius: 22px;
-  background: #fffdfb;
+  background: #ffffff;
   color: var(--text);
   padding: 0.95rem 1rem;
   transition:
@@ -103,11 +90,11 @@ textarea {
 
 .field-input:focus {
   outline: none;
-  border-color: rgba(255, 116, 122, 0.55);
-  box-shadow: 0 0 0 4px rgba(255, 116, 122, 0.14);
+  border-color: rgba(243, 164, 58, 0.6);
+  box-shadow: 0 0 0 4px rgba(243, 164, 58, 0.12);
   background: #ffffff;
 }
 
 .field-input::placeholder {
-  color: rgba(111, 91, 105, 0.62);
+  color: rgba(102, 102, 116, 0.72);
 }
