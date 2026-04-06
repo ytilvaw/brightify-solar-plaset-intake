@@ -17,6 +17,7 @@ import {
 } from '../lib/intake'
 
 const acceptedUploadTypes = 'image/jpeg,image/png,image/webp,image/heic,image/heif'
+const requestTimeoutMs = 10_000
 
 function createEmptySelectedFiles() {
   return Object.fromEntries(
@@ -48,6 +49,28 @@ async function parseApiResponse(response: Response) {
       error: raw,
     }
   }
+}
+
+function createTimeoutController(timeoutMs: number) {
+  const controller = new AbortController()
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs)
+
+  return {
+    signal: controller.signal,
+    clear: () => window.clearTimeout(timeoutId),
+  }
+}
+
+function getSubmissionErrorMessage(error: unknown) {
+  if (!(error instanceof Error)) {
+    return 'Unable to submit the intake package.'
+  }
+
+  if (error.name === 'AbortError') {
+    return `Request timed out after ${requestTimeoutMs / 1000} seconds. Please try again.`
+  }
+
+  return error.message
 }
 
 export default function IntakeForm() {
@@ -128,11 +151,19 @@ export default function IntakeForm() {
         const file = item.file!
         setProgressLabel(`Uploading ${item.label.toLowerCase()}...`)
 
-        const blob = await upload(buildUploadPath(item.field, file), file, {
-          access: 'public',
-          clientPayload: JSON.stringify({ field: item.field }),
-          handleUploadUrl: '/api/uploads',
-        })
+        const timeout = createTimeoutController(requestTimeoutMs)
+        let blob
+
+        try {
+          blob = await upload(buildUploadPath(item.field, file), file, {
+            abortSignal: timeout.signal,
+            access: 'public',
+            clientPayload: JSON.stringify({ field: item.field }),
+            handleUploadUrl: '/api/uploads',
+          })
+        } finally {
+          timeout.clear()
+        }
 
         completedCount += 1
         setProgressLabel(
@@ -193,13 +224,21 @@ export default function IntakeForm() {
       setStatus('submitting')
       setProgressLabel('Saving intake package...')
 
-      const response = await fetch('/api/intake', {
-        body: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-      })
+      const timeout = createTimeoutController(requestTimeoutMs)
+      let response
+
+      try {
+        response = await fetch('/api/intake', {
+          body: JSON.stringify(payload),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          signal: timeout.signal,
+        })
+      } finally {
+        timeout.clear()
+      }
 
       const result = await parseApiResponse(response)
 
@@ -217,11 +256,7 @@ export default function IntakeForm() {
     } catch (submissionError) {
       setStatus('idle')
       setProgressLabel('Ready')
-      setError(
-        submissionError instanceof Error
-          ? submissionError.message
-          : 'Unable to submit the intake package.',
-      )
+      setError(getSubmissionErrorMessage(submissionError))
     }
   }
 

@@ -45,9 +45,6 @@ export async function POST(request: Request) {
           tokenPayload: JSON.stringify(parsedPayload),
         }
       },
-      onUploadCompleted: async () => {
-        return
-      },
       request,
     })
 
