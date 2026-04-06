@@ -4,7 +4,6 @@ import {
   useState,
   type ChangeEvent,
   type FormEvent,
-  type KeyboardEvent,
 } from 'react'
 
 import FileUploadCard, { type SelectedFileState } from './FileUploadCard'
@@ -17,9 +16,8 @@ import {
 } from '../lib/intake'
 
 const acceptedUploadTypes = 'image/jpeg,image/png,image/webp,image/heic,image/heif'
-const addressQueryMinLength = 4
-const addressSuggestionLimit = 5
-const addressSearchDebounceMs = 250
+const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY?.trim()
+const googleMapsScriptId = 'google-maps-places-script'
 const requestTimeoutMs = 10_000
 
 type ApiErrorResponse = {
@@ -32,8 +30,30 @@ type IntakeResponse = ApiErrorResponse & {
 
 type UploadResponse = ApiErrorResponse & Partial<UploadedAsset>
 
-type PhotonResponse = {
-  suggestions?: string[]
+declare global {
+  interface Window {
+    google?: {
+      maps: {
+        importLibrary: (name: string) => Promise<{
+          Autocomplete?: new (
+            input: HTMLInputElement,
+            options?: Record<string, unknown>,
+          ) => {
+            addListener: (eventName: string, handler: () => void) => void
+            getPlace: () => {
+              address_components?: Array<{
+                long_name: string
+                short_name: string
+                types: string[]
+              }>
+              formatted_address?: string
+            }
+          }
+        }>
+      }
+    }
+    __googleMapsPlacesPromise?: Promise<void>
+  }
 }
 
 function createEmptySelectedFiles() {
@@ -85,31 +105,63 @@ function getSubmissionErrorMessage(error: unknown) {
   return error.message
 }
 
-function buildPhotonSearchUrl(query: string) {
+function buildGoogleMapsScriptUrl() {
   const params = new URLSearchParams({
-    q: query,
+    key: googleMapsApiKey,
+    libraries: 'places',
+    loading: 'async',
   })
 
-  return `/api/address-search?${params.toString()}`
+  return `https://maps.googleapis.com/maps/api/js?${params.toString()}`
+}
+
+function loadGoogleMapsPlacesLibrary() {
+  if (!googleMapsApiKey) {
+    return Promise.resolve()
+  }
+
+  if (window.google?.maps?.importLibrary) {
+    return Promise.resolve()
+  }
+
+  if (window.__googleMapsPlacesPromise) {
+    return window.__googleMapsPlacesPromise
+  }
+
+  const existingScript = document.getElementById(googleMapsScriptId) as
+    | HTMLScriptElement
+    | null
+
+  window.__googleMapsPlacesPromise = new Promise<void>((resolve, reject) => {
+    const script = existingScript ?? document.createElement('script')
+
+    script.id = googleMapsScriptId
+    script.src = buildGoogleMapsScriptUrl()
+    script.async = true
+    script.defer = true
+
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('Failed to load Google Maps Places.'))
+
+    if (!existingScript) {
+      document.head.appendChild(script)
+    }
+  })
+
+  return window.__googleMapsPlacesPromise
 }
 
 export default function IntakeForm() {
   const [selectedFiles, setSelectedFiles] =
     useState<Record<FileFieldName, SelectedFileState>>(createEmptySelectedFiles)
-  const [siteAddress, setSiteAddress] = useState('')
-  const [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
-  const [addressSearchState, setAddressSearchState] = useState<'idle' | 'loading' | 'error'>(
-    'idle',
-  )
-  const [showAddressSuggestions, setShowAddressSuggestions] = useState(false)
-  const [activeAddressIndex, setActiveAddressIndex] = useState(-1)
+  const [addressAutocompleteReady, setAddressAutocompleteReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] =
     useState<'idle' | 'uploading' | 'submitting' | 'success'>('idle')
   const [progressLabel, setProgressLabel] = useState('Ready')
   const [submissionId, setSubmissionId] = useState<string | null>(null)
   const selectedFilesRef = useRef(selectedFiles)
-  const addressBlurTimeoutRef = useRef<number | null>(null)
+  const siteAddressInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     selectedFilesRef.current = selectedFiles
@@ -126,64 +178,53 @@ export default function IntakeForm() {
   }, [])
 
   useEffect(() => {
-    return () => {
-      if (addressBlurTimeoutRef.current) {
-        window.clearTimeout(addressBlurTimeoutRef.current)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    const query = siteAddress.trim()
-
-    if (query.length < addressQueryMinLength) {
-      setAddressSuggestions([])
-      setAddressSearchState('idle')
-      setActiveAddressIndex(-1)
+    if (!googleMapsApiKey || !siteAddressInputRef.current) {
       return
     }
 
-    const controller = new AbortController()
-    const timeoutId = window.setTimeout(async () => {
-      setAddressSearchState('loading')
+    let active = true
 
+    void (async () => {
       try {
-        const response = await fetch(buildPhotonSearchUrl(query), {
-          headers: {
-            Accept: 'application/json',
-          },
-          signal: controller.signal,
-        })
+        await loadGoogleMapsPlacesLibrary()
 
-        if (!response.ok) {
-          throw new Error('Unable to load address suggestions.')
-        }
-
-        const result = (await response.json()) as PhotonResponse
-        const suggestions = Array.from(
-          new Set((result.suggestions ?? []).filter(Boolean).slice(0, addressSuggestionLimit)),
-        )
-
-        setAddressSuggestions(suggestions)
-        setActiveAddressIndex(suggestions.length ? 0 : -1)
-        setAddressSearchState('idle')
-      } catch (fetchError) {
-        if (controller.signal.aborted) {
+        if (!active || !window.google?.maps?.importLibrary || !siteAddressInputRef.current) {
           return
         }
 
-        console.error(fetchError)
-        setAddressSuggestions([])
-        setActiveAddressIndex(-1)
-        setAddressSearchState('error')
+        const placesLibrary = await window.google.maps.importLibrary('places')
+        const Autocomplete = placesLibrary.Autocomplete
+
+        if (!Autocomplete || !active || !siteAddressInputRef.current) {
+          return
+        }
+
+        const autocomplete = new Autocomplete(siteAddressInputRef.current, {
+          componentRestrictions: { country: 'us' },
+          fields: ['address_components', 'formatted_address'],
+          types: ['address'],
+        })
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace()
+          if (!siteAddressInputRef.current) {
+            return
+          }
+
+          siteAddressInputRef.current.value =
+            place.formatted_address?.trim() || siteAddressInputRef.current.value
+        })
+
+        setAddressAutocompleteReady(true)
+      } catch (mapsError) {
+        console.error(mapsError)
       }
-    }, addressSearchDebounceMs)
+    })()
 
     return () => {
-      controller.abort()
-      window.clearTimeout(timeoutId)
+      active = false
     }
-  }, [siteAddress])
+  }, [])
 
   const handleFileChange = (
     field: FileFieldName,
@@ -217,46 +258,6 @@ export default function IntakeForm() {
 
       return createEmptySelectedFiles()
     })
-  }
-
-  const selectAddressSuggestion = (suggestion: string) => {
-    setSiteAddress(suggestion)
-    setAddressSuggestions([])
-    setShowAddressSuggestions(false)
-    setAddressSearchState('idle')
-    setActiveAddressIndex(-1)
-  }
-
-  const handleAddressKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!showAddressSuggestions || !addressSuggestions.length) {
-      return
-    }
-
-    if (event.key === 'ArrowDown') {
-      event.preventDefault()
-      setActiveAddressIndex((current) =>
-        current >= addressSuggestions.length - 1 ? 0 : current + 1,
-      )
-      return
-    }
-
-    if (event.key === 'ArrowUp') {
-      event.preventDefault()
-      setActiveAddressIndex((current) =>
-        current <= 0 ? addressSuggestions.length - 1 : current - 1,
-      )
-      return
-    }
-
-    if (event.key === 'Enter' && activeAddressIndex >= 0) {
-      event.preventDefault()
-      selectAddressSuggestion(addressSuggestions[activeAddressIndex])
-      return
-    }
-
-    if (event.key === 'Escape') {
-      setShowAddressSuggestions(false)
-    }
   }
 
   const uploadAssets = async () => {
@@ -336,9 +337,6 @@ export default function IntakeForm() {
       setStatus('success')
       setSubmissionId(`screened-${crypto.randomUUID().slice(0, 8)}`)
       form.reset()
-      setSiteAddress('')
-      setAddressSuggestions([])
-      setShowAddressSuggestions(false)
       resetSelectedFiles()
       return
     }
@@ -394,9 +392,6 @@ export default function IntakeForm() {
       setSubmissionId(result?.submissionId ?? null)
       setProgressLabel('Submission received')
       form.reset()
-      setSiteAddress('')
-      setAddressSuggestions([])
-      setShowAddressSuggestions(false)
       resetSelectedFiles()
     } catch (submissionError) {
       setStatus('idle')
@@ -464,67 +459,23 @@ export default function IntakeForm() {
                 <label className="field-label" htmlFor="siteAddress">
                   Site Address
                 </label>
-                <div className="address-autocomplete">
-                  <input
-                    autoComplete="street-address"
-                    className="field-input"
-                    id="siteAddress"
-                    name="siteAddress"
-                    onBlur={() => {
-                      addressBlurTimeoutRef.current = window.setTimeout(() => {
-                        setShowAddressSuggestions(false)
-                      }, 120)
-                    }}
-                    onChange={(event) => {
-                      setSiteAddress(event.target.value)
-                      setShowAddressSuggestions(true)
-                    }}
-                    onFocus={() => {
-                      if (addressSuggestions.length) {
-                        setShowAddressSuggestions(true)
-                      }
-                    }}
-                    onKeyDown={handleAddressKeyDown}
-                    placeholder="123 Main St, City, State, ZIP"
-                    required
-                    spellCheck={false}
-                    type="text"
-                    value={siteAddress}
-                  />
-                  {showAddressSuggestions &&
-                  (addressSuggestions.length > 0 ||
-                    siteAddress.trim().length >= addressQueryMinLength) ? (
-                    <div className="address-suggestions" role="listbox">
-                      {addressSuggestions.map((suggestion, index) => (
-                        <button
-                          aria-selected={index === activeAddressIndex}
-                          className={`address-suggestion ${index === activeAddressIndex ? 'address-suggestion-active' : ''}`}
-                          key={suggestion}
-                          onMouseDown={(event) => {
-                            event.preventDefault()
-                            selectAddressSuggestion(suggestion)
-                          }}
-                          type="button"
-                        >
-                          {suggestion}
-                        </button>
-                      ))}
-                      {!addressSuggestions.length && addressSearchState === 'loading' ? (
-                        <div className="address-suggestion-meta">Looking up addresses...</div>
-                      ) : null}
-                      {!addressSuggestions.length && addressSearchState === 'error' ? (
-                        <div className="address-suggestion-meta">
-                          Address lookup is temporarily unavailable.
-                        </div>
-                      ) : null}
-                      {!addressSuggestions.length && addressSearchState === 'idle' ? (
-                        <div className="address-suggestion-meta">No address matches found.</div>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </div>
+                <input
+                  autoComplete="street-address"
+                  className="field-input"
+                  id="siteAddress"
+                  name="siteAddress"
+                  placeholder="123 Main St, City, State, ZIP"
+                  ref={siteAddressInputRef}
+                  required
+                  spellCheck={false}
+                  type="text"
+                />
                 <p className="field-hint">
-                  US-only suggestions. Add city, state, or ZIP for better matches.
+                  {googleMapsApiKey
+                    ? addressAutocompleteReady
+                      ? 'Google Places Autocomplete is enabled for U.S. street addresses.'
+                      : 'Loading Google address suggestions...'
+                    : 'Set VITE_GOOGLE_MAPS_API_KEY to enable Google address suggestions.'}
                 </p>
               </div>
 
