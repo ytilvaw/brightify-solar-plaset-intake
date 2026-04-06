@@ -12,6 +12,7 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.3.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
