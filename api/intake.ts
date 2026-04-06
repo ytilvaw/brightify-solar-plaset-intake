@@ -1,3 +1,4 @@
+import { createHmac } from 'node:crypto'
 import { put } from '@vercel/blob'
 import { Resend } from 'resend'
 import { z } from 'zod'
@@ -76,7 +77,23 @@ function renderField(label: string, value: string) {
   return `<tr><td style="padding:10px 14px;border:1px solid #dbe4f0;font-weight:600;background:#f8fafc;">${escapeHtml(label)}</td><td style="padding:10px 14px;border:1px solid #dbe4f0;">${escapeHtml(value || '—')}</td></tr>`
 }
 
+function getUploadLinkSecret() {
+  return process.env.UPLOAD_LINK_SECRET ?? process.env.BLOB_READ_WRITE_TOKEN ?? ''
+}
+
+function signUploadPath(pathname: string) {
+  return createHmac('sha256', getUploadLinkSecret()).update(pathname).digest('hex')
+}
+
+function buildUploadViewerLink(baseUrl: string, pathname: string) {
+  const url = new URL('/api/view-upload', baseUrl)
+  url.searchParams.set('pathname', pathname)
+  url.searchParams.set('sig', signUploadPath(pathname))
+  return url.toString()
+}
+
 async function sendNotificationEmail(input: {
+  appBaseUrl: string
   manifest: z.infer<typeof submissionSchema> & {
     source: string
     submissionId: string
@@ -95,12 +112,14 @@ async function sendNotificationEmail(input: {
   }
 
   const resend = new Resend(apiKey)
-  const { manifest } = input
+  const { appBaseUrl, manifest } = input
   const uploadList = manifest.uploads.length
     ? manifest.uploads
         .map(
-          (upload) =>
-            `<li style="margin:0 0 8px;"><a href="${escapeHtml(upload.downloadUrl ?? upload.url)}">${escapeHtml(upload.label)}</a> <span style="color:#475569;">(${escapeHtml(upload.originalName)})</span></li>`,
+          (upload) => {
+            const uploadUrl = buildUploadViewerLink(appBaseUrl, upload.pathname)
+            return `<li style="margin:0 0 8px;"><a href="${escapeHtml(uploadUrl)}">${escapeHtml(upload.label)}</a> <span style="color:#475569;">(${escapeHtml(upload.originalName)})</span></li>`
+          },
         )
         .join('')
     : '<li>No files uploaded.</li>'
@@ -109,7 +128,7 @@ async function sendNotificationEmail(input: {
     ? manifest.uploads
         .map(
           (upload) =>
-            `${upload.label}: ${upload.originalName} - ${upload.downloadUrl ?? upload.url}`,
+            `${upload.label}: ${upload.originalName} - ${buildUploadViewerLink(appBaseUrl, upload.pathname)}`,
         )
         .join('\n')
     : 'No files uploaded.'
@@ -194,6 +213,10 @@ export async function POST(request: Request) {
 
   try {
     const payload = submissionSchema.parse(await request.json())
+    const requestUrl = new URL(request.url)
+    const appBaseUrl =
+      process.env.APP_BASE_URL?.trim() ||
+      `${requestUrl.protocol}//${requestUrl.host}`
     const submissionId = `intake_${Date.now()}_${crypto.randomUUID().slice(0, 8)}`
     const submittedAt = new Date().toISOString()
     const manifest = {
@@ -212,7 +235,7 @@ export async function POST(request: Request) {
       access: 'private',
     })
 
-    const emailResult = await sendNotificationEmail({ manifest })
+    const emailResult = await sendNotificationEmail({ appBaseUrl, manifest })
 
     return Response.json({
       emailSent: emailResult.sent,
