@@ -2,7 +2,7 @@ import { put } from '@vercel/blob'
 import { Resend } from 'resend'
 import { z } from 'zod'
 
-import { fileFields, type FileFieldName } from '../src/lib/intake'
+import { fileFields, type FileFieldName } from './_shared/intake'
 
 const allowedFieldNames = fileFields.map((field) => field.name) as [
   FileFieldName,

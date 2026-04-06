@@ -1,6 +1,6 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 
-import { fileFields, uploadContentTypes } from '../src/lib/intake'
+import { fileFields, uploadContentTypes } from './_shared/intake'
 
 const allowedFieldNames = new Set(fileFields.map((field) => field.name))
 
