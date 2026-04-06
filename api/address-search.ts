@@ -1,5 +1,12 @@
 import { z } from 'zod'
 
+const usBoundingBox = {
+  east: '-66.885444',
+  north: '49.384358',
+  south: '24.396308',
+  west: '-124.848974',
+} as const
+
 const addressQuerySchema = z.object({
   q: z.string().trim().min(4).max(200),
 })
@@ -71,6 +78,10 @@ export async function GET(request: Request) {
     photonUrl.searchParams.set('q', parsedQuery.data.q)
     photonUrl.searchParams.set('limit', '5')
     photonUrl.searchParams.set('lang', 'en')
+    photonUrl.searchParams.set(
+      'bbox',
+      `${usBoundingBox.west},${usBoundingBox.south},${usBoundingBox.east},${usBoundingBox.north}`,
+    )
 
     const response = await fetch(photonUrl, {
       headers: {
@@ -85,7 +96,12 @@ export async function GET(request: Request) {
 
     const result = (await response.json()) as PhotonResponse
     const suggestions = Array.from(
-      new Set((result.features ?? []).map(formatPhotonAddress).filter(Boolean)),
+      new Set(
+        (result.features ?? [])
+          .filter((feature) => feature.properties?.countrycode?.toUpperCase() === 'US')
+          .map(formatPhotonAddress)
+          .filter(Boolean),
+      ),
     )
 
     return Response.json(

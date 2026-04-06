@@ -524,7 +524,7 @@ export default function IntakeForm() {
                   ) : null}
                 </div>
                 <p className="field-hint">
-                  Suggestions are powered by OpenStreetMap search and fill the full address line.
+                  US-only suggestions. Add city, state, or ZIP for better matches.
                 </p>
               </div>
 
