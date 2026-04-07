@@ -2,7 +2,20 @@ import { createHmac } from 'node:crypto'
 import { put } from '@vercel/blob'
 import { Resend } from 'resend'
 import { z } from 'zod'
-import { fileFields, type FileFieldName } from '../src/lib/intake'
+
+const fileFields = [
+  { name: 'mainPanelPhoto', label: 'Main Panel' },
+  { name: 'frontHousePhoto', label: 'Front of House' },
+  { name: 'sidewallPhoto', label: 'Sidewall' },
+  { name: 'roofPhoto', label: 'Roof Area' },
+  { name: 'meterPhoto', label: 'Utility Meter' },
+  { name: 'additionalPhoto', label: 'Additional Context' },
+  { name: 'solarPanelDatasheet', label: 'Solar Panel' },
+  { name: 'inverterDatasheet', label: 'Inverter' },
+  { name: 'batteryDatasheet', label: 'Battery' },
+] as const
+
+type FileFieldName = (typeof fileFields)[number]['name']
 
 const allowedFieldNames = fileFields.map((field) => field.name) as [
   FileFieldName,

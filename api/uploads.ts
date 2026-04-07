@@ -1,16 +1,33 @@
 import { put } from '@vercel/blob'
-import {
-  fileFields,
-  uploadContentTypes,
-  type FileFieldName,
-} from '../src/lib/intake'
+
+const fileFields = [
+  { name: 'mainPanelPhoto', label: 'Main Panel' },
+  { name: 'frontHousePhoto', label: 'Front of House' },
+  { name: 'sidewallPhoto', label: 'Sidewall' },
+  { name: 'roofPhoto', label: 'Roof Area' },
+  { name: 'meterPhoto', label: 'Utility Meter' },
+  { name: 'additionalPhoto', label: 'Additional Context' },
+  { name: 'solarPanelDatasheet', label: 'Solar Panel' },
+  { name: 'inverterDatasheet', label: 'Inverter' },
+  { name: 'batteryDatasheet', label: 'Battery' },
+] as const
+
+const uploadContentTypes = [
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+] as const
+
+type FileFieldName = (typeof fileFields)[number]['name']
 
 const allowedFieldNames = new Set(fileFields.map((field) => field.name))
 const allowedContentTypes = new Set(uploadContentTypes)
-const fileLabels = Object.fromEntries(fileFields.map((field) => [field.name, field.label])) as Record<
-  FileFieldName,
-  string
->
+const fileLabels = Object.fromEntries(
+  fileFields.map((field) => [field.name, field.label]),
+) as Record<FileFieldName, string>
 
 function sanitizeFileName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9.-]+/g, '-')
