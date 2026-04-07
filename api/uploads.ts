@@ -1,34 +1,16 @@
 import { put } from '@vercel/blob'
+import {
+  fileFields,
+  uploadContentTypes,
+  type FileFieldName,
+} from '../src/lib/intake'
 
-const fileFields = [
-  'mainPanelPhoto',
-  'frontHousePhoto',
-  'sidewallPhoto',
-  'roofPhoto',
-  'meterPhoto',
-  'additionalPhoto',
-] as const
-
-const fileLabels = {
-  mainPanelPhoto: 'Main Panel',
-  frontHousePhoto: 'Front of House',
-  sidewallPhoto: 'Sidewall',
-  roofPhoto: 'Roof Area',
-  meterPhoto: 'Utility Meter',
-  additionalPhoto: 'Additional Context',
-} as const
-
-const uploadContentTypes = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-  'image/heic',
-  'image/heif',
-] as const
-
-const allowedFieldNames = new Set(fileFields)
+const allowedFieldNames = new Set(fileFields.map((field) => field.name))
 const allowedContentTypes = new Set(uploadContentTypes)
-type FileFieldName = (typeof fileFields)[number]
+const fileLabels = Object.fromEntries(fileFields.map((field) => [field.name, field.label])) as Record<
+  FileFieldName,
+  string
+>
 
 function sanitizeFileName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9.-]+/g, '-')
@@ -62,7 +44,7 @@ export async function POST(request: Request) {
 
     if (!allowedContentTypes.has(file.type as (typeof uploadContentTypes)[number])) {
       return Response.json(
-        { error: 'Unsupported file type. Upload JPG, PNG, WEBP, HEIC, or HEIF.' },
+        { error: 'Unsupported file type. Upload PDF, JPG, PNG, WEBP, HEIC, or HEIF.' },
         { status: 400 },
       )
     }

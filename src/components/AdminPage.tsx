@@ -57,7 +57,12 @@ function SubmissionCard(props: {
   submission: SubmissionRecord
 }) {
   const { adminKey, submission } = props
-  const imageEntries = submission.uploads
+  const imageEntries = submission.uploads.filter((upload) =>
+    upload.contentType.startsWith('image/'),
+  )
+  const documentEntries = submission.uploads.filter(
+    (upload) => !upload.contentType.startsWith('image/'),
+  )
 
   return (
     <article className="rounded-[32px] border border-[#ececf0] bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
@@ -111,9 +116,9 @@ function SubmissionCard(props: {
 
       <div className="mt-5">
         <div className="flex items-center justify-between gap-4">
-          <p className="field-label">Uploaded Images</p>
+          <p className="field-label">Uploaded Files</p>
           <span className="text-sm text-[#666674]">
-            {imageEntries.length} file{imageEntries.length === 1 ? '' : 's'}
+            {submission.uploads.length} file{submission.uploads.length === 1 ? '' : 's'}
           </span>
         </div>
 
@@ -136,11 +141,33 @@ function SubmissionCard(props: {
               </figure>
             ))}
           </div>
-        ) : (
+        ) : null}
+
+        {documentEntries.length ? (
+          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {documentEntries.map((upload) => (
+              <a
+                className="rounded-[24px] border border-[#ececf0] bg-[#fafafa] p-4 transition hover:border-[#d8d8de] hover:bg-white"
+                href={`/api/admin/blob?pathname=${encodeURIComponent(upload.pathname)}&key=${encodeURIComponent(adminKey)}`}
+                key={upload.pathname}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[#7a7a86]">
+                  {upload.label}
+                </p>
+                <p className="mt-3 text-sm font-medium text-[#18181b]">{upload.originalName}</p>
+                <p className="mt-2 text-sm text-[#666674]">Open file</p>
+              </a>
+            ))}
+          </div>
+        ) : null}
+
+        {!submission.uploads.length ? (
           <div className="mt-4 rounded-[24px] border border-dashed border-[#d7d7dd] bg-[#fafafa] px-4 py-8 text-sm text-[#777785]">
             No files uploaded with this submission.
           </div>
-        )}
+        ) : null}
       </div>
     </article>
   )

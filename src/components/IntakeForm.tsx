@@ -11,12 +11,12 @@ import FileUploadCard, { type SelectedFileState } from './FileUploadCard'
 import {
   fileFields,
   roofTypeOptions,
+  uploadSections,
   type FileFieldName,
   type IntakePayload,
   type UploadedAsset,
 } from '../lib/intake'
 
-const acceptedUploadTypes = 'image/jpeg,image/png,image/webp,image/heic,image/heif'
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY?.trim()
 const googleMapsCallbackName = '__initGoogleMapsPlaces'
 const googleMapsScriptId = 'google-maps-places-script'
@@ -347,7 +347,10 @@ export default function IntakeForm() {
         ...current,
         [field]: {
           file: nextFile,
-          previewUrl: nextFile ? URL.createObjectURL(nextFile) : null,
+          previewUrl:
+            nextFile && nextFile.type.startsWith('image/')
+              ? URL.createObjectURL(nextFile)
+              : null,
         },
       }
     })
@@ -760,32 +763,35 @@ export default function IntakeForm() {
           </div>
         </div>
 
-        <section>
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#f3a43a]">
-                Site Photos
-              </p>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#666674]">
-                Upload the best available field photos. Files upload directly to Vercel Blob before the intake metadata is saved, which avoids large request payloads hitting a single serverless function.
-              </p>
+        {uploadSections.map((section) => (
+          <section key={section.name}>
+            <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#f3a43a]">
+                  {section.title}
+                </p>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#666674]">
+                  {section.description}
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {fileFields.map((field) => (
-              <FileUploadCard
-                accept={acceptedUploadTypes}
-                fieldName={field.name}
-                hint={field.hint}
-                key={field.name}
-                label={field.label}
-                onChange={handleFileChange}
-                selected={selectedFiles[field.name]}
-              />
-            ))}
-          </div>
-        </section>
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {section.fields.map((field) => (
+                <FileUploadCard
+                  accept={section.accept}
+                  emptyStateLabel={section.emptyStateLabel}
+                  fieldName={field.name}
+                  hint={field.hint}
+                  key={field.name}
+                  label={field.label}
+                  onChange={handleFileChange}
+                  selected={selectedFiles[field.name]}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
 
         {error ? (
           <div className="rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-4 text-sm leading-6 text-rose-700">
@@ -810,7 +816,7 @@ export default function IntakeForm() {
             type="submit"
           >
             {status === 'uploading'
-              ? 'Uploading Photos'
+              ? 'Uploading Files'
               : status === 'submitting'
                 ? 'Submitting Packet'
                 : 'Submit Intake'}
