@@ -48,18 +48,26 @@ const uploadSchema = z.object({
   url: z.string().url(),
 })
 
+const optionalEmailSchema = z
+  .string()
+  .max(320)
+  .default('')
+  .refine((value) => value === '' || z.string().email().safeParse(value).success, {
+    message: 'Invalid email address.',
+  })
+
 const submissionSchema = z.object({
   battery: z.string().max(200).default(''),
   companyName: z.string().max(200).default(''),
-  contactName: z.string().min(2).max(200),
-  desiredSystemSize: z.string().min(1).max(80),
-  email: z.string().email(),
+  contactName: z.string().max(200).default(''),
+  desiredSystemSize: z.string().max(80).default(''),
+  email: optionalEmailSchema,
   inverter: z.string().max(200).default(''),
   mainPanelRating: z.string().max(80).default(''),
   notes: z.string().max(4000).default(''),
-  phone: z.string().min(7).max(40),
+  phone: z.string().max(40).default(''),
   roofType: z.string().max(80).default(''),
-  siteAddress: z.string().min(5).max(300),
+  siteAddress: z.string().max(300).default(''),
   solarPanel: z.string().max(200).default(''),
   uploads: z.array(uploadSchema).max(fileFields.length),
 })
@@ -146,7 +154,7 @@ async function sendNotificationEmail(input: {
         ${renderField('Site address', manifest.siteAddress)}
         ${renderField('Main panel rating', manifest.mainPanelRating)}
         ${renderField('Roof type', manifest.roofType)}
-        ${renderField('Desired system size', manifest.desiredSystemSize)}
+        ${renderField('Number of panels', manifest.desiredSystemSize)}
         ${renderField('Solar panel', manifest.solarPanel)}
         ${renderField('Inverter', manifest.inverter)}
         ${renderField('Battery', manifest.battery)}
@@ -170,7 +178,7 @@ Company: ${manifest.companyName || '—'}
 Site address: ${manifest.siteAddress}
 Main panel rating: ${manifest.mainPanelRating || '—'}
 Roof type: ${manifest.roofType || '—'}
-Desired system size: ${manifest.desiredSystemSize}
+Number of panels: ${manifest.desiredSystemSize}
 Solar panel: ${manifest.solarPanel || '—'}
 Inverter: ${manifest.inverter || '—'}
 Battery: ${manifest.battery || '—'}

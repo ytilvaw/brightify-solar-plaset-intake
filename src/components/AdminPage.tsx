@@ -90,7 +90,7 @@ function SubmissionCard(props: {
         <div className="rounded-[24px] bg-[#fafafa] p-4">
           <p className="field-label">System</p>
           <div className="mt-3 space-y-2 text-sm text-[#2d2d34]">
-            <p>Size: {submission.desiredSystemSize}</p>
+            <p>Panels: {submission.desiredSystemSize}</p>
             <p>Roof: {submission.roofType || '—'}</p>
             <p>Panel: {submission.solarPanel || '—'}</p>
             <p>Inverter: {submission.inverter || '—'}</p>

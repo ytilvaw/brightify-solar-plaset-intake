@@ -573,7 +573,6 @@ export default function IntakeForm() {
                   id="contactName"
                   name="contactName"
                   placeholder="Name handling this permit set"
-                  required
                   type="text"
                 />
               </div>
@@ -587,7 +586,6 @@ export default function IntakeForm() {
                   id="email"
                   name="email"
                   placeholder="ops@brightify.solar"
-                  required
                   type="email"
                 />
               </div>
@@ -601,7 +599,6 @@ export default function IntakeForm() {
                   id="phone"
                   name="phone"
                   placeholder="(555) 555-0199"
-                  required
                   type="tel"
                 />
               </div>
@@ -636,7 +633,6 @@ export default function IntakeForm() {
                     onKeyDown={handleAddressKeyDown}
                     placeholder="123 Main St, City, State, ZIP"
                     ref={siteAddressInputRef}
-                    required
                     spellCheck={false}
                     type="text"
                     value={siteAddress}
@@ -696,14 +692,13 @@ export default function IntakeForm() {
 
               <div>
                 <label className="field-label" htmlFor="desiredSystemSize">
-                  Desired System Size
+                  Number of Panels
                 </label>
                 <input
                   className="field-input"
                   id="desiredSystemSize"
                   name="desiredSystemSize"
-                  placeholder="8.2 kW"
-                  required
+                  placeholder="24"
                   type="text"
                 />
               </div>
