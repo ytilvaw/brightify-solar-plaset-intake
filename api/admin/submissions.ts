@@ -11,6 +11,7 @@ interface UploadedAsset {
 }
 
 interface SubmissionRecord {
+  requesterType: string
   contactName: string
   companyName: string
   email: string

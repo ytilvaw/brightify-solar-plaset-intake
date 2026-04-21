@@ -51,6 +51,7 @@ const submissionSchema = z.object({
   mainPanelRating: z.string().max(80).default(''),
   notes: z.string().max(4000).default(''),
   phone: z.string().max(40).default(''),
+  requesterType: z.enum(['Homeowner', 'Installer']).or(z.literal('')).default(''),
   roofType: z.string().max(80).default(''),
   siteAddress: z.string().max(300).default(''),
   solarPanel: z.string().max(200).default(''),
@@ -133,6 +134,7 @@ async function sendNotificationEmail(input: {
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
         ${renderField('Submitted', manifest.submittedAt)}
         ${renderField('Primary contact', manifest.contactName)}
+        ${renderField('Requester type', manifest.requesterType)}
         ${renderField('Email', manifest.email)}
         ${renderField('Phone', manifest.phone)}
         ${renderField('Company', manifest.companyName)}
@@ -157,6 +159,7 @@ async function sendNotificationEmail(input: {
 Submission ID: ${manifest.submissionId}
 Submitted: ${manifest.submittedAt}
 Primary contact: ${manifest.contactName}
+Requester type: ${manifest.requesterType || '—'}
 Email: ${manifest.email}
 Phone: ${manifest.phone}
 Company: ${manifest.companyName || '—'}

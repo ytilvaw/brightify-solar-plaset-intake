@@ -87,6 +87,7 @@ function SubmissionCard(props: {
         <div className="rounded-[24px] bg-[#fafafa] p-4">
           <p className="field-label">Contact</p>
           <div className="mt-3 space-y-2 text-sm text-[#2d2d34]">
+            <p>Requester: {submission.requesterType || '—'}</p>
             <p>{submission.email}</p>
             <p>{submission.phone}</p>
             <p>{submission.companyName || 'No company provided'}</p>

@@ -8,6 +8,8 @@ export const roofTypeOptions = [
   'Other',
 ] as const
 
+export const requesterTypeOptions = ['Homeowner', 'Installer'] as const
+
 export const sitePhotoFields = [
   {
     name: 'mainPanelPhoto',
@@ -85,6 +87,7 @@ export interface UploadedAsset {
 }
 
 export interface IntakePayload {
+  requesterType: string
   contactName: string
   companyName: string
   email: string

@@ -10,6 +10,7 @@ import {
 import FileUploadCard, { type SelectedFileState } from './FileUploadCard'
 import {
   fileFields,
+  requesterTypeOptions,
   roofTypeOptions,
   uploadSections,
   type FileFieldName,
@@ -509,6 +510,7 @@ export default function IntakeForm() {
         mainPanelRating: getText(formData, 'mainPanelRating'),
         notes: getText(formData, 'notes'),
         phone: getText(formData, 'phone'),
+        requesterType: getText(formData, 'requesterType'),
         roofType: getText(formData, 'roofType'),
         siteAddress: getText(formData, 'siteAddress'),
         solarPanel: getText(formData, 'solarPanel'),
@@ -567,6 +569,20 @@ export default function IntakeForm() {
         <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="space-y-8">
             <section className="grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className="field-label" htmlFor="requesterType">
+                  Requester Type
+                </label>
+                <select className="field-input" id="requesterType" name="requesterType">
+                  <option value="">Select requester type</option>
+                  {requesterTypeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="md:col-span-2">
                 <label className="field-label" htmlFor="contactName">
                   Primary Contact
