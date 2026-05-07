@@ -97,7 +97,7 @@ async function sendNotificationEmail(input: {
 }) {
   const apiKey = process.env.RESEND_API_KEY
   const to =
-    process.env.INTAKE_NOTIFICATION_EMAIL ?? 'yrtilvawala@gmail.com'
+    process.env.INTAKE_NOTIFICATION_EMAIL ?? 'yash.tilvawala@brightifysolar.com'
   const from =
     process.env.INTAKE_FROM_EMAIL ?? 'Brightify Intake <onboarding@resend.dev>'
 
