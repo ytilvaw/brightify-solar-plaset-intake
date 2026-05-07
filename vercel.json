@@ -1,11 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/planset",
-      "permanent": false
-    }
-  ],
   "rewrites": [
     {
       "source": "/planset",
