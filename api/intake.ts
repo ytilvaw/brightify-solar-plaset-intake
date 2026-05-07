@@ -99,7 +99,7 @@ async function sendNotificationEmail(input: {
   const to =
     process.env.INTAKE_NOTIFICATION_EMAIL ?? 'yash.tilvawala@brightifysolar.com'
   const from =
-    process.env.INTAKE_FROM_EMAIL ?? 'Brightify Intake <onboarding@resend.dev>'
+    process.env.INTAKE_FROM_EMAIL ?? 'Brightify Intake <intake@brightifysolar.com>'
 
   if (!apiKey) {
     return { sent: false as const, skipped: true as const }
