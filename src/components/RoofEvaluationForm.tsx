@@ -134,7 +134,7 @@ export default function RoofEvaluationForm() {
     const file = panelSpecFile.file
 
     if (!file) {
-      throw new Error('Upload the panel spec before submitting the roof evaluation.')
+      return null
     }
 
     const uploadFormData = new FormData()
@@ -182,7 +182,10 @@ export default function RoofEvaluationForm() {
     const formData = new FormData(form)
 
     try {
-      setStatus('uploading')
+      if (panelSpecFile.file) {
+        setStatus('uploading')
+      }
+
       const panelSpecAttachment = await uploadPanelSpecAttachment()
 
       setStatus('submitting')

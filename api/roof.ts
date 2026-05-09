@@ -19,7 +19,7 @@ const roofEvaluationSchema = z.object({
   customerEmail: z.string().email().max(320),
   desiredPanelCount: z.string().min(1).max(80),
   notes: optionalTextSchema,
-  panelSpecAttachment: uploadedAssetSchema,
+  panelSpecAttachment: uploadedAssetSchema.nullable().optional(),
   panelSize: z.string().min(1).max(80),
   siteAddress: z.string().min(4).max(300),
 })
@@ -73,10 +73,21 @@ export async function POST(request: Request) {
       `${requestUrl.protocol}//${requestUrl.host}`
     const requestId = `roof_${Date.now()}_${crypto.randomUUID().slice(0, 8)}`
     const submittedAt = new Date().toISOString()
-    const panelSpecUrl = buildUploadViewerLink(
-      appBaseUrl,
-      payload.panelSpecAttachment.pathname,
-    )
+    const panelSpecUrl = payload.panelSpecAttachment
+      ? buildUploadViewerLink(appBaseUrl, payload.panelSpecAttachment.pathname)
+      : ''
+    const panelSpecFileName = payload.panelSpecAttachment?.originalName ?? '—'
+    const attachmentHtml = payload.panelSpecAttachment
+      ? `
+        <h2 style="margin:0 0 12px;font-size:20px;">Attachments</h2>
+        <ul style="padding-left:20px;margin:0;">
+          <li style="margin:0 0 8px;"><a href="${escapeHtml(panelSpecUrl)}">Panel spec attachment</a> <span style="color:#475569;">(${escapeHtml(payload.panelSpecAttachment.originalName)})</span></li>
+        </ul>
+      `
+      : ''
+    const attachmentText = payload.panelSpecAttachment
+      ? `Panel spec link: ${panelSpecUrl}`
+      : 'Panel spec link: —'
     const to =
       process.env.ROOF_NOTIFICATION_EMAIL ??
       process.env.INTAKE_NOTIFICATION_EMAIL ??
@@ -96,13 +107,10 @@ export async function POST(request: Request) {
           ${renderField('Customer email', payload.customerEmail)}
           ${renderField('Desired number of panels', payload.desiredPanelCount)}
           ${renderField('Panel size', payload.panelSize)}
-          ${renderField('Panel spec file', payload.panelSpecAttachment.originalName)}
+          ${renderField('Panel spec file', panelSpecFileName)}
           ${renderField('Roof notes', payload.notes)}
         </table>
-        <h2 style="margin:0 0 12px;font-size:20px;">Attachments</h2>
-        <ul style="padding-left:20px;margin:0;">
-          <li style="margin:0 0 8px;"><a href="${escapeHtml(panelSpecUrl)}">Panel spec attachment</a> <span style="color:#475569;">(${escapeHtml(payload.panelSpecAttachment.originalName)})</span></li>
-        </ul>
+        ${attachmentHtml}
       </div>
     `
 
@@ -114,8 +122,8 @@ Property address: ${payload.siteAddress}
 Customer email: ${payload.customerEmail}
 Desired number of panels: ${payload.desiredPanelCount}
 Panel size: ${payload.panelSize}
-Panel spec file: ${payload.panelSpecAttachment.originalName}
-Panel spec link: ${panelSpecUrl}
+Panel spec file: ${panelSpecFileName}
+${attachmentText}
 Roof notes: ${payload.notes || '—'}
 `
 
