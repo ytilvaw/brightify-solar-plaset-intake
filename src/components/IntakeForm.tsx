@@ -186,7 +186,7 @@ export default function IntakeForm() {
   const [addressAutocompleteMessage, setAddressAutocompleteMessage] = useState(
     googleMapsApiKey
       ? 'Loading Google address suggestions...'
-      : 'Set VITE_GOOGLE_MAPS_API_KEY to enable Google address suggestions.',
+      : '',
   )
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] =
@@ -675,11 +675,13 @@ export default function IntakeForm() {
                     </div>
                   ) : null}
                 </div>
-                <p
-                  className={`field-hint ${addressAutocompleteStatus === 'error' ? 'field-hint-error' : ''}`}
-                >
-                  {addressAutocompleteMessage}
-                </p>
+                {addressAutocompleteMessage ? (
+                  <p
+                    className={`field-hint ${addressAutocompleteStatus === 'error' ? 'field-hint-error' : ''}`}
+                  >
+                    {addressAutocompleteMessage}
+                  </p>
+                ) : null}
               </div>
 
               <div>

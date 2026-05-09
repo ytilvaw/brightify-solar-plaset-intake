@@ -12,9 +12,11 @@ interface FileUploadCardProps {
   emptyStateLabel: string
   fieldName: FileFieldName
   hint: string
+  inputId?: string
   label: string
   onChange: (field: FileFieldName, event: ChangeEvent<HTMLInputElement>) => void
   selected: SelectedFileState
+  showLabel?: boolean
 }
 
 function formatFileSize(bytes: number) {
@@ -26,7 +28,17 @@ function formatFileSize(bytes: number) {
 }
 
 export default function FileUploadCard(props: FileUploadCardProps) {
-  const { accept, emptyStateLabel, fieldName, hint, label, onChange, selected } = props
+  const {
+    accept,
+    emptyStateLabel,
+    fieldName,
+    hint,
+    inputId,
+    label,
+    onChange,
+    selected,
+    showLabel = true,
+  } = props
   const isImagePreview = Boolean(selected.file?.type.startsWith('image/') && selected.previewUrl)
 
   return (
@@ -34,6 +46,7 @@ export default function FileUploadCard(props: FileUploadCardProps) {
       <input
         accept={accept}
         className="hidden"
+        id={inputId}
         name={fieldName}
         onChange={(event) => onChange(fieldName, event)}
         type="file"
@@ -41,10 +54,12 @@ export default function FileUploadCard(props: FileUploadCardProps) {
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[#7a7a86]">
-            {label}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-[#666674]">
+          {showLabel ? (
+            <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-[#7a7a86]">
+              {label}
+            </p>
+          ) : null}
+          <p className={`${showLabel ? 'mt-2 ' : ''}text-sm leading-6 text-[#666674]`}>
             {hint}
           </p>
         </div>

@@ -9,6 +9,14 @@
       "destination": "/"
     },
     {
+      "source": "/roof",
+      "destination": "/"
+    },
+    {
+      "source": "/roof/(.*)",
+      "destination": "/"
+    },
+    {
       "source": "/admin",
       "destination": "/"
     },

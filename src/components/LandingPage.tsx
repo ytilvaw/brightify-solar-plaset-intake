@@ -33,6 +33,7 @@ export default function LandingPage() {
         <nav aria-label="Primary navigation" className="site-nav">
           <a href="/">Home</a>
           <a href="/#shop">Shop</a>
+          <a href="/roof">Roof</a>
           <a href="/planset">Planset</a>
           <a href="/#contact">Contact Us</a>
         </nav>
