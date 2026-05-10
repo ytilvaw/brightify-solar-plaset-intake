@@ -136,8 +136,6 @@ async function sendNotificationEmail(input: {
         ${renderField('Submitted', manifest.submittedAt)}
         ${renderField('Primary contact', manifest.contactName)}
         ${renderField('Requester type', manifest.requesterType)}
-        ${renderField('Email', manifest.email)}
-        ${renderField('Phone', manifest.phone)}
         ${renderField('Company', manifest.companyName)}
         ${renderField('Site address', manifest.siteAddress)}
         ${renderField('Main panel rating', manifest.mainPanelRating)}
@@ -161,8 +159,6 @@ Submission ID: ${manifest.submissionId}
 Submitted: ${manifest.submittedAt}
 Primary contact: ${manifest.contactName}
 Requester type: ${manifest.requesterType || '—'}
-Email: ${manifest.email}
-Phone: ${manifest.phone}
 Company: ${manifest.companyName || '—'}
 Site address: ${manifest.siteAddress}
 Main panel rating: ${manifest.mainPanelRating || '—'}
