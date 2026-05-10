@@ -3,6 +3,17 @@ import { Resend } from 'resend'
 import { z } from 'zod'
 
 const optionalTextSchema = z.string().max(1200).default('')
+const optionalShortTextSchema = z.string().max(80).default('')
+const optionalEmailSchema = z
+  .string()
+  .max(320)
+  .default('')
+  .refine(
+    (value) => value === '' || z.string().email().safeParse(value).success,
+    {
+      message: 'Invalid email address.',
+    },
+  )
 
 const uploadedAssetSchema = z.object({
   contentType: z.string().min(1),
@@ -16,11 +27,11 @@ const uploadedAssetSchema = z.object({
 })
 
 const roofEvaluationSchema = z.object({
-  customerEmail: z.string().email().max(320),
-  desiredPanelCount: z.string().min(1).max(80),
+  customerEmail: optionalEmailSchema,
+  desiredPanelCount: optionalShortTextSchema,
   notes: optionalTextSchema,
   panelSpecAttachment: uploadedAssetSchema.nullable().optional(),
-  panelSize: z.string().min(1).max(80),
+  panelSize: optionalShortTextSchema,
   siteAddress: z.string().min(4).max(300),
 })
 
@@ -119,9 +130,9 @@ export async function POST(request: Request) {
 Request ID: ${requestId}
 Submitted: ${submittedAt}
 Property address: ${payload.siteAddress}
-Customer email: ${payload.customerEmail}
-Desired number of panels: ${payload.desiredPanelCount}
-Panel size: ${payload.panelSize}
+Customer email: ${payload.customerEmail || '—'}
+Desired number of panels: ${payload.desiredPanelCount || '—'}
+Panel size: ${payload.panelSize || '—'}
 Panel spec file: ${panelSpecFileName}
 ${attachmentText}
 Roof notes: ${payload.notes || '—'}
@@ -131,7 +142,7 @@ Roof notes: ${payload.notes || '—'}
     const { data, error } = await resend.emails.send({
       from,
       html,
-      replyTo: payload.customerEmail,
+      ...(payload.customerEmail ? { replyTo: payload.customerEmail } : {}),
       subject: `New roof evaluation: ${payload.siteAddress}`,
       text,
       to,

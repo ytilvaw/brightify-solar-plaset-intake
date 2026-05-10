@@ -3,9 +3,10 @@ import AddressAutocompleteField from './AddressAutocompleteField'
 import FileUploadCard, { type SelectedFileState } from './FileUploadCard'
 import {
   datasheetContentTypes,
+  maxUploadSizeLabel,
   type FileFieldName,
-  type UploadedAsset,
 } from '../lib/intake'
+import { uploadIntakeFile } from '../lib/uploads'
 
 const requestTimeoutMs = 10_000
 const panelSpecFieldName = 'solarPanelDatasheet' satisfies FileFieldName
@@ -17,8 +18,6 @@ type ApiErrorResponse = {
 type RoofEvaluationResponse = ApiErrorResponse & {
   requestId?: string
 }
-
-type UploadResponse = ApiErrorResponse & Partial<UploadedAsset>
 
 async function parseApiResponse<T>(response: Response) {
   const raw = await response.text()
@@ -137,40 +136,11 @@ export default function RoofEvaluationForm() {
       return null
     }
 
-    const uploadFormData = new FormData()
-    uploadFormData.set('field', panelSpecFieldName)
-    uploadFormData.set('file', file)
-
-    const timeout = createTimeoutController(requestTimeoutMs)
-    let response
-
-    try {
-      response = await fetch('/api/uploads', {
-        body: uploadFormData,
-        method: 'POST',
-        signal: timeout.signal,
-      })
-    } finally {
-      timeout.clear()
-    }
-
-    const result = await parseApiResponse<UploadResponse>(response)
-
-    if (!response.ok) {
-      throw new Error(result?.error?.trim() || 'Unable to upload panel spec.')
-    }
-
-    return {
-      contentType:
-        result?.contentType ?? file.type ?? 'application/octet-stream',
-      downloadUrl: result?.downloadUrl,
-      field: (result?.field as FileFieldName | undefined) ?? panelSpecFieldName,
+    return uploadIntakeFile({
+      field: panelSpecFieldName,
+      file,
       label: 'Panel Spec',
-      originalName: result?.originalName ?? file.name,
-      pathname: result?.pathname ?? '',
-      size: result?.size ?? file.size,
-      url: result?.url ?? '',
-    } satisfies UploadedAsset
+    })
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -260,7 +230,6 @@ export default function RoofEvaluationForm() {
                   inputMode="numeric"
                   name="desiredPanelCount"
                   placeholder="24"
-                  required
                   type="text"
                 />
               </div>
@@ -274,7 +243,6 @@ export default function RoofEvaluationForm() {
                   id="panelSize"
                   name="panelSize"
                   placeholder="69x45"
-                  required
                   type="text"
                 />
               </div>
@@ -286,7 +254,7 @@ export default function RoofEvaluationForm() {
                 <div className="mt-3">
                   <FileUploadCard
                     accept={datasheetContentTypes.join(',')}
-                    emptyStateLabel="PDF, JPG, PNG, WEBP, HEIC, or HEIF"
+                    emptyStateLabel={`PDF, JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`}
                     fieldName={panelSpecFieldName}
                     hint="Upload the panel spec or datasheet as a PDF or image."
                     inputId="panelSpecAttachment"
@@ -308,7 +276,6 @@ export default function RoofEvaluationForm() {
                   id="customerEmail"
                   name="customerEmail"
                   placeholder="you@example.com"
-                  required
                   type="email"
                 />
               </div>
