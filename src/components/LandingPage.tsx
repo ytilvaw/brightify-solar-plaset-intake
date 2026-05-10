@@ -95,8 +95,8 @@ export default function LandingPage() {
           <p className="eyebrow">Contact Us</p>
           <h2>Ready to talk solar?</h2>
         </div>
-        <a className="email-link" href="mailto:yash.tilvawala@brightifysolar.com">
-          yash.tilvawala@brightifysolar.com
+        <a className="email-link" href="mailto:info@brightifysolar.com">
+          info@brightifysolar.com
         </a>
       </section>
     </main>
