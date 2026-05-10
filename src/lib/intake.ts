@@ -117,6 +117,8 @@ export const datasheetContentTypes = [
 ] as const
 
 export const uploadContentTypes = [...datasheetContentTypes] as const
+export const maxUploadSizeBytes = 100 * 1024 * 1024
+export const maxUploadSizeLabel = '100 MB'
 
 export const uploadSections = [
   {
@@ -125,7 +127,7 @@ export const uploadSections = [
     description:
       'Upload the best available field photos. Files upload directly to Vercel Blob before the intake metadata is saved, which avoids large request payloads hitting a single serverless function.',
     accept: sitePhotoContentTypes.join(','),
-    emptyStateLabel: 'JPG, PNG, WEBP, HEIC, or HEIF',
+    emptyStateLabel: `JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
     fields: sitePhotoFields,
   },
   {
@@ -134,7 +136,7 @@ export const uploadSections = [
     description:
       'Upload equipment datasheets for the selected solar panel, inverter, and battery. PDFs and images are both accepted.',
     accept: datasheetContentTypes.join(','),
-    emptyStateLabel: 'PDF, JPG, PNG, WEBP, HEIC, or HEIF',
+    emptyStateLabel: `PDF, JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
     fields: datasheetFields,
   },
 ] as const

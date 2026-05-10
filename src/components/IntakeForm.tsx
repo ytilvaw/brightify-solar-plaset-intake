@@ -17,6 +17,7 @@ import {
   type IntakePayload,
   type UploadedAsset,
 } from '../lib/intake'
+import { uploadIntakeFile } from '../lib/uploads'
 
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY?.trim()
 const googleMapsCallbackName = '__initGoogleMapsPlaces'
@@ -30,8 +31,6 @@ type ApiErrorResponse = {
 type IntakeResponse = ApiErrorResponse & {
   submissionId?: string
 }
-
-type UploadResponse = ApiErrorResponse & Partial<UploadedAsset>
 
 type AddressPrediction = {
   description: string
@@ -425,56 +424,33 @@ export default function IntakeForm() {
       return [] satisfies UploadedAsset[]
     }
 
-    let completedCount = 0
+    const uploadedAssets: UploadedAsset[] = []
 
-    return Promise.all(
-      pendingUploads.map(async (item) => {
-        const file = item.file!
-        setProgressLabel(`Uploading ${item.label.toLowerCase()}...`)
+    for (const item of pendingUploads) {
+      const file = item.file!
+      setProgressLabel(`Uploading ${item.label.toLowerCase()}...`)
 
-        const timeout = createTimeoutController(requestTimeoutMs)
-        let response
+      const uploadedAsset = await uploadIntakeFile({
+        field: item.field,
+        file,
+        label: item.label,
+        onUploadProgress: (progress) => {
+          setProgressLabel(
+            `Uploading ${item.label.toLowerCase()} (${Math.round(progress.percentage)}%)...`,
+          )
+        },
+      })
 
-        try {
-          const uploadFormData = new FormData()
-          uploadFormData.set('field', item.field)
-          uploadFormData.set('file', file)
+      uploadedAssets.push(uploadedAsset)
 
-          response = await fetch('/api/uploads', {
-            body: uploadFormData,
-            method: 'POST',
-            signal: timeout.signal,
-          })
-        } finally {
-          timeout.clear()
-        }
+      setProgressLabel(
+        uploadedAssets.length === pendingUploads.length
+          ? 'Uploads complete'
+          : `Uploaded ${uploadedAssets.length} of ${pendingUploads.length} files`,
+      )
+    }
 
-        const result = await parseApiResponse<UploadResponse>(response)
-
-        if (!response.ok) {
-          throw new Error(result?.error?.trim() || 'Unable to upload photo.')
-        }
-
-        completedCount += 1
-        setProgressLabel(
-          completedCount === pendingUploads.length
-            ? 'Uploads complete'
-            : `Uploaded ${completedCount} of ${pendingUploads.length} photos`,
-        )
-
-        return {
-          contentType:
-            result?.contentType ?? file.type ?? 'application/octet-stream',
-          downloadUrl: result?.downloadUrl,
-          field: (result?.field as FileFieldName | undefined) ?? item.field,
-          label: result?.label ?? item.label,
-          originalName: result?.originalName ?? file.name,
-          pathname: result?.pathname ?? '',
-          size: result?.size ?? file.size,
-          url: result?.url ?? '',
-        } satisfies UploadedAsset
-      }),
-    )
+    return uploadedAssets
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
