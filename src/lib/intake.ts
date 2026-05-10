@@ -125,7 +125,7 @@ export const uploadSections = [
     name: 'sitePhotos',
     title: 'Site Photos',
     description:
-      'Upload the best available field photos. Files upload directly to Vercel Blob before the intake metadata is saved, which avoids large request payloads hitting a single serverless function.',
+      'Upload the best available field photos for the planset review.',
     accept: sitePhotoContentTypes.join(','),
     emptyStateLabel: `JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
     fields: sitePhotoFields,
