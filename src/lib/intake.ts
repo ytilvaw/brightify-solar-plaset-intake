@@ -123,18 +123,18 @@ export const maxUploadSizeLabel = '100 MB'
 export const uploadSections = [
   {
     name: 'sitePhotos',
-    title: 'Site Photos',
+    title: 'Site Photos (Optional)',
     description:
-      'Upload the best available field photos for the planset review.',
+      'Optional: upload the best available field photos for the planset review.',
     accept: sitePhotoContentTypes.join(','),
     emptyStateLabel: `JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
     fields: sitePhotoFields,
   },
   {
     name: 'datasheets',
-    title: 'Datasheets',
+    title: 'Datasheets (Optional)',
     description:
-      'Upload equipment datasheets for the selected solar panel, inverter, and battery. PDFs and images are both accepted.',
+      'Optional: upload equipment datasheets for the selected solar panel, inverter, and battery. PDFs and images are both accepted.',
     accept: datasheetContentTypes.join(','),
     emptyStateLabel: `PDF, JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
     fields: datasheetFields,

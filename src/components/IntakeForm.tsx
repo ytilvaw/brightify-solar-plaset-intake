@@ -795,7 +795,7 @@ export default function IntakeForm() {
 
         {status === 'success' ? (
           <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm leading-6 text-emerald-700">
-            Submission received{submissionId ? ` with ID ${submissionId}` : ''}. The intake packet and file references are now stored in Vercel Blob.
+            Submission received{submissionId ? ` with ID ${submissionId}` : ''}. The intake packet and any uploaded files are ready for review.
           </div>
         ) : null}
 

@@ -55,7 +55,7 @@ const submissionSchema = z.object({
   roofType: z.string().max(80).default(''),
   siteAddress: z.string().max(300).default(''),
   solarPanel: z.string().max(200).default(''),
-  uploads: z.array(uploadSchema).max(fileFields.length),
+  uploads: z.array(uploadSchema).max(fileFields.length).default([]),
 })
 
 function escapeHtml(value: string) {
