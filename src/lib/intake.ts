@@ -75,7 +75,7 @@ export const intakeUploadFields = [
     name: 'sitePhotos',
     label: 'Site Photos',
     hint:
-      'Upload site photos here: main electrical panel, utility meter, front of house, roof areas, conduit or sidewall routes, and anything unusual that may affect layout or permitting.',
+      'Upload site photos of main electrical panel, utility meter, front of house, roof areas and anything unusual that may affect the design.',
     section: 'sitePhotos',
   },
   {
