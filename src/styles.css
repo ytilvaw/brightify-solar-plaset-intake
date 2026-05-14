@@ -322,6 +322,14 @@ textarea {
   border-top: 1px solid rgba(20, 83, 45, 0.14);
 }
 
+.contact-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
 .email-link {
   color: #14532d;
   font-size: 1.35rem;
@@ -332,6 +340,35 @@ textarea {
 
 .email-link:hover {
   text-decoration: underline;
+}
+
+.whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid rgba(18, 140, 126, 0.28);
+  border-radius: 999px;
+  background: #25d366;
+  color: #071d14;
+  padding: 0.72rem 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.whatsapp-link:hover {
+  background: #20bd5a;
+  transform: translateY(-1px);
+}
+
+.whatsapp-link svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
 }
 
 .hero-shell {
@@ -558,5 +595,10 @@ textarea {
 
   .email-link {
     font-size: 1.05rem;
+  }
+
+  .contact-links {
+    align-items: flex-start;
+    justify-content: flex-start;
   }
 }

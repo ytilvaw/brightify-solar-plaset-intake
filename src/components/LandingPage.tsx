@@ -95,9 +95,23 @@ export default function LandingPage() {
           <p className="eyebrow">Contact Us</p>
           <h2>Ready to talk solar?</h2>
         </div>
-        <a className="email-link" href="mailto:info@brightifysolar.com">
-          info@brightifysolar.com
-        </a>
+        <div className="contact-links">
+          <a className="email-link" href="mailto:info@brightifysolar.com">
+            info@brightifysolar.com
+          </a>
+          <a
+            aria-label="Message Brightify Solar on WhatsApp"
+            className="whatsapp-link"
+            href="https://wa.me/14084643739"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <svg aria-hidden="true" viewBox="0 0 32 32">
+              <path d="M16.04 4a11.89 11.89 0 0 0-10.2 18.03L4.5 28l6.08-1.59A11.94 11.94 0 1 0 16.04 4Zm0 21.86c-1.77 0-3.5-.47-5.01-1.37l-.36-.21-3.61.95.96-3.52-.24-.37a9.87 9.87 0 1 1 8.26 4.52Zm5.42-7.38c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.39-1.47-.89-.79-1.48-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.1 3.21 5.09 4.5.71.31 1.27.49 1.7.63.71.23 1.36.2 1.88.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35Z" />
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+        </div>
       </section>
     </main>
   )
