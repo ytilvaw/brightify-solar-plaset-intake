@@ -7,13 +7,13 @@ import {
   type KeyboardEvent,
 } from 'react'
 
-import FileUploadCard, { type SelectedFileState } from './FileUploadCard'
+import type { SelectedFileState } from './FileUploadCard'
+import MultiFileUploadCard from './MultiFileUploadCard'
 import {
-  fileFields,
   requesterTypeOptions,
   roofTypeOptions,
   uploadSections,
-  type FileFieldName,
+  type IntakeUploadFieldName,
   type IntakePayload,
   type UploadedAsset,
 } from '../lib/intake'
@@ -71,9 +71,13 @@ declare global {
 }
 
 function createEmptySelectedFiles() {
-  return Object.fromEntries(
-    fileFields.map(({ name }) => [name, { file: null, previewUrl: null }]),
-  ) as Record<FileFieldName, SelectedFileState>
+  const selectedFiles = {} as Record<IntakeUploadFieldName, SelectedFileState[]>
+
+  for (const { field } of uploadSections) {
+    selectedFiles[field.name] = []
+  }
+
+  return selectedFiles
 }
 
 function getText(formData: FormData, key: string) {
@@ -174,7 +178,9 @@ function loadGoogleMapsPlacesLibrary() {
 
 export default function IntakeForm() {
   const [selectedFiles, setSelectedFiles] =
-    useState<Record<FileFieldName, SelectedFileState>>(createEmptySelectedFiles)
+    useState<Record<IntakeUploadFieldName, SelectedFileState[]>>(
+      createEmptySelectedFiles,
+    )
   const [siteAddress, setSiteAddress] = useState('')
   const [addressPredictions, setAddressPredictions] = useState<AddressPrediction[]>([])
   const [showAddressPredictions, setShowAddressPredictions] = useState(false)
@@ -205,9 +211,11 @@ export default function IntakeForm() {
 
   useEffect(() => {
     return () => {
-      for (const entry of Object.values(selectedFilesRef.current)) {
-        if (entry.previewUrl) {
-          URL.revokeObjectURL(entry.previewUrl)
+      for (const entries of Object.values(selectedFilesRef.current)) {
+        for (const entry of entries) {
+          if (entry.previewUrl) {
+            URL.revokeObjectURL(entry.previewUrl)
+          }
         }
       }
     }
@@ -332,35 +340,37 @@ export default function IntakeForm() {
   }, [addressAutocompleteStatus, siteAddress])
 
   const handleFileChange = (
-    field: FileFieldName,
+    field: IntakeUploadFieldName,
     event: ChangeEvent<HTMLInputElement>,
   ) => {
-    const nextFile = event.target.files?.[0] ?? null
+    const nextFiles = Array.from(event.target.files ?? [])
 
     setSelectedFiles((current) => {
-      const previous = current[field]
-      if (previous.previewUrl) {
-        URL.revokeObjectURL(previous.previewUrl)
+      for (const previous of current[field]) {
+        if (previous.previewUrl) {
+          URL.revokeObjectURL(previous.previewUrl)
+        }
       }
 
       return {
         ...current,
-        [field]: {
-          file: nextFile,
-          previewUrl:
-            nextFile && nextFile.type.startsWith('image/')
-              ? URL.createObjectURL(nextFile)
-              : null,
-        },
+        [field]: nextFiles.map((file) => ({
+          file,
+          previewUrl: file.type.startsWith('image/')
+            ? URL.createObjectURL(file)
+            : null,
+        })),
       }
     })
   }
 
   const resetSelectedFiles = () => {
     setSelectedFiles((current) => {
-      for (const entry of Object.values(current)) {
-        if (entry.previewUrl) {
-          URL.revokeObjectURL(entry.previewUrl)
+      for (const entries of Object.values(current)) {
+        for (const entry of entries) {
+          if (entry.previewUrl) {
+            URL.revokeObjectURL(entry.previewUrl)
+          }
         }
       }
 
@@ -412,13 +422,20 @@ export default function IntakeForm() {
   }
 
   const uploadAssets = async () => {
-    const pendingUploads = fileFields
-      .map(({ label, name }) => ({
-        field: name,
-        label,
-        file: selectedFiles[name].file,
-      }))
-      .filter((item) => item.file)
+    const pendingUploads = uploadSections.flatMap((section) => {
+      const files = selectedFiles[section.field.name]
+
+      return files
+        .filter((selectedFile) => selectedFile.file)
+        .map((selectedFile, index) => ({
+          field: section.field.name,
+          file: selectedFile.file!,
+          label:
+            files.length > 1
+              ? `${section.field.label} ${index + 1}`
+              : section.field.label,
+        }))
+    })
 
     if (!pendingUploads.length) {
       return [] satisfies UploadedAsset[]
@@ -770,19 +787,16 @@ export default function IntakeForm() {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {section.fields.map((field) => (
-                <FileUploadCard
-                  accept={section.accept}
-                  emptyStateLabel={section.emptyStateLabel}
-                  fieldName={field.name}
-                  hint={field.hint}
-                  key={field.name}
-                  label={field.label}
-                  onChange={handleFileChange}
-                  selected={selectedFiles[field.name]}
-                />
-              ))}
+            <div className="mt-6">
+              <MultiFileUploadCard
+                accept={section.accept}
+                emptyStateLabel={section.emptyStateLabel}
+                fieldName={section.field.name}
+                hint={section.field.hint}
+                label={section.field.label}
+                onChange={handleFileChange}
+                selectedFiles={selectedFiles[section.field.name]}
+              />
             </div>
           </section>
         ))}

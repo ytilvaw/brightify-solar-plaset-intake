@@ -11,6 +11,8 @@ const fileFields = [
   { name: 'solarPanelDatasheet', label: 'Solar Panel' },
   { name: 'inverterDatasheet', label: 'Inverter' },
   { name: 'batteryDatasheet', label: 'Battery' },
+  { name: 'sitePhotos', label: 'Site Photos' },
+  { name: 'datasheets', label: 'Datasheets' },
 ] as const
 
 const uploadContentTypes = [

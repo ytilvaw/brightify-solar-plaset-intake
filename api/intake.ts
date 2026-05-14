@@ -13,6 +13,8 @@ const fileFields = [
   { name: 'solarPanelDatasheet', label: 'Solar Panel' },
   { name: 'inverterDatasheet', label: 'Inverter' },
   { name: 'batteryDatasheet', label: 'Battery' },
+  { name: 'sitePhotos', label: 'Site Photos' },
+  { name: 'datasheets', label: 'Datasheets' },
 ] as const
 
 type FileFieldName = (typeof fileFields)[number]['name']
@@ -21,6 +23,7 @@ const allowedFieldNames = fileFields.map((field) => field.name) as [
   FileFieldName,
   ...FileFieldName[],
 ]
+const maxUploadCount = 20
 
 const uploadSchema = z.object({
   contentType: z.string().min(1),
@@ -55,7 +58,7 @@ const submissionSchema = z.object({
   roofType: z.string().max(80).default(''),
   siteAddress: z.string().max(300).default(''),
   solarPanel: z.string().max(200).default(''),
-  uploads: z.array(uploadSchema).max(fileFields.length).default([]),
+  uploads: z.array(uploadSchema).max(maxUploadCount).default([]),
 })
 
 function escapeHtml(value: string) {

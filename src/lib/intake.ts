@@ -70,10 +70,32 @@ export const datasheetFields = [
   },
 ] as const
 
-export const fileFields = [...sitePhotoFields, ...datasheetFields] as const
+export const intakeUploadFields = [
+  {
+    name: 'sitePhotos',
+    label: 'Site Photos',
+    hint:
+      'Upload site photos here: main electrical panel, utility meter, front of house, roof areas, conduit or sidewall routes, and anything unusual that may affect layout or permitting.',
+    section: 'sitePhotos',
+  },
+  {
+    name: 'datasheets',
+    label: 'Datasheets',
+    hint:
+      'Upload equipment datasheets here: solar panels, inverter, battery, racking, and any other spec sheets you already have.',
+    section: 'datasheets',
+  },
+] as const
+
+export const fileFields = [
+  ...sitePhotoFields,
+  ...datasheetFields,
+  ...intakeUploadFields,
+] as const
 
 export type FileFieldName = (typeof fileFields)[number]['name']
 export type UploadSectionName = (typeof fileFields)[number]['section']
+export type IntakeUploadFieldName = (typeof intakeUploadFields)[number]['name']
 
 export interface UploadedAsset {
   field: FileFieldName
@@ -119,26 +141,25 @@ export const datasheetContentTypes = [
 export const uploadContentTypes = [...datasheetContentTypes] as const
 export const maxUploadSizeBytes = 100 * 1024 * 1024
 export const maxUploadSizeLabel = '100 MB'
+export const maxUploadCount = 20
 
 export const uploadSections = [
   {
     name: 'sitePhotos',
     title: 'Site Photos (Optional)',
     description:
-      'Optional: upload the best available field photos for the planset review.',
+      'Optional: add site photos that help the planset team understand the electrical equipment, roof, and installation area.',
     accept: sitePhotoContentTypes.join(','),
     emptyStateLabel: `JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
-    fields: sitePhotoFields,
+    field: intakeUploadFields[0],
   },
   {
     name: 'datasheets',
     title: 'Datasheets (Optional)',
     description:
-      'Optional: upload equipment datasheets for the selected solar panel, inverter, and battery. PDFs and images are both accepted.',
+      'Optional: add spec sheets for the selected solar panel, inverter, battery, racking, or other equipment. PDFs and images are both accepted.',
     accept: datasheetContentTypes.join(','),
     emptyStateLabel: `PDF, JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
-    fields: datasheetFields,
+    field: intakeUploadFields[1],
   },
 ] as const
-
-export const maxUploadCount = fileFields.length
