@@ -180,7 +180,7 @@ ${textUploads}
     from,
     html,
     replyTo: manifest.email,
-    subject: `New intake: ${manifest.contactName} - ${manifest.siteAddress}`,
+    subject: `New planset request: ${manifest.contactName} - ${manifest.siteAddress}`,
     text,
     to,
   })
