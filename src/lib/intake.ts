@@ -147,17 +147,13 @@ export const uploadSections = [
   {
     name: 'sitePhotos',
     title: 'Site Photos (Optional)',
-    description:
-      'Optional: add site photos that help the planset team understand the electrical equipment, roof, and installation area.',
-    accept: sitePhotoContentTypes.join(','),
-    emptyStateLabel: `JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
+    accept: datasheetContentTypes.join(','),
+    emptyStateLabel: `PDF, JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
     field: intakeUploadFields[0],
   },
   {
     name: 'datasheets',
     title: 'Datasheets (Optional)',
-    description:
-      'Optional: add spec sheets for the selected solar panel, inverter, battery, racking, or other equipment. PDFs and images are both accepted.',
     accept: datasheetContentTypes.join(','),
     emptyStateLabel: `PDF, JPG, PNG, WEBP, HEIC, or HEIF up to ${maxUploadSizeLabel}`,
     field: intakeUploadFields[1],

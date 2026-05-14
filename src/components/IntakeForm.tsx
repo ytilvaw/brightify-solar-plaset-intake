@@ -781,9 +781,6 @@ export default function IntakeForm() {
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#f3a43a]">
                   {section.title}
                 </p>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#666674]">
-                  {section.description}
-                </p>
               </div>
             </div>
 
