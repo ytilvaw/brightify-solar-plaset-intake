@@ -53,6 +53,12 @@ type PlacesLibrary = {
   }
 }
 
+const requiredSubmissionFields = [
+  { key: 'contactName', label: 'Name' },
+  { key: 'siteAddress', label: 'Site address' },
+  { key: 'mainPanelRating', label: 'Main panel rating' },
+] as const
+
 declare global {
   interface Window {
     google?: {
@@ -83,6 +89,33 @@ function createEmptySelectedFiles() {
 function getText(formData: FormData, key: string) {
   const value = formData.get(key)
   return typeof value === 'string' ? value.trim() : ''
+}
+
+function formatFieldList(labels: string[]) {
+  if (labels.length <= 1) {
+    return labels[0] ?? ''
+  }
+
+  if (labels.length === 2) {
+    return `${labels[0]} and ${labels[1]}`
+  }
+
+  return `${labels.slice(0, -1).join(', ')}, and ${labels[labels.length - 1]}`
+}
+
+function formatMissingRequiredFields(formData: FormData) {
+  const missingFields = requiredSubmissionFields.filter(
+    (field) => !getText(formData, field.key),
+  )
+
+  if (!missingFields.length) {
+    return null
+  }
+
+  const fieldList = formatFieldList(missingFields.map((field) => field.label))
+  const verb = missingFields.length === 1 ? 'is' : 'are'
+
+  return `${fieldList} ${verb} required before submitting.`
 }
 
 async function parseApiResponse<T>(response: Response) {
@@ -489,6 +522,14 @@ export default function IntakeForm() {
       return
     }
 
+    const missingRequiredFieldsMessage = formatMissingRequiredFields(formData)
+
+    if (missingRequiredFieldsMessage) {
+      setError(missingRequiredFieldsMessage)
+      setProgressLabel('Ready')
+      return
+    }
+
     try {
       setStatus('uploading')
 
@@ -585,6 +626,7 @@ export default function IntakeForm() {
                   id="contactName"
                   name="contactName"
                   placeholder="Name handling this permit set"
+                  required
                   type="text"
                 />
               </div>
@@ -645,6 +687,7 @@ export default function IntakeForm() {
                     onKeyDown={handleAddressKeyDown}
                     placeholder="123 Main St, City, State, ZIP"
                     ref={siteAddressInputRef}
+                    required
                     spellCheck={false}
                     type="text"
                     value={siteAddress}
@@ -686,6 +729,7 @@ export default function IntakeForm() {
                   id="mainPanelRating"
                   name="mainPanelRating"
                   placeholder="200A"
+                  required
                   type="text"
                 />
               </div>

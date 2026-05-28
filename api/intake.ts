@@ -44,19 +44,31 @@ const optionalEmailSchema = z
     message: 'Invalid email address.',
   })
 
+const requiredTextSchema = (label: string, maxLength: number) =>
+  z
+    .string({
+      invalid_type_error: `${label} is required.`,
+      required_error: `${label} is required.`,
+    })
+    .trim()
+    .min(1, { message: `${label} is required.` })
+    .max(maxLength, {
+      message: `${label} must be ${maxLength} characters or fewer.`,
+    })
+
 const submissionSchema = z.object({
   battery: z.string().max(200).default(''),
   companyName: z.string().max(200).default(''),
-  contactName: z.string().max(200).default(''),
+  contactName: requiredTextSchema('Name', 200),
   desiredSystemSize: z.string().max(80).default(''),
   email: optionalEmailSchema,
   inverter: z.string().max(200).default(''),
-  mainPanelRating: z.string().max(80).default(''),
+  mainPanelRating: requiredTextSchema('Main panel rating', 80),
   notes: z.string().max(4000).default(''),
   phone: z.string().max(40).default(''),
   requesterType: z.enum(['Homeowner', 'Installer']).or(z.literal('')).default(''),
   roofType: z.string().max(80).default(''),
-  siteAddress: z.string().max(300).default(''),
+  siteAddress: requiredTextSchema('Site address', 300),
   solarPanel: z.string().max(200).default(''),
   uploads: z.array(uploadSchema).max(maxUploadCount).default([]),
 })
@@ -197,18 +209,19 @@ ${textUploads}
 }
 
 export async function POST(request: Request) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return Response.json(
-      {
-        error:
-          'Vercel Blob is not configured. Attach a Blob store to this project or set BLOB_READ_WRITE_TOKEN locally.',
-      },
-      { status: 500 },
-    )
-  }
-
   try {
     const payload = submissionSchema.parse(await request.json())
+
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return Response.json(
+        {
+          error:
+            'Vercel Blob is not configured. Attach a Blob store to this project or set BLOB_READ_WRITE_TOKEN locally.',
+        },
+        { status: 500 },
+      )
+    }
+
     const requestUrl = new URL(request.url)
     const appBaseUrl =
       process.env.APP_BASE_URL?.trim() ||
