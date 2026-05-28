@@ -671,12 +671,7 @@ function Pricing() {
         </div>
 
         <div
-          className="pricing-cards"
-          style={{
-            gridTemplateColumns: `repeat(${data.tiers.length}, 1fr)`,
-            maxWidth: data.tiers.length < 3 ? 760 : 'none',
-            marginInline: data.tiers.length < 3 ? 'auto' : '0',
-          }}
+          className={`pricing-cards${data.tiers.length < 3 ? ' pricing-cards--sm' : ''}`}
         >
           {data.tiers.map((t, i) => (
             <div key={i} className={`card${t.highlight ? ' highlight' : ''}`}>

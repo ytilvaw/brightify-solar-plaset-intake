@@ -1235,6 +1235,11 @@ h1.hero-title {
   gap: 16px;
   margin-bottom: 24px;
 }
+.pricing-cards--sm {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 760px;
+  margin-inline: auto;
+}
 .card {
   background: var(--paper);
   border: 1px solid var(--rule-strong);
@@ -1908,7 +1913,8 @@ h1.hero-title {
   .process-steps { grid-template-columns: 1fr; }
   .step { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.12); }
   .step:last-child { border-bottom: none; }
-  .pricing-cards, .quotes { grid-template-columns: 1fr; }
+  .pricing-cards, .pricing-cards--sm, .quotes { grid-template-columns: 1fr; }
+  .pricing-cards--sm { max-width: none; margin-inline: 0; }
   .card.highlight { transform: none; }
   .coverage .wrap { grid-template-columns: 1fr; gap: 32px; }
   .faq-wrap { grid-template-columns: 1fr; gap: 32px; }
@@ -1916,7 +1922,7 @@ h1.hero-title {
   .trust .wrap { grid-template-columns: repeat(2, 1fr); }
   .trust-cell:nth-child(2) { border-right: none; }
   .trust-cell:nth-child(1), .trust-cell:nth-child(2) { border-bottom: 1px solid var(--rule); }
-  footer .wrap { grid-template-columns: 1fr 1fr; }
+  .dl footer .wrap { grid-template-columns: 1fr 1fr; }
   .addons { grid-template-columns: 1fr; gap: 16px; }
   .addons-list { justify-content: flex-start; }
   .guarantee { grid-template-columns: 1fr; gap: 16px; padding: 24px; }
@@ -1925,17 +1931,27 @@ h1.hero-title {
 @media (max-width: 640px) {
   :root { --gutter: 20px; }
   .nav-links { display: none; }
-  .nav .wrap { gap: 16px; }
+  .nav .wrap { gap: 12px; }
+  /* Hide the ghost "See pricing" button — keep only Purchase */
+  .nav-cta .btn-ghost { display: none; }
   .deliverables { grid-template-columns: 1fr; }
-  section { padding: 80px 0; }
+  /* Higher specificity so it beats .dl section { padding: 112px 0 } */
+  .dl section { padding: 80px 0; }
   .hero { padding: 48px 0 80px; }
   .trust .wrap { grid-template-columns: 1fr; }
   .trust-cell { border-right: none; border-bottom: 1px solid var(--rule); }
-  footer .wrap { grid-template-columns: 1fr; }
+  .dl footer .wrap { grid-template-columns: 1fr; }
   .announce-right { display: none; }
   .faq-q { font-size: 18px; }
   .quotes { grid-template-columns: 1fr; }
   .turn-badge { display: none; }
+  /* Pricing tabs: allow horizontal scroll on very small screens */
+  .pricing-controls { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .pricing-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  /* Coverage map height */
+  .map { aspect-ratio: 4 / 3; }
+  /* Footer bottom row */
+  .foot-bot { flex-direction: column; gap: 8px; }
 }
 
 /* ---------- floating WhatsApp button ---------- */
