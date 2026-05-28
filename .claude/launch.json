@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "brightify-dev",
+      "runtimeExecutable": "/Users/yashtilvawala/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "runtimeArgs": ["/Users/yashtilvawala/Documents/brightify/node_modules/.bin/vite"],
+      "port": 5173
+    }
+  ]
+}

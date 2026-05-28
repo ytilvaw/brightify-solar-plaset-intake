@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/design",
+      "destination": "/"
+    },
+    {
+      "source": "/design/(.*)",
+      "destination": "/"
+    },
+    {
       "source": "/planset",
       "destination": "/"
     },
