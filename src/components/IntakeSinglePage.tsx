@@ -457,7 +457,6 @@ export default function IntakeSinglePage() {
       if (form.requesterType && form.requesterType !== 'Homeowner' && form.requesterType !== 'Solar installer / EPC') {
         noteLines.push(`Requester: ${form.requesterType}`)
       }
-      if (form.racking) noteLines.push(`Racking: ${form.racking}`)
       if (form.notes) noteLines.push(form.notes)
 
       const payload: IntakePayload = {
@@ -473,6 +472,7 @@ export default function IntakeSinglePage() {
         solarPanel: form.panelModel,
         inverter: form.inverter,
         battery: form.battery,
+        racking: form.racking,
         notes: noteLines.join('\n'),
         uploads,
       }

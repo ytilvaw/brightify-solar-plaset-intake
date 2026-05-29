@@ -63,8 +63,9 @@ const submissionSchema = z.object({
   desiredSystemSize: z.string().max(80).default(''),
   email: optionalEmailSchema,
   inverter: z.string().max(200).default(''),
-  mainPanelRating: requiredTextSchema('Main panel rating', 80),
+  mainPanelRating: z.string().max(80).default(''),
   notes: z.string().max(4000).default(''),
+  racking: z.string().max(200).default(''),
   phone: z.string().max(40).default(''),
   requesterType: z.enum(['Homeowner', 'Installer']).or(z.literal('')).default(''),
   roofType: z.string().max(80).default(''),
@@ -159,6 +160,7 @@ async function sendNotificationEmail(input: {
         ${renderField('Solar panel', manifest.solarPanel)}
         ${renderField('Inverter', manifest.inverter)}
         ${renderField('Battery', manifest.battery)}
+        ${renderField('Racking', manifest.racking)}
         ${renderField('Notes', manifest.notes)}
       </table>
       <h2 style="margin:0 0 12px;font-size:20px;">Uploaded files</h2>
@@ -182,6 +184,7 @@ Number of panels: ${manifest.desiredSystemSize}
 Solar panel: ${manifest.solarPanel || '—'}
 Inverter: ${manifest.inverter || '—'}
 Battery: ${manifest.battery || '—'}
+Racking: ${manifest.racking || '—'}
 Notes: ${manifest.notes || '—'}
 
 Uploaded files:

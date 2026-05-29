@@ -121,6 +121,7 @@ export interface IntakePayload {
   solarPanel: string
   inverter: string
   battery: string
+  racking: string
   notes: string
   uploads: UploadedAsset[]
 }

@@ -863,6 +863,7 @@ export default function IntakePortal() {
         solarPanel: [form.moduleMake, form.moduleModel].filter(Boolean).join(' '),
         inverter: [form.inverterMake, form.inverterModel].filter(Boolean).join(' '),
         battery: [form.batteryMake, form.batteryModel].filter(Boolean).join(' '),
+        racking: '',
         notes: noteLines.join('\n'),
         uploads,
       }

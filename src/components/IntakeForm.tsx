@@ -548,6 +548,7 @@ export default function IntakeForm() {
         roofType: getText(formData, 'roofType'),
         siteAddress: getText(formData, 'siteAddress'),
         solarPanel: getText(formData, 'solarPanel'),
+        racking: '',
         uploads,
       }
 
