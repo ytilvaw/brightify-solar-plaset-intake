@@ -307,6 +307,53 @@ textarea.isp-input {
   color: var(--isp-ink);
 }
 
+/* ── email validation indicator ──────────────────────────────── */
+.email-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.email-wrap .isp-input {
+  padding-right: 42px; /* room for the icon */
+}
+.email-input-err {
+  border-color: var(--isp-coral) !important;
+  box-shadow: 0 0 0 3px rgba(255, 85, 119, 0.14) !important;
+}
+.email-status-icon {
+  position: absolute;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+.email-ok  { color: var(--isp-positive); }
+.email-err { color: var(--isp-coral); }
+
+@keyframes isp-spin {
+  to { transform: rotate(360deg); }
+}
+.email-spinner {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--isp-rule-strong);
+  border-top-color: var(--isp-orange);
+  border-radius: 50%;
+  animation: isp-spin 0.7s linear infinite;
+}
+
+.isp-error {
+  font-size: 12.5px;
+  color: var(--isp-coral);
+  line-height: 1.45;
+  margin-top: -2px;
+}
+
 .isp-select-wrap { position: relative; }
 .isp-select-wrap::after {
   content: "";

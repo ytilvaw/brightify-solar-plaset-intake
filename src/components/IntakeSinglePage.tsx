@@ -159,8 +159,7 @@ function TextField({ label, optional, hint, ...props }: {
 
 // ── file drop zone ────────────────────────────────────────────────────────────
 
-function FileDrop({ title, sub, files, onAdd, onRemove, field }: {
-  title: string
+function FileDrop({ sub, files, onAdd, onRemove, field }: {
   sub: string
   files: UploadedFile[]
   onAdd: (items: UploadedFile[]) => void
@@ -413,9 +412,43 @@ export default function IntakeSinglePage() {
     else if (e.key === 'Escape') setShowPredictions(false)
   }
 
+  // email validation state
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'checking' | 'ok' | 'error'>('idle')
+  const [emailError, setEmailError] = useState<string | null>(null)
+
+  // reset email validation whenever the email value changes
+  useEffect(() => {
+    setEmailStatus('idle')
+    setEmailError(null)
+  }, [form.email])
+
+  const checkEmail = async () => {
+    const email = form.email.trim()
+    if (!email) return
+    setEmailStatus('checking')
+    setEmailError(null)
+    try {
+      const res = await fetch('/api/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const data = await res.json() as { valid: boolean; reason?: string }
+      if (data.valid) {
+        setEmailStatus('ok')
+      } else {
+        setEmailStatus('error')
+        setEmailError(data.reason ?? 'Invalid email address.')
+      }
+    } catch {
+      // network failure — don't block the user, just reset to idle
+      setEmailStatus('idle')
+    }
+  }
+
   const set = (patch: Partial<FormState>) => setForm((f) => ({ ...f, ...patch }))
   const isWorking = status === 'uploading' || status === 'submitting'
-  const ready = !!(form.requesterType && form.contact && form.email && form.address)
+  const ready = !!(form.requesterType && form.contact && form.email && form.address && emailStatus === 'ok')
 
   const reset = () => {
     ;[...photos, ...datasheets].forEach((f) => { if (f.url) URL.revokeObjectURL(f.url) })
@@ -571,13 +604,33 @@ export default function IntakeSinglePage() {
             />
 
             <div className="row-2">
-              <TextField
-                label="Email"
-                type="email"
-                placeholder="ops@brightify.solar"
-                value={form.email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => set({ email: e.target.value })}
-              />
+              <div className="isp-field">
+                <label>Email</label>
+                <div className="email-wrap">
+                  <input
+                    className={`isp-input${emailStatus === 'error' ? ' email-input-err' : ''}`}
+                    type="email"
+                    placeholder="ops@brightify.solar"
+                    value={form.email}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => set({ email: e.target.value })}
+                    onBlur={checkEmail}
+                  />
+                  {emailStatus === 'checking' && (
+                    <span className="email-status-icon">
+                      <span className="email-spinner" aria-label="Checking…" />
+                    </span>
+                  )}
+                  {emailStatus === 'ok' && (
+                    <span className="email-status-icon email-ok" aria-label="Valid email">✓</span>
+                  )}
+                  {emailStatus === 'error' && (
+                    <span className="email-status-icon email-err" aria-label="Invalid email">✕</span>
+                  )}
+                </div>
+                {emailStatus === 'error' && emailError && (
+                  <div className="isp-error">{emailError}</div>
+                )}
+              </div>
               <TextField
                 label="Phone"
                 placeholder="(555) 555-0199"
@@ -708,7 +761,6 @@ export default function IntakeSinglePage() {
         </div>
         <FileDrop
           field="sitePhotos"
-          title="Site photos"
           sub="Upload site photos of the main electrical panel, utility meter, front of house, roof areas, and anything unusual that may affect the design."
           files={photos}
           onAdd={(items) => setPhotos((p) => [...p, ...items])}
@@ -723,7 +775,6 @@ export default function IntakeSinglePage() {
         </div>
         <FileDrop
           field="datasheets"
-          title="Datasheets"
           sub="Upload equipment datasheets here: solar panels, inverter, battery, racking, and any other spec sheets you already have."
           files={datasheets}
           onAdd={(items) => setDatasheets((d) => [...d, ...items])}
