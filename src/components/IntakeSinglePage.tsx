@@ -307,6 +307,8 @@ function Confirmation({ form, photoCount, sheetCount, onReset }: {
 
 // ── main component ────────────────────────────────────────────────────────────
 
+type PaymentSession = { paid: boolean; tierLabel: string; amount: number }
+
 export default function IntakeSinglePage() {
   const [form, setForm] = useState<FormState>(() => loadSaved() ?? BLANK)
   const [photos, setPhotos] = useState<UploadedFile[]>([])
@@ -314,6 +316,14 @@ export default function IntakeSinglePage() {
   const [done, setDone] = useState(false)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'submitting' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
+
+  // Stripe session from redirect
+  const [stripeSessionId] = useState<string | null>(() => {
+    const p = new URLSearchParams(window.location.search)
+    return p.get('session_id')
+  })
+  const [payment, setPayment] = useState<PaymentSession | null>(null)
+  const [paymentErr, setPaymentErr] = useState<string | null>(null)
 
   // address autocomplete
   const [addressPredictions, setAddressPredictions] = useState<AddressPrediction[]>([])
@@ -333,6 +343,24 @@ export default function IntakeSinglePage() {
     document.body.classList.add('isp-portal')
     return () => document.body.classList.remove('isp-portal')
   }, [])
+
+  // verify Stripe session
+  useEffect(() => {
+    if (!stripeSessionId) return
+    void (async () => {
+      try {
+        const res = await fetch(`/api/checkout?session_id=${encodeURIComponent(stripeSessionId)}`)
+        const data = await res.json() as { paid?: boolean; tierLabel?: string; amount?: number; error?: string }
+        if (!res.ok || data.error) {
+          setPaymentErr(data.error ?? 'Could not verify payment.')
+          return
+        }
+        setPayment({ paid: data.paid ?? false, tierLabel: data.tierLabel ?? '', amount: data.amount ?? 0 })
+      } catch {
+        setPaymentErr('Could not verify payment. Please contact support.')
+      }
+    })()
+  }, [stripeSessionId])
 
   // persist form
   useEffect(() => {
@@ -507,6 +535,7 @@ export default function IntakeSinglePage() {
         racking: form.racking,
         notes: noteLines.join('\n'),
         uploads,
+        ...(stripeSessionId ? { stripeSessionId } : {}),
       }
 
       const controller = new AbortController()
@@ -565,6 +594,32 @@ export default function IntakeSinglePage() {
 
   return (
     <main className="intake-page">
+      {/* ── payment confirmation banner ── */}
+      {stripeSessionId && payment?.paid && (
+        <div className="payment-banner payment-banner--ok">
+          <span className="payment-banner-check">✓</span>
+          <div>
+            <strong>Payment confirmed</strong>
+            {payment.tierLabel && <span> · {payment.tierLabel}</span>}
+            {payment.amount > 0 && (
+              <span> · ${(payment.amount / 100).toLocaleString('en-US', { minimumFractionDigits: 0 })}</span>
+            )}
+          </div>
+        </div>
+      )}
+      {stripeSessionId && payment && !payment.paid && (
+        <div className="payment-banner payment-banner--err">
+          <span>Payment not completed.</span>{' '}
+          <a href="/design#pricing">Return to pricing</a>
+        </div>
+      )}
+      {stripeSessionId && paymentErr && (
+        <div className="payment-banner payment-banner--err">
+          <span>{paymentErr}</span>{' '}
+          <a href="/design#pricing">Return to pricing</a>
+        </div>
+      )}
+
       {/* ── hero ── */}
       <header className="intake-hero">
         <img className="intake-logo" src="/brightify-logo.png" alt="Brightify" />

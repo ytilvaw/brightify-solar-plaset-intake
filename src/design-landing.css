@@ -1980,3 +1980,131 @@ h1.hero-title {
   .wa-fab { right: 16px; bottom: 16px; width: 52px; height: 52px; }
 }
 
+
+/* ---------- addons modal ---------- */
+.addons-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.addons-modal {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 24px 64px -16px rgba(15, 23, 42, 0.36);
+}
+
+.addons-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: color .15s, background .15s;
+}
+.addons-modal-close:hover { background: var(--paper-2); color: var(--ink); }
+
+.addons-modal-tier {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.addons-modal-tier-name {
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.addons-modal-tier-price {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--amber);
+}
+
+.addons-modal-section {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.addons-modal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.addons-modal-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.addons-modal-item:hover { border-color: var(--amber); background: var(--paper-2); }
+.addons-modal-item.checked { border-color: var(--amber); background: rgba(244, 164, 0, 0.07); }
+.addons-modal-item input[type="checkbox"] { accent-color: var(--amber); width: 15px; height: 15px; flex-shrink: 0; }
+.addons-modal-item-label { flex: 1; font-size: 14px; color: var(--ink); }
+.addons-modal-item-price { font-family: var(--mono); font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+
+.addons-modal-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+  border-top: 1px solid var(--rule);
+}
+
+.addons-modal-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.addons-modal-total-price {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.addons-modal-err {
+  font-size: 13px;
+  color: #e74c3c;
+}
+
+.addons-modal-cta {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .addons-modal { padding: 22px 18px 20px; }
+}

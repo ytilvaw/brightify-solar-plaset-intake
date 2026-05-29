@@ -124,6 +124,7 @@ export interface IntakePayload {
   racking: string
   notes: string
   uploads: UploadedAsset[]
+  stripeSessionId?: string
 }
 
 export const sitePhotoContentTypes = [

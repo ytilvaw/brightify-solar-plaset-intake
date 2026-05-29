@@ -71,6 +71,7 @@ const submissionSchema = z.object({
   roofType: z.string().max(80).default(''),
   siteAddress: requiredTextSchema('Site address', 300),
   solarPanel: z.string().max(200).default(''),
+  stripeSessionId: z.string().max(200).optional(),
   uploads: z.array(uploadSchema).max(maxUploadCount).default([]),
 })
 
@@ -162,6 +163,7 @@ async function sendNotificationEmail(input: {
         ${renderField('Battery', manifest.battery)}
         ${renderField('Racking', manifest.racking)}
         ${renderField('Notes', manifest.notes)}
+        ${manifest.stripeSessionId ? renderField('Stripe session', manifest.stripeSessionId) : ''}
       </table>
       <h2 style="margin:0 0 12px;font-size:20px;">Uploaded files</h2>
       <ul style="padding-left:20px;margin:0 0 24px;">

@@ -623,3 +623,30 @@ textarea.isp-input {
   .intake-card { padding: 24px; border-radius: 18px; }
   .row-2 { grid-template-columns: 1fr; }
 }
+
+/* ---------- payment confirmation banner ---------- */
+.payment-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.payment-banner--ok {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1.5px solid #6ee7b7;
+}
+.payment-banner--err {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1.5px solid #fca5a5;
+}
+.payment-banner-check {
+  font-size: 18px;
+  line-height: 1;
+}
+.payment-banner a { color: inherit; text-decoration: underline; }

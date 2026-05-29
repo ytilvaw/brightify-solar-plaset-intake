@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import '../design-landing.css'
+import { ADDONS, TIERS, formatPrice, type AddonId, type TierId } from '../lib/checkout'
 
 // ── shared ────────────────────────────────────────────────────────────────
 
@@ -623,7 +624,7 @@ const PRICING: Record<PricingKey, PricingCategory> = {
   },
 }
 
-const ADDONS = [
+const ADDON_DISPLAY = [
   { name: 'PE Stamp', plus: '+ $199' },
   { name: 'Structural letter', plus: '+ $149' },
   { name: 'Same-day expedite', plus: '+ $99' },
@@ -631,8 +632,110 @@ const ADDONS = [
   { name: 'Interconnection filing', plus: '+ $149' },
 ]
 
+// ── addons modal ──────────────────────────────────────────────────────────
+
+function AddonsModal({
+  tierId,
+  onClose,
+}: {
+  tierId: TierId
+  onClose: () => void
+}) {
+  const tier = TIERS[tierId]
+  const [selected, setSelected] = useState<Set<AddonId>>(new Set())
+  const [loading, setLoading] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  const toggle = (id: AddonId) =>
+    setSelected((s) => {
+      const next = new Set(s)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+
+  const total =
+    tier.price + [...selected].reduce((sum, id) => sum + ADDONS[id].price, 0)
+
+  const handlePay = async () => {
+    setLoading(true)
+    setErr(null)
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier: tierId, addons: [...selected] }),
+      })
+      const text = await res.text()
+      if (!text) throw new Error('Checkout API is not available. Run `vercel dev` locally or deploy to Vercel.')
+      const data = JSON.parse(text) as { url?: string; error?: string }
+      if (!res.ok || !data.url) throw new Error(data.error ?? 'Failed to start checkout.')
+      window.location.href = data.url
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Something went wrong.')
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div
+      className="addons-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Select add-ons"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+    >
+      <div className="addons-modal">
+        <button className="addons-modal-close" onClick={onClose} aria-label="Close">✕</button>
+
+        <div className="addons-modal-tier">
+          <span className="addons-modal-tier-name">{tier.label}</span>
+          <span className="addons-modal-tier-price">{formatPrice(tier.price)}</span>
+        </div>
+
+        <div className="addons-modal-section">Add-ons</div>
+        <div className="addons-modal-list">
+          {(Object.entries(ADDONS) as [AddonId, { label: string; price: number }][]).map(([id, addon]) => (
+            <label key={id} className={`addons-modal-item${selected.has(id) ? ' checked' : ''}`}>
+              <input
+                type="checkbox"
+                checked={selected.has(id)}
+                onChange={() => toggle(id)}
+              />
+              <span className="addons-modal-item-label">{addon.label}</span>
+              <span className="addons-modal-item-price">+{formatPrice(addon.price)}</span>
+            </label>
+          ))}
+        </div>
+
+        <div className="addons-modal-footer">
+          <div className="addons-modal-total">
+            <span>Total</span>
+            <span className="addons-modal-total-price">{formatPrice(total)}</span>
+          </div>
+          {err && <div className="addons-modal-err">{err}</div>}
+          <button
+            className="btn btn-grad btn-lg addons-modal-cta"
+            onClick={() => void handlePay()}
+            disabled={loading}
+          >
+            {loading ? 'Redirecting…' : <>Continue to payment <Arrow /></>}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// map pricing card → TierId
+const TIER_ID_MAP: Record<PricingKey, Record<string, TierId | null>> = {
+  residential: { Single: 'residential-single', '5-Pack': 'residential-5pack', '10-Pack': 'residential-10pack' },
+  battery:     { Single: 'battery-single',      '5-Pack': 'battery-5pack',     '10-Pack': 'battery-10pack'    },
+  commercial:  { Standard: 'commercial-standard', Enterprise: null },
+}
+
 function Pricing() {
   const [tab, setTab] = useState<PricingKey>('residential')
+  const [modalTier, setModalTier] = useState<TierId | null>(null)
   const data = PRICING[tab]
   return (
     <section className="pricing" id="pricing">
@@ -706,13 +809,30 @@ function Pricing() {
                 ))}
               </ul>
               <div className="card-cta">
-                <a
-                  className={`btn ${t.highlight ? 'btn-grad' : 'btn-primary'} btn-lg`}
-                  style={{ width: '100%', justifyContent: 'center' }}
-                  href="/planset"
-                >
-                  {t.cta} <Arrow />
-                </a>
+                {(() => {
+                  const tierId = TIER_ID_MAP[tab]?.[t.name]
+                  if (tierId === null) {
+                    // Enterprise — contact sales
+                    return (
+                      <a
+                        className={`btn ${t.highlight ? 'btn-grad' : 'btn-primary'} btn-lg`}
+                        style={{ width: '100%', justifyContent: 'center' }}
+                        href="mailto:info@brightifysolar.com"
+                      >
+                        {t.cta} <Arrow />
+                      </a>
+                    )
+                  }
+                  return (
+                    <button
+                      className={`btn ${t.highlight ? 'btn-grad' : 'btn-primary'} btn-lg`}
+                      style={{ width: '100%', justifyContent: 'center' }}
+                      onClick={() => tierId && setModalTier(tierId)}
+                    >
+                      {t.cta} <Arrow />
+                    </button>
+                  )
+                })()}
               </div>
             </div>
           ))}
@@ -724,7 +844,7 @@ function Pricing() {
             <div className="sub">Drop into any planset</div>
           </div>
           <div className="addons-list">
-            {ADDONS.map((a, i) => (
+            {ADDON_DISPLAY.map((a, i) => (
               <div key={i} className="addon">
                 <b>{a.name}</b>
                 <span className="plus">{a.plus}</span>
@@ -733,6 +853,7 @@ function Pricing() {
           </div>
         </div>
       </div>
+      {modalTier && <AddonsModal tierId={modalTier} onClose={() => setModalTier(null)} />}
     </section>
   )
 }
