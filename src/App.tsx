@@ -2,7 +2,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import AdminPage from './components/AdminPage'
 import DesignLandingPage from './components/DesignLandingPage'
-import IntakePortal from './components/IntakePortal'
+import IntakeSinglePage from './components/IntakeSinglePage'
 import LandingPage from './components/LandingPage'
 import RoofEvaluationForm from './components/RoofEvaluationForm'
 
@@ -74,7 +74,7 @@ export default function App() {
   if (window.location.pathname.startsWith('/planset')) {
     return (
       <>
-        <IntakePortal />
+        <IntakeSinglePage />
         <Analytics />
         <SpeedInsights />
       </>
