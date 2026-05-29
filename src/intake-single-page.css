@@ -212,7 +212,7 @@ body.isp-portal {
   display: grid;
   grid-template-columns: 1.08fr 0.92fr;
   gap: 40px;
-  align-items: start;
+  align-items: stretch;
 }
 .form-main {
   display: flex;
@@ -345,7 +345,7 @@ textarea.isp-input {
 }
 .notes-panel textarea.isp-input {
   flex: 1;
-  min-height: 360px;
+  min-height: 80px;
   background: var(--isp-paper);
 }
 
