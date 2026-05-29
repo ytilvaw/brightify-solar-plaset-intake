@@ -194,7 +194,6 @@ function FileDrop({ title, sub, files, onAdd, onRemove, field }: {
     <div>
       <div className="upload-head">
         <div className="ut">
-          <span className="ut-title">{title}</span>
           <span className="ut-sub">{sub}</span>
         </div>
         <button
@@ -688,9 +687,7 @@ export default function IntakeSinglePage() {
 
           {/* ── sticky notes panel ── */}
           <aside className="notes-panel">
-            <div className="isp-sec-label">
-              Intake<br />notes
-            </div>
+            <div className="isp-sec-label">Intake notes</div>
             <p className="notes-hint">
               Call out service upgrades, trenching, detached structures, HOA review, or anything that could change engineering assumptions.
             </p>

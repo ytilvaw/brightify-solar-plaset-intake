@@ -332,9 +332,6 @@ textarea.isp-input {
 .notes-panel .isp-sec-label {
   margin-bottom: 10px;
   color: var(--isp-orange);
-  font-size: 10px;
-  white-space: normal;
-  line-height: 1.4;
 }
 .notes-panel .isp-sec-label::after { display: none; }
 .notes-hint {
