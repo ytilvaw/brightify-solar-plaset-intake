@@ -268,6 +268,45 @@ textarea.isp-input {
   min-height: 110px;
   line-height: 1.55;
 }
+/* ── address autocomplete ──────────────────────────────────────── */
+.isp-address-wrap { position: relative; }
+
+.isp-address-suggestions {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  border: 1px solid var(--isp-rule-strong);
+  border-radius: 18px;
+  background: rgba(255, 252, 247, 0.98);
+  box-shadow: 0 20px 48px rgba(26, 20, 16, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.isp-address-suggestion {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  border-top: 1px solid var(--isp-rule);
+  background: transparent;
+  font-size: 14px;
+  font-family: var(--isp-sans);
+  line-height: 1.45;
+  color: var(--isp-ink-2);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+.isp-address-suggestion:first-child { border-top: 0; }
+.isp-address-suggestion:hover,
+.isp-address-suggestion.active {
+  background: rgba(255, 138, 61, 0.08);
+  color: var(--isp-ink);
+}
+
 .isp-select-wrap { position: relative; }
 .isp-select-wrap::after {
   content: "";

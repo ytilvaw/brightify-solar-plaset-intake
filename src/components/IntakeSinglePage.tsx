@@ -1,7 +1,42 @@
-import { useEffect, useRef, useState, type DragEvent } from 'react'
+import { useEffect, useRef, useState, type DragEvent, type KeyboardEvent } from 'react'
 import '../intake-single-page.css'
 import { uploadIntakeFile } from '../lib/uploads'
 import type { IntakePayload, UploadedAsset } from '../lib/intake'
+
+// ── Google Maps ───────────────────────────────────────────────────────────────
+
+const GMAPS_API_KEY = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined)?.trim()
+const GMAPS_CALLBACK = '__initGoogleMapsPlaces'
+const GMAPS_SCRIPT_ID = 'google-maps-places-script'
+const REQUEST_TIMEOUT_MS = 10_000
+
+type AddressPrediction = { description: string; place_id: string }
+type PlacesLibrary = {
+  AutocompleteSessionToken: new () => unknown
+  AutocompleteSuggestion: {
+    fetchAutocompleteSuggestions: (req: Record<string, unknown>) => Promise<{
+      suggestions?: Array<{ placePrediction?: { placeId?: string; text?: { toString: () => string } } }>
+    }>
+  }
+}
+
+function loadGoogleMapsPlaces(): Promise<void> {
+  if (!GMAPS_API_KEY) return Promise.resolve()
+  if (window.google?.maps?.importLibrary) return Promise.resolve()
+  if (window.__googleMapsPlacesPromise) return window.__googleMapsPlacesPromise
+  const existing = document.getElementById(GMAPS_SCRIPT_ID) as HTMLScriptElement | null
+  window.__googleMapsPlacesPromise = new Promise<void>((resolve, reject) => {
+    window[GMAPS_CALLBACK] = () => resolve()
+    const script = existing ?? document.createElement('script')
+    script.id = GMAPS_SCRIPT_ID
+    script.src = `https://maps.googleapis.com/maps/api/js?${new URLSearchParams({ callback: GMAPS_CALLBACK, key: GMAPS_API_KEY, libraries: 'places', loading: 'async' })}`
+    script.async = true
+    script.defer = true
+    script.onerror = () => { window.__googleMapsLoadError = 'Failed to load Google Maps'; reject(new Error(window.__googleMapsLoadError)) }
+    if (!existing) document.head.appendChild(script)
+  })
+  return window.__googleMapsPlacesPromise
+}
 
 // ── constants ─────────────────────────────────────────────────────────────────
 
@@ -282,6 +317,19 @@ export default function IntakeSinglePage() {
   const [status, setStatus] = useState<'idle' | 'uploading' | 'submitting' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
 
+  // address autocomplete
+  const [addressPredictions, setAddressPredictions] = useState<AddressPrediction[]>([])
+  const [showPredictions, setShowPredictions] = useState(false)
+  const [activePredIdx, setActivePredIdx] = useState(-1)
+  const [acStatus, setAcStatus] = useState<'disabled' | 'loading' | 'ready' | 'error'>(
+    GMAPS_API_KEY ? 'loading' : 'disabled',
+  )
+  const addressInputRef = useRef<HTMLInputElement>(null)
+  const placesLibRef = useRef<PlacesLibrary | null>(null)
+  const sessionTokenRef = useRef<unknown | null>(null)
+  const predReqIdRef = useRef(0)
+  const addressBlurRef = useRef<number | null>(null)
+
   // add body class for background gradient
   useEffect(() => {
     document.body.classList.add('isp-portal')
@@ -301,6 +349,71 @@ export default function IntakeSinglePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // cleanup blur timer
+  useEffect(() => {
+    return () => { if (addressBlurRef.current) window.clearTimeout(addressBlurRef.current) }
+  }, [])
+
+  // load Google Maps Places library
+  useEffect(() => {
+    if (!GMAPS_API_KEY) return
+    let active = true
+    void (async () => {
+      try {
+        await loadGoogleMapsPlaces()
+        if (!active || !window.google?.maps?.importLibrary) return
+        const lib = await window.google.maps.importLibrary('places')
+        if (!active) return
+        placesLibRef.current = lib
+        sessionTokenRef.current = new lib.AutocompleteSessionToken()
+        setAcStatus('ready')
+      } catch {
+        if (active) setAcStatus('error')
+      }
+    })()
+    return () => { active = false }
+  }, [])
+
+  // fetch address predictions
+  useEffect(() => {
+    if (acStatus !== 'ready' || !placesLibRef.current || !sessionTokenRef.current) return
+    const query = form.address.trim()
+    if (query.length < 3) { setAddressPredictions([]); setActivePredIdx(-1); return }
+    const id = window.setTimeout(() => {
+      const reqId = ++predReqIdRef.current
+      void placesLibRef.current!.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        includedRegionCodes: ['us'], input: query, language: 'en-US', region: 'us',
+        sessionToken: sessionTokenRef.current,
+      }).then((result) => {
+        if (reqId !== predReqIdRef.current) return
+        const preds = (result.suggestions ?? [])
+          .map((s) => s.placePrediction)
+          .filter(Boolean)
+          .map((p) => ({ description: p!.text?.toString().trim() ?? '', place_id: p!.placeId ?? '' }))
+          .filter((p) => p.description && p.place_id)
+        setAddressPredictions(preds)
+        setActivePredIdx(preds.length ? 0 : -1)
+      }).catch(() => { if (reqId === predReqIdRef.current) setAddressPredictions([]) })
+    }, 200)
+    return () => window.clearTimeout(id)
+  }, [acStatus, form.address])
+
+  const selectPrediction = (pred: AddressPrediction) => {
+    set({ address: pred.description })
+    setShowPredictions(false)
+    setAddressPredictions([])
+    setActivePredIdx(-1)
+    if (placesLibRef.current) sessionTokenRef.current = new placesLibRef.current.AutocompleteSessionToken()
+  }
+
+  const handleAddressKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!showPredictions || !addressPredictions.length) return
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActivePredIdx((i) => i >= addressPredictions.length - 1 ? 0 : i + 1) }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActivePredIdx((i) => i <= 0 ? addressPredictions.length - 1 : i - 1) }
+    else if (e.key === 'Enter' && activePredIdx >= 0) { e.preventDefault(); selectPrediction(addressPredictions[activePredIdx]) }
+    else if (e.key === 'Escape') setShowPredictions(false)
+  }
+
   const set = (patch: Partial<FormState>) => setForm((f) => ({ ...f, ...patch }))
   const isWorking = status === 'uploading' || status === 'submitting'
   const ready = !!(form.requesterType && form.contact && form.email && form.address)
@@ -315,21 +428,22 @@ export default function IntakeSinglePage() {
     setError(null)
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (honeypot?: string) => {
     if (!ready || isWorking) return
+
+    // honeypot bot screen
+    if (honeypot) { setDone(true); return }
+
     setError(null)
     setStatus('uploading')
 
     try {
       const uploads: UploadedAsset[] = []
 
-      // Upload site photos
       for (const f of photos) {
         const asset = await uploadIntakeFile({ field: 'sitePhotos', file: f.file, label: f.name })
         uploads.push(asset)
       }
-
-      // Upload datasheets
       for (const f of datasheets) {
         const asset = await uploadIntakeFile({ field: 'datasheets', file: f.file, label: f.name })
         uploads.push(asset)
@@ -337,10 +451,8 @@ export default function IntakeSinglePage() {
 
       setStatus('submitting')
 
-      // Map requester type to API-accepted values
       const requesterType = form.requesterType === 'Homeowner' ? 'Homeowner' : 'Installer'
 
-      // Build notes including extra fields
       const noteLines: string[] = []
       if (form.requesterType && form.requesterType !== 'Homeowner' && form.requesterType !== 'Solar installer / EPC') {
         noteLines.push(`Requester: ${form.requesterType}`)
@@ -365,11 +477,19 @@ export default function IntakeSinglePage() {
         uploads,
       }
 
-      const response = await fetch('/api/intake', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      const controller = new AbortController()
+      const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+      let response: Response
+      try {
+        response = await fetch('/api/intake', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        })
+      } finally {
+        window.clearTimeout(timeoutId)
+      }
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({})) as { error?: string }
@@ -381,7 +501,11 @@ export default function IntakeSinglePage() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
       setStatus('error')
-      setError(err instanceof Error ? err.message : 'Submission failed. Please try again.')
+      if (err instanceof Error && err.name === 'AbortError') {
+        setError(`Request timed out after ${REQUEST_TIMEOUT_MS / 1000}s. Please try again.`)
+      } else {
+        setError(err instanceof Error ? err.message : 'Submission failed. Please try again.')
+      }
     }
   }
 
@@ -463,12 +587,42 @@ export default function IntakeSinglePage() {
               />
             </div>
 
-            <TextField
-              label="Site address"
-              placeholder="123 Main St, City, State, ZIP"
-              value={form.address}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => set({ address: e.target.value })}
-            />
+            {/* honeypot — never visible */}
+            <input autoComplete="off" name="website" style={{ display: 'none' }} tabIndex={-1} />
+
+            <div className="isp-field">
+              <label>Site address</label>
+              <div className="isp-address-wrap">
+                <input
+                  autoComplete="street-address"
+                  className="isp-input"
+                  placeholder="123 Main St, City, State, ZIP"
+                  ref={addressInputRef}
+                  spellCheck={false}
+                  type="text"
+                  value={form.address}
+                  onChange={(e) => { set({ address: e.target.value }); setShowPredictions(true) }}
+                  onFocus={() => { if (addressPredictions.length) setShowPredictions(true) }}
+                  onBlur={() => { addressBlurRef.current = window.setTimeout(() => setShowPredictions(false), 120) }}
+                  onKeyDown={handleAddressKeyDown}
+                />
+                {showPredictions && addressPredictions.length > 0 && (
+                  <div className="isp-address-suggestions" role="listbox">
+                    {addressPredictions.map((pred, idx) => (
+                      <button
+                        key={pred.place_id}
+                        type="button"
+                        className={`isp-address-suggestion${idx === activePredIdx ? ' active' : ''}`}
+                        aria-selected={idx === activePredIdx}
+                        onMouseDown={(e) => { e.preventDefault(); selectPrediction(pred) }}
+                      >
+                        {pred.description}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
 
             <div className="row-2">
               <TextField
@@ -590,7 +744,10 @@ export default function IntakeSinglePage() {
           </span>
           <button
             className="isp-btn isp-btn-grad isp-btn-lg"
-            onClick={handleSubmit}
+            onClick={() => {
+              const hp = (document.querySelector('input[name="website"]') as HTMLInputElement | null)?.value ?? ''
+              void handleSubmit(hp)
+            }}
             disabled={!ready || isWorking}
           >
             {isWorking
