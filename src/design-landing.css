@@ -1383,7 +1383,7 @@ h1.hero-title {
   border-right: none;
   transform: rotate(-45deg) translate(1px, -1px);
 }
-.card-cta { margin-top: 4px; }
+.card-cta { margin-top: auto; padding-top: 4px; }
 
 .addons {
   border: 1px dashed var(--rule-strong);

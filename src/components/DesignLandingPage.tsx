@@ -492,7 +492,7 @@ const PRICING: Record<PricingKey, PricingCategory> = {
           'Free AHJ revisions',
           'AC/DC placards included',
         ],
-        cta: 'Start one project',
+        cta: 'Buy one project',
       },
       {
         name: '5-Pack',
@@ -547,7 +547,7 @@ const PRICING: Record<PricingKey, PricingCategory> = {
           'Free AHJ revisions',
           'Critical-load panel detail',
         ],
-        cta: 'Start one project',
+        cta: 'Buy one project',
       },
       {
         name: '5-Pack',
