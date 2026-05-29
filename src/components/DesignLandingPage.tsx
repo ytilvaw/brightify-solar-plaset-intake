@@ -551,7 +551,7 @@ const PRICING: Record<PricingKey, PricingCategory> = {
       },
       {
         name: '5-Pack',
-        price: 1500,
+        price: 1499,
         each: 300,
         save: '$495',
         desc: 'Battery projects, priority queue.',
@@ -569,7 +569,7 @@ const PRICING: Record<PricingKey, PricingCategory> = {
       },
       {
         name: '10-Pack',
-        price: 2700,
+        price: 2699,
         each: 270,
         save: '$1,290',
         desc: 'Volume tier for storage-heavy installers.',
