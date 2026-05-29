@@ -568,10 +568,6 @@ export default function IntakeSinglePage() {
       {/* ── hero ── */}
       <header className="intake-hero">
         <img className="intake-logo" src="/brightify-logo.png" alt="Brightify" />
-        <div className="intake-eyebrow">
-          <span className="pill">Step</span>
-          Project intake
-        </div>
         <h1>Solar planset <em>intake</em>.</h1>
         <p className="sub">
           Submit the project details, equipment assumptions, and site photos needed to start planset design.
