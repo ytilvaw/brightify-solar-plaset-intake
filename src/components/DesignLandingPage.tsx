@@ -1221,9 +1221,6 @@ function Footer() {
             <li>
               <a href="mailto:info@brightifysolar.com">Email us</a>
             </li>
-            <li>
-              <a href="/planset">Start a planset</a>
-            </li>
           </ul>
         </div>
       </div>
