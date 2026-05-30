@@ -52,7 +52,7 @@ function Announce() {
           <span className="announce-dot" />
           Now accepting new installer accounts · 24-hr turnaround
         </div>
-        <div className="announce-right">Talk to a designer — (408) 464-3739</div>
+        <div className="announce-right"><a href="mailto:planset@brightifysolar.com" style={{ color: 'inherit' }}>Email a designer — planset@brightifysolar.com</a></div>
       </div>
     </div>
   )
