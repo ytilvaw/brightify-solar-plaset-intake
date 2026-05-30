@@ -143,11 +143,16 @@ function AllProducts({ onHome }: { onHome: boolean }) {
           ))}
         </div>
         <a className="apm-design" href="/design" onClick={() => setOpen(false)}>
-          <span className="apm-text">
-            <span className="e">Brightify Design Studio</span>
-            <span className="n">Permit plansets that pass</span>
+          <span className="apm-ico">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M32 8l8 8-20 20H12v-8L32 8Z" />
+              <path d="M28 12l8 8" />
+            </svg>
           </span>
-          <SHArrow />
+          <span className="apm-text">
+            <span className="apm-name">Design Studio</span>
+            <span className="apm-hook">Permit plansets</span>
+          </span>
         </a>
       </div>
     </div>

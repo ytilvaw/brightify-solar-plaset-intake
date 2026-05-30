@@ -420,15 +420,8 @@ footer .col ul a:hover { color: var(--amber); }
 .apm-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .apm-name { font-size: 14.5px; font-weight: 500; color: var(--ink); letter-spacing: -0.01em; }
 .apm-hook { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.apm-design {
-  margin-top: 10px; display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; padding: 14px 16px; border-radius: 12px; background: var(--ink); color: var(--paper);
-  transition: transform .15s ease;
-}
-.apm-design:hover { transform: translateY(-1px); }
-.apm-design .e { font-family: var(--mono); font-size: 9px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--amber); }
-.apm-design .n { font-size: 14px; font-weight: 500; }
-.apm-design .arrow { color: var(--amber); }
+.apm-design { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; transition: background .15s ease; }
+.apm-design:hover { background: var(--paper-2); }
 
 .allprod-scrim { position: fixed; inset: 0; z-index: 55; }
 
