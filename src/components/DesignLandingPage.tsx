@@ -1159,14 +1159,6 @@ function Footer() {
             Solar permit design for installers and DIY homeowners. Built by people who've installed
             the panels themselves.
           </p>
-          <div className="foot-contact">
-            <div>
-              <a href="tel:+14084643739">(408) 464-3739</a>
-            </div>
-            <div>
-              <a href="https://wa.me/14084643739">WhatsApp — (408) 464-3739</a>
-            </div>
-          </div>
         </div>
         <div className="col">
           <h4>Product</h4>
