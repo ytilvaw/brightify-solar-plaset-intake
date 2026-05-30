@@ -1053,7 +1053,7 @@ const FAQS: FaqItem[] = [
   {
     q: "What's your refund policy?",
     featured: true,
-    a: "Every plan set is custom-engineered for your specific project. Our designers put real craft and hours of meticulous work into your set the moment you order, so once your plan set has been prepared, it's non-refundable. What we promise instead: we stay reachable throughout, and we provide free revisions for as long as it takes to get you approved. You're never on your own, your plan set always crosses the finish line.",
+    a: "Every plan set is custom engineered for your specific project. Our designers put real craft and hours of meticulous work into your set, so once your plan set has been prepared, it's non-refundable. However, we promise to stay reachable throughout and provide free revisions for as long as it takes to get you approved. You're never on your own, your plan set always crosses the finish line.",
   },
 ]
 
