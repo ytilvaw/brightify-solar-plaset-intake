@@ -56,6 +56,7 @@ interface Product {
   pricePerW: string;   // display e.g. "$0.31/W"
   art: 'allblack' | 'bifacial' | 'standard'; // CSS art variant
   tags: string[];      // 'topcon' | 'hjt' | 'bifacial' | 'allblack'
+  datasheet?: string;  // URL to PDF datasheet
   flag?: string;
 }
 
@@ -78,6 +79,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.31/W',
     art: 'bifacial',
     tags: ['topcon', 'bifacial'],
+    datasheet: 'https://en.risen.com/uploads/20240416/Risen_TDS%20for%20N-type%20Dual%20Glass%20Modules-20240416.pdf',
   },
   {
     id: 'trina-tsm-435neg9r',
@@ -96,6 +98,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.34/W',
     art: 'standard',
     tags: ['topcon'],
+    datasheet: 'https://static.trinasolar.com/sites/default/files/230531_Datasheet_Vertex%20S+_NEG9R.28_EN_2023_B_web.pdf',
   },
   {
     id: 'trina-tsm-445neg9r',
@@ -115,6 +118,7 @@ const PRODUCTS: Product[] = [
     art: 'standard',
     tags: ['topcon'],
     flag: 'Best seller',
+    datasheet: 'https://static.trinasolar.com/sites/default/files/230531_Datasheet_Vertex%20S+_NEG9R.28_EN_2023_B_web.pdf',
   },
   {
     id: 'trina-tsm-585neg18c',
@@ -133,6 +137,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.32/W',
     art: 'bifacial',
     tags: ['topcon', 'bifacial', 'commercial'],
+    datasheet: 'https://static.trinasolar.com/sites/default/files/Datasheet_Vertex_NEG18C.20_EN_2023_A.pdf',
   },
   {
     id: 'trina-tsm-610neg19rc',
@@ -152,6 +157,7 @@ const PRODUCTS: Product[] = [
     art: 'bifacial',
     tags: ['topcon', 'bifacial', 'commercial'],
     flag: 'Max power',
+    datasheet: 'https://static.trinasolar.com/sites/default/files/Datasheet_Vertex_NEG19RC.20_EN_2023_A.pdf',
   },
   {
     id: 'canadian-cs6w-585tb',
@@ -170,6 +176,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.32/W',
     art: 'bifacial',
     tags: ['topcon', 'bifacial', 'commercial'],
+    datasheet: 'https://www.canadiansolar.com/wp-content/uploads/2023/09/Canadian_Solar-Datasheet-TOPBiHiKu6-CS6W-TB-AG_v1.12_EN.pdf',
   },
   {
     id: 'ja-jam54d40-455lb',
@@ -189,6 +196,7 @@ const PRODUCTS: Product[] = [
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
     flag: 'High efficiency',
+    datasheet: 'https://www.jasolar.com/uploadfile/2023/0606/20230606020521211.pdf',
   },
   {
     id: 'znshine-zxmr-uhldd96-450',
@@ -207,6 +215,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.325/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
+    datasheet: 'https://sunwatts.com/content/specs/ZNShine%20450%20datasheet.pdf',
   },
   {
     id: 'ht-ht54-18x-f-455',
@@ -225,6 +234,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.325/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
+    datasheet: 'https://www.ht-saae.com/upload/2023/09/HT54-18X(ND)-F_EN.pdf',
   },
   {
     id: 'ht-ht54-18x-f-435',
@@ -243,6 +253,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.325/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
+    datasheet: 'https://www.ht-saae.com/upload/2023/09/HT54-18X(ND)-F_EN.pdf',
   },
   {
     id: 'huasun-hsn-210r-b96dsn440',
@@ -261,6 +272,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.325/W',
     art: 'allblack',
     tags: ['hjt', 'bifacial', 'allblack'],
+    datasheet: 'https://www.huasunsolar.com/wp-content/uploads/2023/06/Huasun-HJT-Module-Himalaya-series-datasheet.pdf',
   },
   {
     id: 'jinko-jkm585n-72hl4-bdv',
@@ -279,6 +291,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.34/W',
     art: 'bifacial',
     tags: ['topcon', 'bifacial', 'commercial'],
+    datasheet: 'https://jinkosolar.eu/wp-content/uploads/JKM560-580N-72HL4-BDV-F3-EN.pdf',
   },
   {
     id: 'jinko-jkm470n-60hl4-v',
@@ -297,6 +310,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.34/W',
     art: 'standard',
     tags: ['topcon'],
+    datasheet: 'https://jinkosolar.eu/wp-content/uploads/JKM460-480N-60HL4-V-F3-EN.pdf',
   },
 ];
 
@@ -353,7 +367,7 @@ function ProductCard({ p, inQuote, onToggle }: { p: Product; inQuote: boolean; o
         <div style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: '-4px' }}>
           {p.model}
         </div>
-        <h3 className="prod-name">{p.name}</h3>
+        <h3 className="prod-name">{p.brand.toUpperCase()} {p.name}</h3>
         <div className="prod-specs">
           <span className="prod-spec">{p.watt} W</span>
           <span className="prod-spec">{p.eff}</span>
@@ -363,6 +377,29 @@ function ProductCard({ p, inQuote, onToggle }: { p: Product; inQuote: boolean; o
         <div style={{ fontFamily: 'var(--mono)', fontSize: '10px', color: 'var(--ink-3)', letterSpacing: '0.04em' }}>
           {p.dims} · {p.weight} · {p.use === 'res' ? 'Residential' : 'Commercial'}
         </div>
+        {p.datasheet && (
+          <a
+            href={p.datasheet}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '5px',
+              fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '0.06em',
+              textTransform: 'uppercase', color: 'var(--ink-2)',
+              border: '1px solid var(--rule-strong)', borderRadius: '6px',
+              padding: '5px 10px', background: 'var(--paper-2)',
+              transition: 'border-color .15s, color .15s', width: 'fit-content',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--orange)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--ink)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--rule-strong)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--ink-2)'; }}
+          >
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+              <rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+              <path d="M4.5 4.5h5M4.5 7h5M4.5 9.5h3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+            </svg>
+            Spec sheet
+          </a>
+        )}
         <div className="prod-foot">
           <div className="prod-price">
             <span className="from">{p.pricePerW}</span>
