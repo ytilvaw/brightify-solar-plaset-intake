@@ -390,10 +390,6 @@ footer .col ul a:hover { color: var(--amber); }
 }
 .cat-link:hover::after, .cat-link.active::after { transform: scaleX(1); }
 .cat-link.active { color: var(--paper); }
-.cat-link.design {
-  margin-left: auto; color: var(--amber); font-weight: 500; gap: 7px;
-}
-.cat-link.design::after { background: var(--amber); }
 .cat-link.design .spark { font-size: 11px; }
 
 /* ---- All Products mega dropdown ---- */
@@ -442,8 +438,7 @@ footer .col ul a:hover { color: var(--amber); }
   .site-search { max-width: none; }
 }
 @media (max-width: 820px) {
-  .site-catbar .cat-link:not(.design) { display: none; }
-  .cat-link.design { margin-left: auto; }
+  .site-catbar .cat-link { display: none; }
 }
 @media (max-width: 760px) {
   .site-row1 .wrap { gap: 14px; }
