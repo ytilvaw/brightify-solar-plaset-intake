@@ -137,7 +137,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.32/W',
     art: 'bifacial',
     tags: ['topcon', 'bifacial', 'commercial'],
-    datasheet: 'https://static.trinasolar.com/sites/default/files/Datasheet_Vertex_NEG18C.20_EN_2023_A.pdf',
+    datasheet: 'https://dpvenergy.com/wp-content/uploads/2024/05/DOC-20250305-WA0001.pdf',
   },
   {
     id: 'trina-tsm-610neg19rc',
@@ -176,7 +176,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.32/W',
     art: 'bifacial',
     tags: ['topcon', 'bifacial', 'commercial'],
-    datasheet: 'https://www.canadiansolar.com/wp-content/uploads/2023/09/Canadian_Solar-Datasheet-TOPBiHiKu6-CS6W-TB-AG_v1.12_EN.pdf',
+    datasheet: 'https://static.csisolar.com/wp-content/uploads/2022/09/06160941/CS-Datasheet-TOPBiHiKu6-TOPCon_CS6W-TB-AG_v1.8_EN.pdf',
   },
   {
     id: 'ja-jam54d40-455lb',
@@ -196,7 +196,7 @@ const PRODUCTS: Product[] = [
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
     flag: 'High efficiency',
-    datasheet: 'https://www.jasolar.com/uploadfile/2023/0606/20230606020521211.pdf',
+    datasheet: '/datasheets/ja-jam54d40-455lb.pdf',
   },
   {
     id: 'znshine-zxmr-uhldd96-450',
@@ -234,7 +234,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.325/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
-    datasheet: 'https://www.ht-saae.com/upload/2023/09/HT54-18X(ND)-F_EN.pdf',
+    datasheet: 'https://ussolarsupplier.com/cdn/shop/files/SPEC_HT54-18X_ND_-F_455W_USSS.pdf',
   },
   {
     id: 'ht-ht54-18x-f-435',
@@ -253,7 +253,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.325/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
-    datasheet: 'https://www.ht-saae.com/upload/2023/09/HT54-18X(ND)-F_EN.pdf',
+    datasheet: 'https://ussolarsupplier.com/cdn/shop/files/SPEC_HT54-18X_ND_-F_455W_USSS.pdf',
   },
   {
     id: 'huasun-hsn-210r-b96dsn440',
@@ -272,7 +272,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.325/W',
     art: 'allblack',
     tags: ['hjt', 'bifacial', 'allblack'],
-    datasheet: 'https://www.huasunsolar.com/wp-content/uploads/2023/06/Huasun-HJT-Module-Himalaya-series-datasheet.pdf',
+    datasheet: 'https://www.huasunsolar.com/uploads/file/hsn-210r-b96dsn-435-460-en.pdf',
   },
   {
     id: 'jinko-jkm585n-72hl4-bdv',
@@ -310,7 +310,7 @@ const PRODUCTS: Product[] = [
     pricePerW: '$0.34/W',
     art: 'standard',
     tags: ['topcon'],
-    datasheet: 'https://jinkosolar.eu/wp-content/uploads/JKM460-480N-60HL4-V-F3-EN.pdf',
+    datasheet: 'https://jinkosolar.com.au/wp-content/uploads/2022/11/JKM470-490N-60HL4R-V-AUS.pdf',
   },
 ];
 
