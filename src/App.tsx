@@ -3,8 +3,9 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import AdminPage from './components/AdminPage'
 import DesignLandingPage from './components/DesignLandingPage'
 import IntakeSinglePage from './components/IntakeSinglePage'
-import LandingPage from './components/LandingPage'
 import RoofEvaluationForm from './components/RoofEvaluationForm'
+import StoreLandingPage from './components/StoreLandingPage'
+import SolarPanelsPage from './components/SolarPanelsPage'
 
 function BackHomeNav() {
   return (
@@ -91,9 +92,19 @@ export default function App() {
     )
   }
 
+  if (window.location.pathname.startsWith('/solar-panels')) {
+    return (
+      <>
+        <SolarPanelsPage />
+        <Analytics />
+        <SpeedInsights />
+      </>
+    )
+  }
+
   return (
     <>
-      <LandingPage />
+      <StoreLandingPage />
       <Analytics />
       <SpeedInsights />
     </>
