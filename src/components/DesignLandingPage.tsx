@@ -253,7 +253,7 @@ const TRUST_CELLS = [
   { big: '98.3%', sub: '', lbl: 'First-pass AHJ approval rate across 50 states.', grad: true },
   { big: '24', sub: 'hr', lbl: 'Standard turnaround on residential plansets.' },
   { big: '3,200', sub: '+', lbl: 'Plansets shipped to installers since 2021.' },
-  { big: '$179', sub: '', lbl: 'Starts here. Pay per planset or buy a 5-pack.' },
+  { big: '$179', sub: '', lbl: 'Starts here. Pay per planset or buy a pack.' },
 ]
 
 function Trust() {
