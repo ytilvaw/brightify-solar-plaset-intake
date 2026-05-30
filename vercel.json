@@ -31,6 +31,14 @@
     {
       "source": "/admin/(.*)",
       "destination": "/"
+    },
+    {
+      "source": "/solar-panels",
+      "destination": "/"
+    },
+    {
+      "source": "/solar-panels/(.*)",
+      "destination": "/"
     }
   ]
 }
