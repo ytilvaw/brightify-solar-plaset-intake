@@ -1164,7 +1164,7 @@ function CTA() {
           desk before the sun sets tomorrow.
         </p>
         <div className="cta-ctas">
-          <a className="btn btn-grad btn-lg" href="/planset">
+          <a className="btn btn-grad btn-lg" href="#pricing">
             Purchase <Arrow />
           </a>
           <a
