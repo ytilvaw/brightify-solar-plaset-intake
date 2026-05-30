@@ -437,7 +437,7 @@ function Drawer({
   const waMsg = useMemo(() => {
     if (!items.length) return '';
     const lines = items.map((p) => `• ${p.brand} ${p.model} (${p.watt}W, ${p.tech}) — $${p.price.toFixed(2)}/panel`);
-    return encodeURIComponent(`Hi Brightify, I'd like a quote on these solar panels:\n${lines.join('\n')}\n\nMy project: `);
+    return encodeURIComponent(`Hi Brightify, I'd like a quote on these solar panels:\n${lines.join('\n')}`);
   }, [items]);
 
   return (
