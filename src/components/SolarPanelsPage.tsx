@@ -42,37 +42,278 @@ const WhatsAppFab = () => (
 interface Product {
   id: string;
   brand: string;
+  model: string;
   name: string;
   watt: number;
-  eff: number;
-  cell: string;
-  use: string;
-  warranty: number;
-  price: number;
+  eff: string;         // e.g. "22.3%"
+  tech: string;        // display: "N-Type TOPCon", "HJT", etc.
+  dims: string;        // e.g. "1762×1134×30mm"
+  weight: string;
+  use: 'res' | 'com';
+  productWarranty: string;
+  powerWarranty: string;
+  price: number;       // per panel ($/W + 0.10) × watt
+  pricePerW: string;   // display e.g. "$0.31/W"
+  art: 'allblack' | 'bifacial' | 'standard'; // CSS art variant
+  tags: string[];      // 'topcon' | 'hjt' | 'bifacial' | 'allblack'
   flag?: string;
 }
 
+// Prices = (USA list $/W + $0.10) × wattage, rounded to 2 dp
 const PRODUCTS: Product[] = [
-  { id: 'bf-mono-450', brand: 'Brightify', name: 'House Mono 450', watt: 450, eff: 21.3, cell: 'mono', use: 'res', warranty: 25, price: 189, flag: 'House brand' },
-  { id: 'helios-bi-550', brand: 'Helios', name: 'Bifacial 550', watt: 550, eff: 21.8, cell: 'bifacial', use: 'com', warranty: 30, price: 229 },
-  { id: 'north-ab-410', brand: 'Northstar', name: 'All-Black 410', watt: 410, eff: 20.9, cell: 'allblack', use: 'res', warranty: 25, price: 179, flag: 'Best seller' },
-  { id: 'aurora-n-440', brand: 'Aurora', name: 'N-Type 440', watt: 440, eff: 22.3, cell: 'ntype', use: 'res', warranty: 30, price: 209, flag: 'High efficiency' },
-  { id: 'sunforge-500', brand: 'SunForge', name: 'Mono 500', watt: 500, eff: 21.5, cell: 'mono', use: 'com', warranty: 25, price: 215 },
-  { id: 'lumen-ab-400', brand: 'Lumen', name: 'All-Black 400', watt: 400, eff: 20.6, cell: 'allblack', use: 'res', warranty: 25, price: 169 },
-  { id: 'helios-mono-480', brand: 'Helios', name: 'Mono 480', watt: 480, eff: 21.6, cell: 'mono', use: 'res', warranty: 25, price: 199 },
-  { id: 'vela-bi-575', brand: 'Vela', name: 'Bifacial 575', watt: 575, eff: 22.0, cell: 'bifacial', use: 'com', warranty: 30, price: 239, flag: 'Max power' },
-  { id: 'bf-mono-415', brand: 'Brightify', name: 'House Mono 415', watt: 415, eff: 21.0, cell: 'mono', use: 'res', warranty: 25, price: 175 },
+  {
+    id: 'risen-rsm108-9-435',
+    brand: 'Risen Energy',
+    model: 'RSM108-9-435BNDG',
+    name: 'RSM108-9-435 435W',
+    watt: 435,
+    eff: '22.3%',
+    tech: 'N-Type TOPCon',
+    dims: '1722×1134×30 mm',
+    weight: '24.5 kg',
+    use: 'res',
+    productWarranty: '15 yr',
+    powerWarranty: '30 yr',
+    price: 134.85,    // ($0.21 + $0.10) × 435
+    pricePerW: '$0.31/W',
+    art: 'bifacial',
+    tags: ['topcon', 'bifacial'],
+  },
+  {
+    id: 'trina-tsm-435neg9r',
+    brand: 'Trina Solar',
+    model: 'TSM-435NEG9R.28',
+    name: 'Vertex S+ 435W',
+    watt: 435,
+    eff: '21.8%',
+    tech: 'N-Type TOPCon',
+    dims: '1762×1134×30 mm',
+    weight: '21.1 kg',
+    use: 'res',
+    productWarranty: '25 yr',
+    powerWarranty: '30 yr',
+    price: 147.90,    // ($0.24 + $0.10) × 435
+    pricePerW: '$0.34/W',
+    art: 'standard',
+    tags: ['topcon'],
+  },
+  {
+    id: 'trina-tsm-445neg9r',
+    brand: 'Trina Solar',
+    model: 'TSM-445NEG9R.28',
+    name: 'Vertex S+ 445W',
+    watt: 445,
+    eff: '22.3%',
+    tech: 'N-Type TOPCon',
+    dims: '1762×1134×30 mm',
+    weight: '21.1 kg',
+    use: 'res',
+    productWarranty: '25 yr',
+    powerWarranty: '30 yr',
+    price: 151.30,    // ($0.24 + $0.10) × 445
+    pricePerW: '$0.34/W',
+    art: 'standard',
+    tags: ['topcon'],
+    flag: 'Best seller',
+  },
+  {
+    id: 'trina-tsm-585neg18c',
+    brand: 'Trina Solar',
+    model: 'TSM-585NEG18C.20',
+    name: 'Vertex 585W Bifacial',
+    watt: 585,
+    eff: '22.6%',
+    tech: 'N-Type TOPCon',
+    dims: '2278×1134×30 mm',
+    weight: '31.9 kg',
+    use: 'com',
+    productWarranty: '12 yr',
+    powerWarranty: '30 yr',
+    price: 187.20,    // ($0.22 + $0.10) × 585
+    pricePerW: '$0.32/W',
+    art: 'bifacial',
+    tags: ['topcon', 'bifacial', 'commercial'],
+  },
+  {
+    id: 'trina-tsm-610neg19rc',
+    brand: 'Trina Solar',
+    model: 'TSM-610NEG19RC.20',
+    name: 'Vertex 610W Bifacial',
+    watt: 610,
+    eff: '22.58%',
+    tech: 'N-Type TOPCon',
+    dims: '2382×1134×30 mm',
+    weight: '33.7 kg',
+    use: 'com',
+    productWarranty: '12 yr',
+    powerWarranty: '30 yr',
+    price: 195.20,    // ($0.22 + $0.10) × 610
+    pricePerW: '$0.32/W',
+    art: 'bifacial',
+    tags: ['topcon', 'bifacial', 'commercial'],
+    flag: 'Max power',
+  },
+  {
+    id: 'canadian-cs6w-585tb',
+    brand: 'Canadian Solar',
+    model: 'CS6W-585TB-AG',
+    name: 'HiKu6 585W Bifacial',
+    watt: 585,
+    eff: '22.6%',
+    tech: 'N-Type TOPCon',
+    dims: '2278×1134×30 mm',
+    weight: '32.3 kg',
+    use: 'com',
+    productWarranty: '12 yr',
+    powerWarranty: '30 yr',
+    price: 187.20,    // ($0.22 + $0.10) × 585
+    pricePerW: '$0.32/W',
+    art: 'bifacial',
+    tags: ['topcon', 'bifacial', 'commercial'],
+  },
+  {
+    id: 'ja-jam54d40-455lb',
+    brand: 'JA Solar',
+    model: 'JAM54D40-455/LB',
+    name: 'DeepBlue 4.0 455W',
+    watt: 455,
+    eff: '22.8%',
+    tech: 'N-Type TOPCon',
+    dims: '1762×1134×30 mm',
+    weight: '22.0 kg',
+    use: 'res',
+    productWarranty: '25 yr',
+    powerWarranty: '30 yr',
+    price: 154.70,    // ($0.24 + $0.10) × 455
+    pricePerW: '$0.34/W',
+    art: 'allblack',
+    tags: ['topcon', 'bifacial', 'allblack'],
+    flag: 'High efficiency',
+  },
+  {
+    id: 'znshine-zxmr-uhldd96-450',
+    brand: 'Znshine Solar',
+    model: 'ZXMR-UHLDD96-450N',
+    name: 'Full Black 450W',
+    watt: 450,
+    eff: '22.52%',
+    tech: 'N-Type SMBB',
+    dims: '1762×1134×30 mm',
+    weight: '26.0 kg',
+    use: 'res',
+    productWarranty: '12 yr',
+    powerWarranty: '30 yr',
+    price: 146.25,    // ($0.225 + $0.10) × 450
+    pricePerW: '$0.325/W',
+    art: 'allblack',
+    tags: ['topcon', 'bifacial', 'allblack'],
+  },
+  {
+    id: 'ht-ht54-18x-f-455',
+    brand: 'HT-SAAE',
+    model: 'HT54-18X(ND)-F-455',
+    name: 'Full Black 455W',
+    watt: 455,
+    eff: '22.8%',
+    tech: 'N-Type TOPCon',
+    dims: '1722×1134×30 mm',
+    weight: '24.0 kg',
+    use: 'res',
+    productWarranty: '15 yr',
+    powerWarranty: '30 yr',
+    price: 147.88,    // ($0.225 + $0.10) × 455
+    pricePerW: '$0.325/W',
+    art: 'allblack',
+    tags: ['topcon', 'bifacial', 'allblack'],
+  },
+  {
+    id: 'ht-ht54-18x-f-435',
+    brand: 'HT-SAAE',
+    model: 'HT54-18X(ND)-F-435',
+    name: 'Full Black 435W',
+    watt: 435,
+    eff: '21.8%',
+    tech: 'N-Type TOPCon',
+    dims: '1722×1134×30 mm',
+    weight: '22.0 kg',
+    use: 'res',
+    productWarranty: '25 yr',
+    powerWarranty: '30 yr',
+    price: 141.38,    // ($0.225 + $0.10) × 435
+    pricePerW: '$0.325/W',
+    art: 'allblack',
+    tags: ['topcon', 'bifacial', 'allblack'],
+  },
+  {
+    id: 'huasun-hsn-210r-b96dsn440',
+    brand: 'Huasun',
+    model: 'HSN-210R-B96DSN440',
+    name: 'Himalaya 440W HJT',
+    watt: 440,
+    eff: '22.0%',
+    tech: 'HJT (Heterojunction)',
+    dims: '1762×1134×30 mm',
+    weight: '21.8 kg',
+    use: 'res',
+    productWarranty: '15 yr',
+    powerWarranty: '30 yr',
+    price: 143.00,    // ($0.225 + $0.10) × 440
+    pricePerW: '$0.325/W',
+    art: 'allblack',
+    tags: ['hjt', 'bifacial', 'allblack'],
+  },
+  {
+    id: 'jinko-jkm585n-72hl4-bdv',
+    brand: 'Jinko Solar',
+    model: 'JKM585N-72HL4-BDV',
+    name: 'Tiger Neo 585W',
+    watt: 585,
+    eff: '22.65%',
+    tech: 'N-Type TOPCon',
+    dims: '2278×1134×30 mm',
+    weight: '31.0 kg',
+    use: 'com',
+    productWarranty: '12 yr',
+    powerWarranty: '30 yr',
+    price: 198.90,    // ($0.24 + $0.10) × 585
+    pricePerW: '$0.34/W',
+    art: 'bifacial',
+    tags: ['topcon', 'bifacial', 'commercial'],
+  },
+  {
+    id: 'jinko-jkm470n-60hl4-v',
+    brand: 'Jinko Solar',
+    model: 'JKM470N-60HL4-V',
+    name: 'Tiger Neo 470W',
+    watt: 470,
+    eff: '21.78%',
+    tech: 'N-Type TOPCon',
+    dims: '1903×1134×30 mm',
+    weight: '22.5 kg',
+    use: 'res',
+    productWarranty: '12 yr',
+    powerWarranty: '30 yr',
+    price: 159.80,    // ($0.24 + $0.10) × 470
+    pricePerW: '$0.34/W',
+    art: 'standard',
+    tags: ['topcon'],
+  },
 ];
 
-const CELL_LABEL: Record<string, string> = { mono: 'Mono PERC', bifacial: 'Bifacial', allblack: 'All-black', ntype: 'N-type TOPCon' };
-const CELL_FILTERS: [string, string][] = [['all', 'All'], ['mono', 'Mono'], ['allblack', 'All-black'], ['bifacial', 'Bifacial'], ['ntype', 'N-type']];
+const TAG_FILTERS: [string, string][] = [
+  ['all', 'All'],
+  ['topcon', 'TOPCon'],
+  ['hjt', 'HJT'],
+  ['allblack', 'All-Black'],
+  ['bifacial', 'Bifacial'],
+];
 const USE_FILTERS: [string, string][] = [['all', 'All'], ['res', 'Residential'], ['com', 'Commercial']];
 const SORTS: [string, string][] = [['featured', 'Featured'], ['price-asc', 'Price: low to high'], ['price-desc', 'Price: high to low'], ['watt-desc', 'Wattage: high to low'], ['eff-desc', 'Efficiency: high to low']];
 
 // ---- product card ----
 
-function ModuleArt({ cell }: { cell: string }) {
-  const cls = cell === 'allblack' ? 'allblack' : cell === 'bifacial' ? 'bifacial' : '';
+function ModuleArt({ art }: { art: Product['art'] }) {
+  const cls = art === 'allblack' ? 'allblack' : art === 'bifacial' ? 'bifacial' : '';
   return (
     <div className={`prod-media ${cls}`}>
       <div className="mod">{Array.from({ length: 24 }).map((_, i) => <span key={i}></span>)}</div>
@@ -80,26 +321,53 @@ function ModuleArt({ cell }: { cell: string }) {
   );
 }
 
+function TagPill({ tag }: { tag: string }) {
+  const labels: Record<string, string> = {
+    topcon: 'TOPCon', hjt: 'HJT', bifacial: 'Bifacial',
+    allblack: 'All-Black', commercial: 'Commercial',
+  };
+  if (!labels[tag]) return null;
+  const colors: Record<string, React.CSSProperties> = {
+    bifacial: { background: 'rgba(255,201,60,0.12)', color: '#a06000', borderColor: 'rgba(255,201,60,0.3)' },
+    allblack: { background: '#f0f0f2', color: '#333', borderColor: '#ddd' },
+    hjt: { background: 'rgba(255,85,119,0.08)', color: '#b0003a', borderColor: 'rgba(255,85,119,0.2)' },
+    topcon: { background: 'rgba(30,100,220,0.07)', color: '#1a4fb5', borderColor: 'rgba(30,100,220,0.2)' },
+    commercial: { background: 'rgba(60,180,80,0.08)', color: '#1a6b2a', borderColor: 'rgba(60,180,80,0.2)' },
+  };
+  return (
+    <span className="prod-spec" style={colors[tag] ?? {}}>
+      {labels[tag]}
+    </span>
+  );
+}
+
 function ProductCard({ p, inQuote, onToggle }: { p: Product; inQuote: boolean; onToggle: (id: string) => void }) {
   return (
     <article className="prod-card">
       <div style={{ position: 'relative' }}>
-        <ModuleArt cell={p.cell} />
+        <ModuleArt art={p.art} />
         <span className="prod-brand">{p.brand}</span>
         {p.flag && <span className="prod-flag">{p.flag}</span>}
       </div>
       <div className="prod-body">
-        <h3 className="prod-name">{p.brand} {p.name}</h3>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: '-4px' }}>
+          {p.model}
+        </div>
+        <h3 className="prod-name">{p.name}</h3>
         <div className="prod-specs">
           <span className="prod-spec">{p.watt} W</span>
-          <span className="prod-spec">{p.eff}% eff</span>
-          <span className="prod-spec">{CELL_LABEL[p.cell]}</span>
-          <span className="prod-spec">{p.warranty}-yr</span>
+          <span className="prod-spec">{p.eff}</span>
+          <span className="prod-spec">{p.tech}</span>
+          {p.tags.filter(t => ['bifacial','allblack','hjt','commercial'].includes(t)).slice(0,2).map(t => <TagPill key={t} tag={t} />)}
+        </div>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: '10px', color: 'var(--ink-3)', letterSpacing: '0.04em' }}>
+          {p.dims} · {p.weight} · {p.use === 'res' ? 'Residential' : 'Commercial'}
         </div>
         <div className="prod-foot">
           <div className="prod-price">
-            <span className="from">From</span>
-            <span className="amt"><sup>$</sup>{p.price}<span className="per"> /panel</span></span>
+            <span className="from">{p.pricePerW}</span>
+            <span className="amt"><sup>$</sup>{p.price.toFixed(2)}<span className="per"> /panel</span></span>
+            <span className="per">{p.productWarranty} product · {p.powerWarranty} power</span>
           </div>
           <button className={`btn-add${inQuote ? ' added' : ''}`} onClick={() => onToggle(p.id)}>
             <span className="ic">{inQuote ? <Check /> : <Plus />}</span>
@@ -132,7 +400,7 @@ function Drawer({
 }) {
   const waMsg = useMemo(() => {
     if (!items.length) return '';
-    const lines = items.map((p) => `• ${p.brand} ${p.name} (${p.watt}W, ${CELL_LABEL[p.cell]}) — from $${p.price}/panel`);
+    const lines = items.map((p) => `• ${p.brand} ${p.model} (${p.watt}W, ${p.tech}) — $${p.price.toFixed(2)}/panel`);
     return encodeURIComponent(`Hi Brightify, I'd like a quote on these solar panels:\n${lines.join('\n')}\n\nMy project: `);
   }, [items]);
 
@@ -153,7 +421,7 @@ function Drawer({
                 <QuoteThumb />
                 <div className="q-meta">
                   <div className="nm">{p.brand} {p.name}</div>
-                  <div className="sp">{p.watt} W · {CELL_LABEL[p.cell]} · {p.warranty}-yr</div>
+                  <div className="sp">{p.watt} W · {p.tech} · {p.productWarranty}</div>
                   <span className="q-remove" onClick={() => onRemove(p.id)}>Remove</span>
                 </div>
                 <div className="q-price">${p.price}</div>
@@ -248,7 +516,7 @@ const STORE_KEY = 'brightify_quote_v1';
 // ---- page ----
 
 export default function SolarPanelsPage() {
-  const [cell, setCell] = useState('all');
+  const [tag, setTag] = useState('all');
   const [use, setUse] = useState('all');
   const [sort, setSort] = useState('featured');
   const [query, setQuery] = useState('');
@@ -273,16 +541,16 @@ export default function SolarPanelsPage() {
   const filtered = useMemo(() => {
     const qq = query.trim().toLowerCase();
     let list = PRODUCTS.filter((p) =>
-      (cell === 'all' || p.cell === cell) &&
+      (tag === 'all' || p.tags.includes(tag)) &&
       (use === 'all' || p.use === use) &&
-      (qq === '' || `${p.brand} ${p.name} ${CELL_LABEL[p.cell]}`.toLowerCase().includes(qq))
+      (qq === '' || `${p.brand} ${p.model} ${p.name} ${p.tech}`.toLowerCase().includes(qq))
     );
     if (sort === 'price-asc') list = [...list].sort((a, b) => a.price - b.price);
     else if (sort === 'price-desc') list = [...list].sort((a, b) => b.price - a.price);
     else if (sort === 'watt-desc') list = [...list].sort((a, b) => b.watt - a.watt);
-    else if (sort === 'eff-desc') list = [...list].sort((a, b) => b.eff - a.eff);
+    else if (sort === 'eff-desc') list = [...list].sort((a, b) => parseFloat(b.eff) - parseFloat(a.eff));
     return list;
-  }, [cell, use, sort, query]);
+  }, [tag, use, sort, query]);
 
   const quoteItems = useMemo(() => quote.map((id) => PRODUCTS.find((p) => p.id === id)).filter((p): p is Product => Boolean(p)), [quote]);
 
@@ -311,9 +579,9 @@ export default function SolarPanelsPage() {
       <div className="toolbar">
         <div className="wrap">
           <div className="filter-group">
-            <span className="filter-label">Cell</span>
-            {CELL_FILTERS.map(([k, l]) => (
-              <button key={k} className={`chip${cell === k ? ' active' : ''}`} onClick={() => setCell(k)}>{l}</button>
+            <span className="filter-label">Type</span>
+            {TAG_FILTERS.map(([k, l]) => (
+              <button key={k} className={`chip${tag === k ? ' active' : ''}`} onClick={() => setTag(k)}>{l}</button>
             ))}
           </div>
           <div className="filter-group">
