@@ -250,10 +250,10 @@ function Hero() {
 // ── trust strip ───────────────────────────────────────────────────────────
 
 const TRUST_CELLS = [
-  { big: '96', sub: '%', lbl: 'First-pass AHJ approval rate across 50 states.', grad: true },
+  { big: '98.3', sub: '%', lbl: 'First-pass AHJ approval rate across 50 states.', grad: true },
   { big: '24', sub: 'hr', lbl: 'Standard turnaround on residential plansets.' },
   { big: '3,200', sub: '+', lbl: 'Plansets shipped to installers since 2021.' },
-  { big: '$299', sub: '', lbl: 'Starts here. Pay per planset or buy a 5-pack.' },
+  { big: '$179', sub: '', lbl: 'Starts here. Pay per planset or buy a 5-pack.' },
 ]
 
 function Trust() {
@@ -907,7 +907,7 @@ function Coverage() {
             </div>
             <div className="coverage-stat">
               <div className="big">
-                96<sub style={subStyle}>%</sub>
+                98.3<sub style={subStyle}>%</sub>
               </div>
               <div className="lbl">First-pass approval rate</div>
             </div>
