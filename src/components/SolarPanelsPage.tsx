@@ -54,7 +54,7 @@ interface Product {
   powerWarranty: string;
   price: number;       // per panel ($/W + 0.10) × watt
   pricePerW: string;   // display e.g. "$0.31/W"
-  art: 'allblack' | 'bifacial' | 'standard'; // CSS art variant
+  art: 'allblack' | 'silver'; // CSS art variant
   tags: string[];      // 'topcon' | 'hjt' | 'bifacial' | 'allblack'
   datasheet?: string;  // URL to PDF datasheet
   flag?: string;
@@ -77,7 +77,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 134.85,    // ($0.21 + $0.10) × 435
     pricePerW: '$0.31/W',
-    art: 'bifacial',
+    art: 'silver',
     tags: ['topcon', 'bifacial'],
     datasheet: 'https://en.risen.com/uploads/20240416/Risen_TDS%20for%20N-type%20Dual%20Glass%20Modules-20240416.pdf',
   },
@@ -96,7 +96,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 147.90,    // ($0.24 + $0.10) × 435
     pricePerW: '$0.34/W',
-    art: 'standard',
+    art: 'silver',
     tags: ['topcon'],
     datasheet: 'https://static.trinasolar.com/sites/default/files/230531_Datasheet_Vertex%20S+_NEG9R.28_EN_2023_B_web.pdf',
   },
@@ -115,7 +115,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 151.30,    // ($0.24 + $0.10) × 445
     pricePerW: '$0.34/W',
-    art: 'standard',
+    art: 'silver',
     tags: ['topcon'],
     flag: 'Best seller',
     datasheet: 'https://static.trinasolar.com/sites/default/files/230531_Datasheet_Vertex%20S+_NEG9R.28_EN_2023_B_web.pdf',
@@ -135,7 +135,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 187.20,    // ($0.22 + $0.10) × 585
     pricePerW: '$0.32/W',
-    art: 'bifacial',
+    art: 'silver',
     tags: ['topcon', 'bifacial', 'commercial'],
     datasheet: 'https://dpvenergy.com/wp-content/uploads/2024/05/DOC-20250305-WA0001.pdf',
   },
@@ -154,7 +154,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 195.20,    // ($0.22 + $0.10) × 610
     pricePerW: '$0.32/W',
-    art: 'bifacial',
+    art: 'silver',
     tags: ['topcon', 'bifacial', 'commercial'],
     flag: 'Max power',
     datasheet: 'https://static.trinasolar.com/sites/default/files/Datasheet_Vertex_NEG19RC.20_EN_2023_A.pdf',
@@ -174,7 +174,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 187.20,    // ($0.22 + $0.10) × 585
     pricePerW: '$0.32/W',
-    art: 'bifacial',
+    art: 'silver',
     tags: ['topcon', 'bifacial', 'commercial'],
     datasheet: 'https://static.csisolar.com/wp-content/uploads/2022/09/06160941/CS-Datasheet-TOPBiHiKu6-TOPCon_CS6W-TB-AG_v1.8_EN.pdf',
   },
@@ -289,7 +289,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 198.90,    // ($0.24 + $0.10) × 585
     pricePerW: '$0.34/W',
-    art: 'bifacial',
+    art: 'silver',
     tags: ['topcon', 'bifacial', 'commercial'],
     datasheet: 'https://jinkosolar.eu/wp-content/uploads/JKM560-580N-72HL4-BDV-F3-EN.pdf',
   },
@@ -308,7 +308,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 159.80,    // ($0.24 + $0.10) × 470
     pricePerW: '$0.34/W',
-    art: 'standard',
+    art: 'silver',
     tags: ['topcon'],
     datasheet: 'https://jinkosolar.com.au/wp-content/uploads/2022/11/JKM470-490N-60HL4R-V-AUS.pdf',
   },
@@ -330,8 +330,8 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 142.50,    // $0.30 × 475
     pricePerW: '$0.30/W',
-    art: 'allblack',
-    tags: ['topcon', 'bifacial', 'allblack'],
+    art: 'silver',
+    tags: ['topcon', 'bifacial'],
     datasheet: '/datasheets/risen-rsm96-11-475bndg.pdf',
   },
   {
@@ -444,7 +444,7 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 153.00,    // ($0.24 + $0.10) × 450 — price TBC with Trina rep
     pricePerW: '$0.34/W',
-    art: 'bifacial',
+    art: 'silver',
     tags: ['topcon', 'bifacial'],
     datasheet: '/datasheets/trina-tsm-neg9rc27-450w.pdf',
   },
@@ -463,7 +463,7 @@ const SORTS: [string, string][] = [['featured', 'Featured'], ['price-asc', 'Pric
 // ---- product card ----
 
 function ModuleArt({ art }: { art: Product['art'] }) {
-  const cls = art === 'allblack' ? 'allblack' : art === 'bifacial' ? 'bifacial' : '';
+  const cls = art === 'allblack' ? 'allblack' : 'silver';
   return (
     <div className={`prod-media ${cls}`}>
       <div className="mod">{Array.from({ length: 24 }).map((_, i) => <span key={i}></span>)}</div>
