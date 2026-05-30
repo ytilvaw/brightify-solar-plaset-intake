@@ -690,7 +690,7 @@ const STORE_KEY = 'brightify_quote_v1';
 export default function SolarPanelsPage() {
   const [tag, setTag] = useState('all');
   const [use, setUse] = useState('all');
-  const [sort, setSort] = useState('featured');
+  const [sort, setSort] = useState('price-asc');
   const [query, setQuery] = useState('');
   const [quote, setQuote] = useState<string[]>(() => {
     try {
