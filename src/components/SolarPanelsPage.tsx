@@ -404,7 +404,6 @@ function ProductCard({ p, inQuote, onToggle }: { p: Product; inQuote: boolean; o
           <div className="prod-price">
             <span className="from">{p.pricePerW}</span>
             <span className="amt"><sup>$</sup>{p.price.toFixed(2)}<span className="per"> /panel</span></span>
-            <span className="per">{p.productWarranty} product · {p.powerWarranty} power</span>
           </div>
           <button className={`btn-add${inQuote ? ' added' : ''}`} onClick={() => onToggle(p.id)}>
             <span className="ic">{inQuote ? <Check /> : <Plus />}</span>
