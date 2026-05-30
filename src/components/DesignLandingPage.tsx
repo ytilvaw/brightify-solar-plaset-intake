@@ -123,7 +123,7 @@ function Hero() {
             <a className="btn btn-grad btn-lg" href="#pricing">
               Purchase <Arrow />
             </a>
-            <a className="btn btn-ghost btn-lg" href="#sample">
+            <a className="btn btn-ghost btn-lg" href="/sample-planset.pdf" target="_blank" rel="noopener noreferrer">
               See sample planset
             </a>
           </div>
@@ -1141,7 +1141,9 @@ function CTA() {
           </a>
           <a
             className="btn btn-ghost btn-lg"
-            href="#deliverables"
+            href="/sample-planset.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{ color: 'var(--paper)', borderColor: 'rgba(255,255,255,0.25)' }}
           >
             See sample planset
@@ -1198,7 +1200,7 @@ function Footer() {
               <a href="#process">Process</a>
             </li>
             <li>
-              <a href="#deliverables">Sample planset</a>
+              <a href="/sample-planset.pdf" target="_blank" rel="noopener noreferrer">Sample planset</a>
             </li>
           </ul>
         </div>
