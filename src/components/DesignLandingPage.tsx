@@ -1210,9 +1210,6 @@ function Footer() {
             <div>
               <a href="https://wa.me/14084643739">WhatsApp — (408) 464-3739</a>
             </div>
-            <div>
-              <a href="mailto:info@brightifysolar.com">info@brightifysolar.com</a>
-            </div>
           </div>
         </div>
         <div className="col">
