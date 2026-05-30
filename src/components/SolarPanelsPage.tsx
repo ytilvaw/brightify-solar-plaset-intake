@@ -328,8 +328,8 @@ const PRODUCTS: Product[] = [
     use: 'res',
     productWarranty: '15 yr',
     powerWarranty: '30 yr',
-    price: 190.00,    // ($0.30 + $0.10) × 475
-    pricePerW: '$0.40/W',
+    price: 142.50,    // $0.30 × 475
+    pricePerW: '$0.30/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
     datasheet: '/datasheets/risen-rsm96-11-475bndg.pdf',
@@ -347,8 +347,8 @@ const PRODUCTS: Product[] = [
     use: 'res',
     productWarranty: '25 yr',
     powerWarranty: '30 yr',
-    price: 195.65,    // ($0.33 + $0.10) × 455
-    pricePerW: '$0.43/W',
+    price: 150.15,    // $0.33 × 455
+    pricePerW: '$0.33/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
     datasheet: '/datasheets/ja-jam54d41-lr-455w.pdf',
@@ -366,8 +366,8 @@ const PRODUCTS: Product[] = [
     use: 'res',
     productWarranty: '25 yr',
     powerWarranty: '30 yr',
-    price: 199.95,    // ($0.33 + $0.10) × 465
-    pricePerW: '$0.43/W',
+    price: 153.45,    // $0.33 × 465
+    pricePerW: '$0.33/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack'],
     datasheet: '/datasheets/ja-jam54d41-lr-465w.pdf',
@@ -385,8 +385,8 @@ const PRODUCTS: Product[] = [
     use: 'com',
     productWarranty: '12 yr',
     powerWarranty: '30 yr',
-    price: 255.85,    // ($0.33 + $0.10) × 595
-    pricePerW: '$0.43/W',
+    price: 196.35,    // $0.33 × 595
+    pricePerW: '$0.33/W',
     art: 'allblack',
     tags: ['topcon', 'bifacial', 'allblack', 'commercial'],
     datasheet: '/datasheets/ja-jam72d40-mb-595w.pdf',
@@ -404,8 +404,8 @@ const PRODUCTS: Product[] = [
     use: 'res',
     productWarranty: '25 yr',
     powerWarranty: '30 yr',
-    price: 206.80,    // ($0.34 + $0.10) × 470
-    pricePerW: '$0.44/W',
+    price: 159.80,    // $0.34 × 470
+    pricePerW: '$0.34/W',
     art: 'allblack',
     tags: ['topcon', 'allblack'],
     datasheet: '/datasheets/jinko-jkm460-485n-48ql6-db.pdf',
@@ -423,8 +423,8 @@ const PRODUCTS: Product[] = [
     use: 'res',
     productWarranty: '25 yr',
     powerWarranty: '30 yr',
-    price: 178.00,    // ($0.30 + $0.10) × 445
-    pricePerW: '$0.40/W',
+    price: 133.50,    // $0.30 × 445
+    pricePerW: '$0.30/W',
     art: 'allblack',
     tags: ['topcon', 'allblack'],
     datasheet: '/datasheets/sunplus-sr4-54htb-445m.pdf',
