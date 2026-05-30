@@ -931,7 +931,11 @@ function Coverage() {
               <div className="big">
                 24<sub style={subStyle}>hr</sub>
               </div>
-              <div className="lbl">Standard residential turnaround</div>
+              <span className="tooltip-wrap">
+                <span className="lbl">Standard residential turnaround</span>
+                <span className="tooltip-icon">ⓘ</span>
+                <span className="tooltip-tip">90% of residential orders delivered within 24 hrs. Battery &amp; commercial: 2–5 business days.</span>
+              </span>
             </div>
           </div>
         </div>
