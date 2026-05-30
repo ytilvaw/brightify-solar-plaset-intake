@@ -504,7 +504,7 @@ const PRICING: Record<PricingKey, PricingCategory> = {
           'Free AHJ revisions',
           'AC/DC placards included',
         ],
-        cta: 'Buy one project',
+        cta: 'Buy one',
       },
       {
         name: '5-Pack',
@@ -559,7 +559,7 @@ const PRICING: Record<PricingKey, PricingCategory> = {
           'Free AHJ revisions',
           'Critical-load panel detail',
         ],
-        cta: 'Buy one project',
+        cta: 'Buy one',
       },
       {
         name: '5-Pack',
@@ -745,6 +745,30 @@ const TIER_ID_MAP: Record<PricingKey, Record<string, TierId | null>> = {
   commercial:  { Standard: 'commercial-standard', Enterprise: null },
 }
 
+// Tiers that go directly to Stripe (no add-ons modal)
+const PACK_TIERS = new Set<TierId>([
+  'residential-5pack', 'residential-10pack',
+  'battery-5pack', 'battery-10pack',
+  'commercial-standard',
+])
+
+async function directCheckout(tierId: TierId) {
+  try {
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tier: tierId, addons: [] }),
+    })
+    const text = await res.text()
+    if (!text) { alert('Checkout API is not available. Run `vercel dev` locally or deploy to Vercel.'); return }
+    const data = JSON.parse(text) as { url?: string; error?: string }
+    if (data.url) window.location.href = data.url
+    else alert(data.error ?? 'Failed to start checkout.')
+  } catch {
+    alert('Something went wrong. Please try again.')
+  }
+}
+
 function Pricing() {
   const [tab, setTab] = useState<PricingKey>('residential')
   const [modalTier, setModalTier] = useState<TierId | null>(null)
@@ -839,7 +863,11 @@ function Pricing() {
                     <button
                       className={`btn ${t.highlight ? 'btn-grad' : 'btn-primary'} btn-lg`}
                       style={{ width: '100%', justifyContent: 'center' }}
-                      onClick={() => tierId && setModalTier(tierId)}
+                      onClick={() => {
+                        if (!tierId) return
+                        if (PACK_TIERS.has(tierId)) void directCheckout(tierId)
+                        else setModalTier(tierId)
+                      }}
                     >
                       {t.cta} <Arrow />
                     </button>
