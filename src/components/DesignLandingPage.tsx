@@ -146,7 +146,11 @@ function Hero() {
             <div className="big">
               24<small style={{ fontSize: 16, marginLeft: 2 }}>hr</small>
             </div>
-            <div className="small">Standard turnaround</div>
+            <span className="tooltip-wrap">
+              <span className="small">Standard turnaround</span>
+              <span className="tooltip-icon">ⓘ</span>
+              <span className="tooltip-tip">90% of residential orders delivered within 24 hrs. Battery &amp; commercial: 2–5 business days.</span>
+            </span>
           </div>
 
           <div className="sheet sheet-1">
@@ -266,7 +270,15 @@ function Trust() {
               {c.big}
               <sub>{c.sub}</sub>
             </div>
-            <div className="lbl">{c.lbl}</div>
+            {c.sub === 'hr' ? (
+              <span className="tooltip-wrap">
+                <span className="lbl">{c.lbl}</span>
+                <span className="tooltip-icon">ⓘ</span>
+                <span className="tooltip-tip">90% of residential orders delivered within 24 hrs. Battery &amp; commercial: 2–5 business days.</span>
+              </span>
+            ) : (
+              <div className="lbl">{c.lbl}</div>
+            )}
           </div>
         ))}
       </div>
