@@ -1144,50 +1144,6 @@ function FAQ() {
   )
 }
 
-// ── cta ───────────────────────────────────────────────────────────────────
-
-function CTA() {
-  return (
-    <section className="cta" id="start">
-      <div className="cta-grid" />
-      <div className="cta-sun-ring" />
-      <div className="cta-sun" />
-      <div className="wrap">
-        <span className="mono" style={{ color: 'var(--amber)' }}>
-          READY WHEN YOU ARE
-        </span>
-        <h2>
-          Submit by noon. <em>Energize</em> by Friday.
-        </h2>
-        <p className="cta-sub">
-          Drop your first project into the portal and have a stamped, AHJ-ready planset on your
-          desk before the sun sets tomorrow.
-        </p>
-        <div className="cta-ctas">
-          <a className="btn btn-grad btn-lg" href="#pricing">
-            Purchase <Arrow />
-          </a>
-          <a
-            className="btn btn-ghost btn-lg"
-            href="/sample-planset.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'var(--paper)', borderColor: 'rgba(255,255,255,0.25)' }}
-          >
-            See sample planset
-          </a>
-        </div>
-        <div className="cta-trust">
-          <span>No subscriptions</span>
-          <span>Free AHJ revisions</span>
-          <span>24-hr turnaround</span>
-          <span>All 50 states</span>
-        </div>
-      </div>
-    </section>
-  )
-}
-
 // ── footer ────────────────────────────────────────────────────────────────
 
 function Footer() {
@@ -1290,7 +1246,6 @@ export default function DesignLandingPage() {
       <Coverage />
       <Testimonials />
       <FAQ />
-      <CTA />
       <Footer />
       <WhatsAppFab />
     </div>
