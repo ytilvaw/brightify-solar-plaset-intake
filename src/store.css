@@ -806,8 +806,18 @@ footer .col ul a:hover { color: var(--amber); }
   transform: rotate(-2deg);
 }
 .prod-media .mod span { border-radius: 2px; background: #182c49; box-shadow: inset 0 0 0 1px rgba(120,170,235,0.10); }
-.prod-media.allblack .mod span { background: #14181f; }
-.prod-media.bifacial .mod { background: #0c1422; }
+
+/* All-black: near-black frame + near-black cells */
+.prod-media.allblack .mod { background: #0a0c10; }
+.prod-media.allblack .mod span { background: #111418; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); }
+
+/* Silver frame: anodised aluminium frame + standard dark cells */
+.prod-media.bifacial .mod { background: #8e97a0; box-shadow: 0 18px 34px -20px rgba(14,23,38,0.5), inset 0 0 0 1.5px rgba(255,255,255,0.18); }
+.prod-media.bifacial .mod span { background: #182c49; }
+
+/* Standard: black frame (stays dark) + slightly lighter cells to add contrast */
+.prod-media.standard .mod { background: #1c2330; }
+.prod-media.standard .mod span { background: #1e3050; }
 .prod-brand {
   position: absolute; top: 12px; left: 12px; z-index: 2;
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
