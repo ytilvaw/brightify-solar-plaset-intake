@@ -318,6 +318,30 @@ const INVERTERS: Inverter[] = [
     certifications: 'UL1741',
     parallel: 'Up to 6 units (60 kW)',
   },
+  {
+    id: 'solaredge-energy-hub',
+    brand: 'SolarEdge',
+    model: 'SE Energy Hub',
+    name: 'Single Phase Energy Hub w/ Prism',
+    kw: 10,
+    pvInputKw: 22,
+    battVoltage: 'High-voltage DC',
+    mpptChannels: 1,
+    outputVoltage: '120/240V',
+    phase: 'Single-phase',
+    dims: '450×370×174 mm',
+    weight: '13.7 kg',
+    type: 'hybrid',
+    use: 'res',
+    warranty: '12 yr',
+    price: 1599,
+    image: '/inverters/solaredge-energy-hub.png',
+    tags: ['hybrid', 'solaredge', 'single-phase'],
+    datasheet: '/datasheets/solaredge-energy-hub.pdf',
+    certifications: 'UL1741, UL1741 SA, UL9540, IEEE 1547, Rule 21',
+    parallel: '—',
+    flag: 'NEMA 4',
+  },
 ];
 
 // ---- filters ----
@@ -332,6 +356,7 @@ const BRAND_FILTERS: [string, string][] = [
   ['ruixu', 'RUiXU'],
   ['eg4', 'EG4'],
   ['growatt', 'Growatt'],
+  ['solaredge', 'SolarEdge'],
 ];
 const SORTS: [string, string][] = [
   ['kw-asc', 'Power: low to high'],
