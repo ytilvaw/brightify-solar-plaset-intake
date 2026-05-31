@@ -141,6 +141,7 @@ const CATEGORIES: Category[] = [
     key: 'battery', media: 'media-battery', Icon: IconBattery,
     hook: 'LiFePO4', name: 'Batteries',
     desc: 'Backup-ready lithium storage and whole-home ESS to keep the lights on after dark.',
+    page: '/batteries',
   },
   {
     key: 'inverter', media: 'media-inverter', Icon: IconInverter,

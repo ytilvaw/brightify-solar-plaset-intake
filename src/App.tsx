@@ -7,6 +7,7 @@ import RoofEvaluationForm from './components/RoofEvaluationForm'
 import StoreLandingPage from './components/StoreLandingPage'
 import SolarPanelsPage from './components/SolarPanelsPage'
 import InvertersPage from './components/InvertersPage'
+import BatteriesPage from './components/BatteriesPage'
 
 function BackHomeNav() {
   return (
@@ -107,6 +108,16 @@ export default function App() {
     return (
       <>
         <InvertersPage />
+        <Analytics />
+        <SpeedInsights />
+      </>
+    )
+  }
+
+  if (window.location.pathname.startsWith('/batteries')) {
+    return (
+      <>
+        <BatteriesPage />
         <Analytics />
         <SpeedInsights />
       </>

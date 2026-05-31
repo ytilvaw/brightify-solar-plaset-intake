@@ -47,6 +47,14 @@
     {
       "source": "/inverters/(.*)",
       "destination": "/"
+    },
+    {
+      "source": "/batteries",
+      "destination": "/"
+    },
+    {
+      "source": "/batteries/(.*)",
+      "destination": "/"
     }
   ]
 }

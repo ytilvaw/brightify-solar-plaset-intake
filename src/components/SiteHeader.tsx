@@ -103,6 +103,7 @@ const SH_CATS: Cat[] = [
 function shCatHref(key: string, onHome: boolean): string {
   if (key === 'solar') return '/solar-panels';
   if (key === 'inverter') return '/inverters';
+  if (key === 'battery') return '/batteries';
   return onHome ? `#shop-${key}` : `/#shop-${key}`;
 }
 
