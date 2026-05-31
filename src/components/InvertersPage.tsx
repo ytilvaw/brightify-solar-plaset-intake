@@ -50,7 +50,7 @@ interface Inverter {
   phase: string;         // "Single-phase" | "Split-phase"
   dims: string;
   weight: string;
-  type: 'offgrid' | 'hybrid';
+  type: 'offgrid' | 'hybrid' | 'microinverter';
   use: 'res' | 'com';
   warranty: string;
   price: number | null;  // null = get a quote
@@ -342,6 +342,101 @@ const INVERTERS: Inverter[] = [
     parallel: '—',
     flag: 'NEMA 4',
   },
+  {
+    id: 'solis-s6-11-4kw',
+    brand: 'Solis',
+    model: 'S6-EH1P3.8-11.4K-H-US',
+    name: 'S6 11.4kW High-Voltage Hybrid',
+    kw: 11.4,
+    pvInputKw: 17,
+    battVoltage: 'High-voltage',
+    mpptChannels: 2,
+    outputVoltage: '120/240V',
+    phase: 'Single-phase',
+    dims: '—',
+    weight: '—',
+    type: 'hybrid',
+    use: 'res',
+    warranty: '10 yr',
+    price: 2225,
+    image: '/inverters/solis-s6-11-4kw.png',
+    tags: ['hybrid', 'solis', 'single-phase', 'highvoltage'],
+    datasheet: '/datasheets/solis-s6-11-4kw.pdf',
+    certifications: 'UL9540, UL3741, NEC 2020',
+    parallel: 'Up to 150 kWh battery per inverter',
+  },
+  {
+    id: 'enphase-iq8hc',
+    brand: 'Enphase',
+    model: 'IQ8HC',
+    name: 'IQ8HC Microinverter 384W',
+    kw: 0.384,
+    pvInputKw: 0.53,
+    battVoltage: '—',
+    mpptChannels: 1,
+    outputVoltage: '120/240V',
+    phase: 'Split-phase',
+    dims: '—',
+    weight: '—',
+    type: 'microinverter',
+    use: 'res',
+    warranty: '25 yr',
+    price: 226,
+    image: '/inverters/enphase-iq8hc.jpg',
+    tags: ['microinverter', 'enphase', 'split-phase'],
+    datasheet: '/datasheets/enphase-iq8hc.pdf',
+    certifications: 'UL listed · NEMA Type 6 · Rapid Shutdown',
+    parallel: 'Up to 960 VA per branch',
+    flag: 'NEMA 6',
+  },
+  {
+    id: 'enphase-iq8ac',
+    brand: 'Enphase',
+    model: 'IQ8AC',
+    name: 'IQ8AC Microinverter 366W',
+    kw: 0.366,
+    pvInputKw: 0.5,
+    battVoltage: '—',
+    mpptChannels: 1,
+    outputVoltage: '120/240V',
+    phase: 'Split-phase',
+    dims: '—',
+    weight: '—',
+    type: 'microinverter',
+    use: 'res',
+    warranty: '25 yr',
+    price: 211,
+    image: '/inverters/enphase-iq8ac.jpg',
+    tags: ['microinverter', 'enphase', 'split-phase'],
+    datasheet: '/datasheets/enphase-iq8ac.pdf',
+    certifications: 'UL listed · NEMA Type 6 · Rapid Shutdown',
+    parallel: 'Up to 960 VA per branch',
+    flag: 'NEMA 6',
+  },
+  {
+    id: 'enphase-iq8mc',
+    brand: 'Enphase',
+    model: 'IQ8MC',
+    name: 'IQ8MC Microinverter 330W',
+    kw: 0.330,
+    pvInputKw: 0.46,
+    battVoltage: '—',
+    mpptChannels: 1,
+    outputVoltage: '120/240V',
+    phase: 'Split-phase',
+    dims: '—',
+    weight: '—',
+    type: 'microinverter',
+    use: 'res',
+    warranty: '25 yr',
+    price: 211,
+    image: '/inverters/enphase-iq8mc.jpg',
+    tags: ['microinverter', 'enphase', 'split-phase'],
+    datasheet: '/datasheets/enphase-iq8mc.pdf',
+    certifications: 'UL listed · NEMA Type 6 · Rapid Shutdown',
+    parallel: 'Up to 960 VA per branch',
+    flag: 'NEMA 6',
+  },
 ];
 
 // ---- filters ----
@@ -350,6 +445,7 @@ const TYPE_FILTERS: [string, string][] = [
   ['all', 'All'],
   ['offgrid', 'Off-Grid'],
   ['hybrid', 'Hybrid'],
+  ['microinverter', 'Micro'],
 ];
 const BRAND_FILTERS: [string, string][] = [
   ['all', 'All Brands'],
@@ -357,6 +453,8 @@ const BRAND_FILTERS: [string, string][] = [
   ['eg4', 'EG4'],
   ['growatt', 'Growatt'],
   ['solaredge', 'SolarEdge'],
+  ['solis', 'Solis'],
+  ['enphase', 'Enphase'],
 ];
 const SORTS: [string, string][] = [
   ['kw-asc', 'Power: low to high'],
@@ -371,6 +469,7 @@ function TagPill({ tag }: { tag: string }) {
   const map: Record<string, [string, React.CSSProperties]> = {
     hybrid:        ['Hybrid',       { background: 'rgba(30,100,220,0.07)', color: '#1a4fb5', borderColor: 'rgba(30,100,220,0.2)' }],
     offgrid:       ['Off-Grid',     { background: 'rgba(255,201,60,0.12)', color: '#a06000', borderColor: 'rgba(255,201,60,0.3)' }],
+    microinverter: ['Micro',        { background: 'rgba(120,60,220,0.07)', color: '#5a1fb5', borderColor: 'rgba(120,60,220,0.2)' }],
     commercial:    ['Commercial',   { background: 'rgba(60,180,80,0.08)', color: '#1a6b2a', borderColor: 'rgba(60,180,80,0.2)' }],
     'split-phase': ['Split-Phase',  { background: '#f0f0f2', color: '#333', borderColor: '#ddd' }],
     'single-phase':['Single-Phase', { background: '#f0f0f2', color: '#333', borderColor: '#ddd' }],
@@ -405,7 +504,7 @@ function InverterCard({ p, inQuote, onToggle }: { p: Inverter; inQuote: boolean;
           <span className="prod-spec">{p.kw} kW</span>
           <span className="prod-spec">{p.mpptChannels}-ch MPPT</span>
           <span className="prod-spec">{p.battVoltage}</span>
-          {p.tags.filter(t => ['hybrid','offgrid','single-phase','split-phase','commercial'].includes(t)).slice(0, 2).map(t => (
+          {p.tags.filter(t => ['hybrid','offgrid','microinverter','single-phase','split-phase','commercial'].includes(t)).slice(0, 2).map(t => (
             <TagPill key={t} tag={t} />
           ))}
         </div>
