@@ -49,7 +49,7 @@ interface Battery {
   weight: string;
   ip: string;
   warranty: string;
-  price: number;
+  price: number | null;
   image: string;
   tags: string[];           // 'lifepo4' | 'nmc' | 'indoor' | 'outdoor' | 'highvoltage' | 'wallmount' | 'ruixu' | 'eg4' | 'lg' | 'tesla'
   datasheet?: string;
@@ -197,6 +197,82 @@ const BATTERIES: Battery[] = [
     flag: 'IP67',
     note: 'Requires Powerwall 3 · Up to 3 units stacked (40.5 kWh)',
   },
+  {
+    id: 'dawnice-5kwh',
+    brand: 'Dawnice',
+    model: 'HZEB-LCT-5',
+    name: 'HZEB-LCT-5 5kWh Wall Battery',
+    kwh: 5.12,
+    voltage: '51.2V',
+    chemistry: 'LiFePO4',
+    dims: '400×160×700 mm',
+    weight: '59 kg',
+    ip: 'IP54',
+    warranty: '10 yr',
+    price: null,
+    image: '/batteries/dawnice-5kwh.webp',
+    tags: ['lifepo4', 'indoor', 'wallmount', 'dawnice'],
+    datasheet: '/datasheets/dawnice-wallmount.pdf',
+    certifications: 'UL1973, IEC62619, CE, RoHS',
+    note: '48V · 100Ah · 5,000+ cycles · Wall mount',
+  },
+  {
+    id: 'dawnice-10kwh',
+    brand: 'Dawnice',
+    model: 'HZEB-LCT-10',
+    name: 'HZEB-LCT-10 10kWh Wall Battery',
+    kwh: 10.54,
+    voltage: '51.2V',
+    chemistry: 'LiFePO4',
+    dims: '460×245×640 mm',
+    weight: '83.5 kg',
+    ip: 'IP54',
+    warranty: '10 yr',
+    price: null,
+    image: '/batteries/dawnice-10kwh.webp',
+    tags: ['lifepo4', 'indoor', 'wallmount', 'dawnice'],
+    datasheet: '/datasheets/dawnice-wallmount.pdf',
+    certifications: 'UL1973, IEC62619, CE, RoHS',
+    note: '48V · 206Ah · 6,000+ cycles · Wall mount',
+  },
+  {
+    id: 'dawnice-15kwh',
+    brand: 'Dawnice',
+    model: 'HZEB-LCT-15',
+    name: 'HZEB-LCT-15 15kWh Wall Battery',
+    kwh: 16.07,
+    voltage: '51.2V',
+    chemistry: 'LiFePO4',
+    dims: '462×245×800 mm',
+    weight: '127 kg',
+    ip: 'IP54',
+    warranty: '10 yr',
+    price: null,
+    image: '/batteries/dawnice-15kwh.webp',
+    tags: ['lifepo4', 'indoor', 'wallmount', 'dawnice'],
+    datasheet: '/datasheets/dawnice-wallmount.pdf',
+    certifications: 'UL1973, IEC62619, CE, RoHS',
+    note: '48V · 314Ah · 8,000+ cycles · Wall mount',
+  },
+  {
+    id: 'dawnice-20kwh',
+    brand: 'Dawnice',
+    model: 'HZEB-LCT-20',
+    name: 'HZEB-LCT-20 20kWh Wall Battery',
+    kwh: 20.99,
+    voltage: '51.2V',
+    chemistry: 'LiFePO4',
+    dims: '650×265×850 mm',
+    weight: '180 kg',
+    ip: 'IP21',
+    warranty: '10 yr',
+    price: null,
+    image: '/batteries/dawnice-20kwh.webp',
+    tags: ['lifepo4', 'indoor', 'wallmount', 'dawnice'],
+    datasheet: '/datasheets/dawnice-wallmount.pdf',
+    certifications: 'UL1973, IEC62619, CE, RoHS',
+    note: '48V · 400Ah · 6,000+ cycles · Wall mount',
+  },
 ];
 
 // ---- filters ----
@@ -217,6 +293,7 @@ const BRAND_FILTERS: [string, string][] = [
   ['eg4', 'EG4'],
   ['lg', 'LG'],
   ['tesla', 'Tesla'],
+  ['dawnice', 'Dawnice'],
 ];
 const SORTS: [string, string][] = [
   ['kwh-asc', 'Capacity: low to high'],
@@ -307,8 +384,14 @@ function BatteryCard({ p, inQuote, onToggle }: { p: Battery; inQuote: boolean; o
         )}
         <div className="prod-foot">
           <div className="prod-price">
-            <span className="from">Starting at</span>
-            <span className="amt"><sup>$</sup>{p.price.toLocaleString(undefined, { minimumFractionDigits: p.price % 1 !== 0 ? 2 : 0 })}<span className="per"> /unit</span></span>
+            {p.price !== null ? (
+              <>
+                <span className="from">Starting at</span>
+                <span className="amt"><sup>$</sup>{p.price.toLocaleString(undefined, { minimumFractionDigits: p.price % 1 !== 0 ? 2 : 0 })}<span className="per"> /unit</span></span>
+              </>
+            ) : (
+              <span className="amt" style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--ink-2)' }}>Get a quote</span>
+            )}
           </div>
           <button className={`btn-add${inQuote ? ' added' : ''}`} onClick={() => onToggle(p.id)}>
             <span className="ic">{inQuote ? <Check /> : <Plus />}</span>
@@ -341,7 +424,7 @@ function Drawer({
 }) {
   const waMsg = useMemo(() => {
     if (!items.length) return '';
-    const lines = items.map(p => `• ${p.brand} ${p.model} (${p.kwh} kWh, ${p.chemistry}) — $${p.price.toLocaleString()}/unit`);
+    const lines = items.map(p => `• ${p.brand} ${p.model} (${p.kwh} kWh, ${p.chemistry})${p.price !== null ? ` — $${p.price.toLocaleString()}/unit` : ' — pricing TBD'}`);
     return encodeURIComponent(`Hi Brightify, I'd like a quote on these batteries:\n${lines.join('\n')}`);
   }, [items]);
 
@@ -365,7 +448,7 @@ function Drawer({
                   <div className="sp">{p.kwh} kWh · {p.chemistry} · {p.warranty}</div>
                   <span className="q-remove" onClick={() => onRemove(p.id)}>Remove</span>
                 </div>
-                <div className="q-price">${p.price.toLocaleString()}</div>
+                <div className="q-price">{p.price !== null ? `$${p.price.toLocaleString()}` : 'Quote'}</div>
               </div>
             ))
           )}
@@ -482,8 +565,8 @@ export default function BatteriesPage() {
     );
     if (sort === 'kwh-asc')   list = [...list].sort((a, b) => a.kwh - b.kwh);
     if (sort === 'kwh-desc')  list = [...list].sort((a, b) => b.kwh - a.kwh);
-    if (sort === 'price-asc') list = [...list].sort((a, b) => a.price - b.price);
-    if (sort === 'price-desc')list = [...list].sort((a, b) => b.price - a.price);
+    if (sort === 'price-asc') list = [...list].sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+    if (sort === 'price-desc')list = [...list].sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
     return list;
   }, [chem, location, brand, sort, query]);
 
