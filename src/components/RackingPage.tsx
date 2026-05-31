@@ -167,6 +167,22 @@ const PRODUCTS: RackingItem[] = [
     datasheet: '/datasheets/snr-structural-screw.pdf',
     certifications: 'ICC-ES AC428',
   },
+  {
+    id: 'snr-tile-hook',
+    brand: 'SnapNRack',
+    partNumber: '242-02729-USA',
+    name: 'Adjustable Tile Hook (USA)',
+    shortName: 'Tile Hook',
+    description: 'USA-made adjustable tile hook for attaching SnapNRack Ultra Rail to tile roofs. IRA Domestic Content-qualified.',
+    material: 'Stainless Steel / Aluminum',
+    compatibility: 'UR-45 Ultra Rail · Concrete & clay tile roofs',
+    price: 12.50,
+    unit: 'each',
+    image: '/racking/snr-tile-hook.jpg',
+    tags: ['anchor', 'snapnrack'],
+    datasheet: '/datasheets/snr-tile-hook.pdf',
+    certifications: 'ICC-ES AC428, UL 2703 · IRA Domestic Content',
+  },
 ];
 
 // ---- filters ----
