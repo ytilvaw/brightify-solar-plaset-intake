@@ -55,6 +55,14 @@
     {
       "source": "/batteries/(.*)",
       "destination": "/"
+    },
+    {
+      "source": "/racking",
+      "destination": "/"
+    },
+    {
+      "source": "/racking/(.*)",
+      "destination": "/"
     }
   ]
 }

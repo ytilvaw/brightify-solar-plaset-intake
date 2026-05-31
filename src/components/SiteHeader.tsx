@@ -104,6 +104,7 @@ function shCatHref(key: string, onHome: boolean): string {
   if (key === 'solar') return '/solar-panels';
   if (key === 'inverter') return '/inverters';
   if (key === 'battery') return '/batteries';
+  if (key === 'racking') return '/racking';
   return onHome ? `#shop-${key}` : `/#shop-${key}`;
 }
 

@@ -153,6 +153,7 @@ const CATEGORIES: Category[] = [
     key: 'racking', media: 'media-racking', Icon: IconRacking,
     hook: 'Roof · ground · ballast', name: 'Racking & Mounting',
     desc: 'Rails, clamps, flashing and ground-mount hardware to get every module locked down.',
+    page: '/racking',
   },
   {
     key: 'offgrid', media: 'media-offgrid', Icon: IconOffgrid,

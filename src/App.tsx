@@ -8,6 +8,7 @@ import StoreLandingPage from './components/StoreLandingPage'
 import SolarPanelsPage from './components/SolarPanelsPage'
 import InvertersPage from './components/InvertersPage'
 import BatteriesPage from './components/BatteriesPage'
+import RackingPage from './components/RackingPage'
 
 function BackHomeNav() {
   return (
@@ -118,6 +119,16 @@ export default function App() {
     return (
       <>
         <BatteriesPage />
+        <Analytics />
+        <SpeedInsights />
+      </>
+    )
+  }
+
+  if (window.location.pathname.startsWith('/racking')) {
+    return (
+      <>
+        <RackingPage />
         <Analytics />
         <SpeedInsights />
       </>
