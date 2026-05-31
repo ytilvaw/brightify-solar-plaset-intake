@@ -146,6 +146,7 @@ const CATEGORIES: Category[] = [
     key: 'inverter', media: 'media-inverter', Icon: IconInverter,
     hook: 'String · micro · hybrid', name: 'Inverters',
     desc: 'Turn DC into usable AC — string, micro and hybrid inverters from the brands installers trust.',
+    page: '/inverters',
   },
   {
     key: 'racking', media: 'media-racking', Icon: IconRacking,
