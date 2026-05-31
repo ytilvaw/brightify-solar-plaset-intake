@@ -39,6 +39,14 @@
     {
       "source": "/solar-panels/(.*)",
       "destination": "/"
+    },
+    {
+      "source": "/inverters",
+      "destination": "/"
+    },
+    {
+      "source": "/inverters/(.*)",
+      "destination": "/"
     }
   ]
 }

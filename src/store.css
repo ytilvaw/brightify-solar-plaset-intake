@@ -784,6 +784,11 @@ footer .col ul a:hover { color: var(--amber); }
   border-bottom: 1px solid var(--rule);
   background: radial-gradient(120% 110% at 30% 0%, rgba(255,201,60,0.18), transparent 60%), #FFFBF1;
 }
+/* Photo variant — used for inverters / hardware with real product images */
+.prod-media.inv-media {
+  background: #f5f6f8;
+  display: flex; align-items: center; justify-content: center;
+}
 /* CSS module render */
 .prod-media .mod {
   position: absolute; inset: 16% 14%;

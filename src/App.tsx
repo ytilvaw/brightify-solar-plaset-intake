@@ -6,6 +6,7 @@ import IntakeSinglePage from './components/IntakeSinglePage'
 import RoofEvaluationForm from './components/RoofEvaluationForm'
 import StoreLandingPage from './components/StoreLandingPage'
 import SolarPanelsPage from './components/SolarPanelsPage'
+import InvertersPage from './components/InvertersPage'
 
 function BackHomeNav() {
   return (
@@ -96,6 +97,16 @@ export default function App() {
     return (
       <>
         <SolarPanelsPage />
+        <Analytics />
+        <SpeedInsights />
+      </>
+    )
+  }
+
+  if (window.location.pathname.startsWith('/inverters')) {
+    return (
+      <>
+        <InvertersPage />
         <Analytics />
         <SpeedInsights />
       </>
