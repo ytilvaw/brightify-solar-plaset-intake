@@ -283,7 +283,6 @@ export default function StoreLandingPage() {
         onSearchChange={setSearch}
         onSearchSubmit={() => { window.location.href = '/solar-panels'; }}
       />
-      <HomeHero />
       <Explore />
       <ShopHelp />
       <Footer />
