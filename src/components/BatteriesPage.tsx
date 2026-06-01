@@ -266,7 +266,7 @@ const BATTERIES: Battery[] = [
     weight: '54 kg',
     ip: 'NEMA 3R',
     warranty: '15 yr / 6,000 cycles',
-    price: 2899,
+    price: 3299,
     image: '/batteries/enphase-iq-battery-5p.jpg',
     tags: ['lifepo4', 'outdoor', 'wallmount', 'enphase'],
     datasheet: '/datasheets/enphase-iq-battery-5p.pdf',
