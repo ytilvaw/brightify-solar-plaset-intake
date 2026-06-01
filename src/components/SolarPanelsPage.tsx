@@ -469,6 +469,26 @@ const PRODUCTS: Product[] = [
     tags: ['topcon', 'bifacial'],
     datasheet: '/datasheets/trina-tsm-neg9rc27-450w.pdf',
   },
+  {
+    id: 'qcells-qpeak-duo-blk-ml-g10-410',
+    brand: 'Qcells',
+    model: 'Q.PEAK DUO BLK ML-G10+ 410',
+    name: 'Q.PEAK DUO BLK ML-G10+ 410W',
+    watt: 410,
+    eff: '21.0%',
+    tech: 'Mono PERC',
+    dims: '1879×1045×32 mm',
+    weight: '22.0 kg',
+    use: 'res',
+    productWarranty: '25 yr',
+    powerWarranty: '25 yr',
+    price: 198,
+    pricePerW: '$0.48/W',
+    art: 'allblack',
+    image: '/panels/qcells-qpeak-duo-blk-410.jpg',
+    tags: ['allblack'],
+    datasheet: '/datasheets/qcells-qpeak-duo-blk-410.pdf',
+  },
 ];
 
 const TAG_FILTERS: [string, string][] = [
