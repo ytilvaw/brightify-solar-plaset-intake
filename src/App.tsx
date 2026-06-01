@@ -126,7 +126,7 @@ export default function App() {
     )
   }
 
-  if (window.location.pathname.startsWith('/diy')) {
+  if (window.location.pathname.startsWith('/diy-kits')) {
     return (
       <>
         <DIYPage />

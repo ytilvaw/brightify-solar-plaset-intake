@@ -65,11 +65,11 @@
       "destination": "/"
     },
     {
-      "source": "/diy",
+      "source": "/diy-kits",
       "destination": "/"
     },
     {
-      "source": "/diy/(.*)",
+      "source": "/diy-kits/(.*)",
       "destination": "/"
     }
   ]
