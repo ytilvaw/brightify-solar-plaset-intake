@@ -487,6 +487,7 @@ const PRODUCTS: Product[] = [
     art: 'allblack',
     image: '/panels/qcells-qpeak-duo-blk-410.jpg',
     tags: ['allblack'],
+    flag: 'Popular',
     datasheet: '/datasheets/qcells-qpeak-duo-blk-410.pdf',
   },
 ];
