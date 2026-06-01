@@ -759,9 +759,9 @@ export default function InvertersPage() {
           </div>
           <div className="filter-group">
             <span className="filter-label">Brand</span>
-            {BRAND_FILTERS.map(([k, l]) => (
-              <button key={k} className={`chip${brand === k ? ' active' : ''}`} onClick={() => setBrand(k)}>{l}</button>
-            ))}
+            <select className="sort-select" value={brand} onChange={e => setBrand(e.target.value)}>
+              {BRAND_FILTERS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+            </select>
           </div>
           <div className="toolbar-right">
             <span className="result-count">{filtered.length} inverter{filtered.length === 1 ? '' : 's'}</span>
