@@ -75,44 +75,6 @@ const IconBattery = () => (
   </svg>
 );
 
-// ---- hero ----
-
-function HomeHero() {
-  return (
-    <header className="hero h-hero">
-      <div className="hero-sun"></div>
-      <div className="wrap">
-        <div>
-          <div className="hero-eyebrow">
-            <span className="pill">SHOP</span>
-            <span>Solar gear for home &amp; pro</span>
-          </div>
-          <h1>
-            Everything under<br />
-            the <em className="hgrad-text">sun</em>.
-          </h1>
-          <p className="lead">
-            Panels, batteries, inverters, racking and complete DIY kits — shipped to your
-            door. Pick a category to start.
-          </p>
-          <div className="h-hero-ctas">
-            <a className="btn btn-grad btn-lg" href="#explore">Shop by category <Arrow /></a>
-            <a className="btn btn-ghost btn-lg" href="#quote">Talk to an advisor</a>
-          </div>
-        </div>
-
-        <div className="h-hero-visual" aria-hidden="true">
-          <div className="panel-card">
-            <div className="pv-grid">
-              {Array.from({ length: 60 }).map((_, i) => <div key={i} className="pv-cell"></div>)}
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-
 // ---- categories ----
 
 interface Category {

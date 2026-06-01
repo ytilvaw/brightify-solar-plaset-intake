@@ -54,7 +54,8 @@ interface Product {
   powerWarranty: string;
   price: number;       // per panel ($/W + 0.10) × watt
   pricePerW: string;   // display e.g. "$0.31/W"
-  art: 'allblack' | 'silver'; // CSS art variant
+  art: 'allblack' | 'silver'; // kept for tag logic
+  image: string;       // self-hosted product photo
   tags: string[];      // 'topcon' | 'hjt' | 'bifacial' | 'allblack'
   datasheet?: string;  // URL to PDF datasheet
   flag?: string;
@@ -78,8 +79,9 @@ const PRODUCTS: Product[] = [
     price: 134.85,    // ($0.21 + $0.10) × 435
     pricePerW: '$0.31/W',
     art: 'silver',
+    image: '/panels/risen-rsm108-9-435.jpg',
     tags: ['topcon', 'bifacial'],
-    datasheet: 'https://en.risen.com/uploads/20240416/Risen_TDS%20for%20N-type%20Dual%20Glass%20Modules-20240416.pdf',
+    datasheet: '/datasheets/risen-rsm108-9-435.pdf',
   },
   {
     id: 'trina-tsm-435neg9r',
@@ -97,8 +99,9 @@ const PRODUCTS: Product[] = [
     price: 147.90,    // ($0.24 + $0.10) × 435
     pricePerW: '$0.34/W',
     art: 'silver',
+    image: '/panels/trina-tsm-435neg9r.jpg',
     tags: ['topcon'],
-    datasheet: 'https://static.trinasolar.com/sites/default/files/230531_Datasheet_Vertex%20S+_NEG9R.28_EN_2023_B_web.pdf',
+    datasheet: '/datasheets/trina-tsm-435neg9r.pdf',
   },
   {
     id: 'trina-tsm-445neg9r',
@@ -116,9 +119,10 @@ const PRODUCTS: Product[] = [
     price: 151.30,    // ($0.24 + $0.10) × 445
     pricePerW: '$0.34/W',
     art: 'silver',
+    image: '/panels/trina-tsm-445neg9r.jpg',
     tags: ['topcon'],
     flag: 'Best seller',
-    datasheet: 'https://static.trinasolar.com/sites/default/files/230531_Datasheet_Vertex%20S+_NEG9R.28_EN_2023_B_web.pdf',
+    datasheet: '/datasheets/trina-tsm-445neg9r.pdf',
   },
   {
     id: 'trina-tsm-585neg18c',
@@ -136,8 +140,9 @@ const PRODUCTS: Product[] = [
     price: 187.20,    // ($0.22 + $0.10) × 585
     pricePerW: '$0.32/W',
     art: 'silver',
+    image: '/panels/trina-tsm-585neg18c.jpg',
     tags: ['topcon', 'bifacial', 'commercial'],
-    datasheet: 'https://dpvenergy.com/wp-content/uploads/2024/05/DOC-20250305-WA0001.pdf',
+    datasheet: '/datasheets/trina-tsm-585neg18c.pdf',
   },
   {
     id: 'trina-tsm-610neg19rc',
@@ -155,9 +160,10 @@ const PRODUCTS: Product[] = [
     price: 195.20,    // ($0.22 + $0.10) × 610
     pricePerW: '$0.32/W',
     art: 'silver',
+    image: '/panels/trina-tsm-610neg19rc.jpg',
     tags: ['topcon', 'bifacial', 'commercial'],
     flag: 'Max power',
-    datasheet: 'https://static.trinasolar.com/sites/default/files/Datasheet_Vertex_NEG19RC.20_EN_2023_A.pdf',
+    datasheet: '/datasheets/trina-tsm-610neg19rc.pdf',
   },
   {
     id: 'canadian-cs6w-585tb',
@@ -175,8 +181,9 @@ const PRODUCTS: Product[] = [
     price: 187.20,    // ($0.22 + $0.10) × 585
     pricePerW: '$0.32/W',
     art: 'silver',
+    image: '/panels/canadian-cs6w-585tb.jpg',
     tags: ['topcon', 'bifacial', 'commercial'],
-    datasheet: 'https://static.csisolar.com/wp-content/uploads/2022/09/06160941/CS-Datasheet-TOPBiHiKu6-TOPCon_CS6W-TB-AG_v1.8_EN.pdf',
+    datasheet: '/datasheets/canadian-cs6w-585tb.pdf',
   },
   {
     id: 'ja-jam54d40-455lb',
@@ -194,6 +201,7 @@ const PRODUCTS: Product[] = [
     price: 154.70,    // ($0.24 + $0.10) × 455
     pricePerW: '$0.34/W',
     art: 'allblack',
+    image: '/panels/ja-jam54d40-455lb.jpg',
     tags: ['topcon', 'bifacial', 'allblack'],
     flag: 'High efficiency',
     datasheet: '/datasheets/ja-jam54d40-455lb.pdf',
@@ -214,8 +222,9 @@ const PRODUCTS: Product[] = [
     price: 146.25,    // ($0.225 + $0.10) × 450
     pricePerW: '$0.325/W',
     art: 'allblack',
+    image: '/panels/znshine-zxmr-450.jpg',
     tags: ['topcon', 'bifacial', 'allblack'],
-    datasheet: 'https://sunwatts.com/content/specs/ZNShine%20450%20datasheet.pdf',
+    datasheet: '/datasheets/znshine-zxmr-450.pdf',
   },
   {
     id: 'ht-ht54-18x-f-455',
@@ -233,8 +242,9 @@ const PRODUCTS: Product[] = [
     price: 147.88,    // ($0.225 + $0.10) × 455
     pricePerW: '$0.325/W',
     art: 'allblack',
+    image: '/panels/ht-saae-455.jpg',
     tags: ['topcon', 'bifacial', 'allblack'],
-    datasheet: 'https://ussolarsupplier.com/cdn/shop/files/SPEC_HT54-18X_ND_-F_455W_USSS.pdf',
+    datasheet: '/datasheets/ht-saae-455.pdf',
   },
   {
     id: 'ht-ht54-18x-f-435',
@@ -252,8 +262,9 @@ const PRODUCTS: Product[] = [
     price: 141.38,    // ($0.225 + $0.10) × 435
     pricePerW: '$0.325/W',
     art: 'allblack',
+    image: '/panels/ht-saae-435.jpg',
     tags: ['topcon', 'bifacial', 'allblack'],
-    datasheet: 'https://ussolarsupplier.com/cdn/shop/files/SPEC_HT54-18X_ND_-F_455W_USSS.pdf',
+    datasheet: '/datasheets/ht-saae-435.pdf',
   },
   {
     id: 'huasun-hsn-210r-b96dsn440',
@@ -271,8 +282,9 @@ const PRODUCTS: Product[] = [
     price: 143.00,    // ($0.225 + $0.10) × 440
     pricePerW: '$0.325/W',
     art: 'allblack',
+    image: '/panels/huasun-440hjt.jpg',
     tags: ['hjt', 'bifacial', 'allblack'],
-    datasheet: 'https://www.huasunsolar.com/uploads/file/hsn-210r-b96dsn-435-460-en.pdf',
+    datasheet: '/datasheets/huasun-440hjt.pdf',
   },
   {
     id: 'jinko-jkm585n-72hl4-bdv',
@@ -290,8 +302,9 @@ const PRODUCTS: Product[] = [
     price: 198.90,    // ($0.24 + $0.10) × 585
     pricePerW: '$0.34/W',
     art: 'silver',
+    image: '/panels/jinko-jkm585n.jpg',
     tags: ['topcon', 'bifacial', 'commercial'],
-    datasheet: 'https://jinkosolar.eu/wp-content/uploads/JKM560-580N-72HL4-BDV-F3-EN.pdf',
+    datasheet: '/datasheets/jinko-jkm585n.pdf',
   },
   {
     id: 'jinko-jkm470n-60hl4-v',
@@ -309,8 +322,9 @@ const PRODUCTS: Product[] = [
     price: 159.80,    // ($0.24 + $0.10) × 470
     pricePerW: '$0.34/W',
     art: 'silver',
+    image: '/panels/jinko-jkm470n-60.jpg',
     tags: ['topcon'],
-    datasheet: 'https://jinkosolar.com.au/wp-content/uploads/2022/11/JKM470-490N-60HL4R-V-AUS.pdf',
+    datasheet: '/datasheets/jinko-jkm470n-60.pdf',
   },
 
   // ---- New inventory (added from spec sheets) ----
@@ -331,6 +345,7 @@ const PRODUCTS: Product[] = [
     price: 142.50,    // $0.30 × 475
     pricePerW: '$0.30/W',
     art: 'silver',
+    image: '/panels/risen-rsm96-475.jpg',
     tags: ['topcon', 'bifacial'],
     datasheet: '/datasheets/risen-rsm96-11-475bndg.pdf',
   },
@@ -350,6 +365,7 @@ const PRODUCTS: Product[] = [
     price: 150.15,    // $0.33 × 455
     pricePerW: '$0.33/W',
     art: 'allblack',
+    image: '/panels/ja-jam54d41-455.jpg',
     tags: ['topcon', 'bifacial', 'allblack'],
     datasheet: '/datasheets/ja-jam54d41-lr-455w.pdf',
   },
@@ -369,6 +385,7 @@ const PRODUCTS: Product[] = [
     price: 153.45,    // $0.33 × 465
     pricePerW: '$0.33/W',
     art: 'allblack',
+    image: '/panels/ja-jam54d41-465.jpg',
     tags: ['topcon', 'bifacial', 'allblack'],
     datasheet: '/datasheets/ja-jam54d41-lr-465w.pdf',
   },
@@ -388,6 +405,7 @@ const PRODUCTS: Product[] = [
     price: 196.35,    // $0.33 × 595
     pricePerW: '$0.33/W',
     art: 'allblack',
+    image: '/panels/ja-jam72d40-595.jpg',
     tags: ['topcon', 'bifacial', 'allblack', 'commercial'],
     datasheet: '/datasheets/ja-jam72d40-mb-595w.pdf',
   },
@@ -407,6 +425,7 @@ const PRODUCTS: Product[] = [
     price: 159.80,    // $0.34 × 470
     pricePerW: '$0.34/W',
     art: 'allblack',
+    image: '/panels/jinko-jkm470n-48ql-db.jpg',
     tags: ['topcon', 'allblack'],
     datasheet: '/datasheets/jinko-jkm460-485n-48ql6-db.pdf',
   },
@@ -426,6 +445,7 @@ const PRODUCTS: Product[] = [
     price: 133.50,    // $0.30 × 445
     pricePerW: '$0.30/W',
     art: 'allblack',
+    image: '/panels/sunplus-sr4-445.jpg',
     tags: ['topcon', 'allblack'],
     datasheet: '/datasheets/sunplus-sr4-54htb-445m.pdf',
   },
@@ -445,6 +465,7 @@ const PRODUCTS: Product[] = [
     price: 153.00,    // ($0.24 + $0.10) × 450 — price TBC with Trina rep
     pricePerW: '$0.34/W',
     art: 'silver',
+    image: '/panels/trina-tsm-neg9rc27-450.jpg',
     tags: ['topcon', 'bifacial'],
     datasheet: '/datasheets/trina-tsm-neg9rc27-450w.pdf',
   },
@@ -462,11 +483,14 @@ const SORTS: [string, string][] = [['featured', 'Featured'], ['price-asc', 'Pric
 
 // ---- product card ----
 
-function ModuleArt({ art }: { art: Product['art'] }) {
-  const cls = art === 'allblack' ? 'allblack' : 'silver';
+function ModulePhoto({ image, brand, model }: { image: string; brand: string; model: string }) {
   return (
-    <div className={`prod-media ${cls}`}>
-      <div className="mod">{Array.from({ length: 24 }).map((_, i) => <span key={i}></span>)}</div>
+    <div className="prod-media inv-media">
+      <img
+        src={image}
+        alt={`${brand} ${model}`}
+        style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '12px' }}
+      />
     </div>
   );
 }
@@ -495,7 +519,7 @@ function ProductCard({ p, inQuote, onToggle }: { p: Product; inQuote: boolean; o
   return (
     <article className="prod-card">
       <div style={{ position: 'relative' }}>
-        <ModuleArt art={p.art} />
+        <ModulePhoto image={p.image} brand={p.brand} model={p.model} />
         <span className="prod-brand">{p.brand}</span>
         {p.flag && <span className="prod-flag">{p.flag}</span>}
       </div>
