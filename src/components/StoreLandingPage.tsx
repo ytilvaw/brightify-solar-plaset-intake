@@ -98,6 +98,7 @@ const CATEGORIES: Category[] = [
     key: 'diy', media: 'media-diy', Icon: IconDIY,
     hook: 'All-in-one', name: 'DIY Kits',
     desc: 'Complete grid-tie and hybrid systems sized for your roof — panels, inverter, racking and wiring in one box.',
+    page: '/diy',
   },
   {
     key: 'battery', media: 'media-battery', Icon: IconBattery,

@@ -9,6 +9,7 @@ import SolarPanelsPage from './components/SolarPanelsPage'
 import InvertersPage from './components/InvertersPage'
 import BatteriesPage from './components/BatteriesPage'
 import RackingPage from './components/RackingPage'
+import DIYPage from './components/DIYPage'
 
 function BackHomeNav() {
   return (
@@ -119,6 +120,16 @@ export default function App() {
     return (
       <>
         <BatteriesPage />
+        <Analytics />
+        <SpeedInsights />
+      </>
+    )
+  }
+
+  if (window.location.pathname.startsWith('/diy')) {
+    return (
+      <>
+        <DIYPage />
         <Analytics />
         <SpeedInsights />
       </>

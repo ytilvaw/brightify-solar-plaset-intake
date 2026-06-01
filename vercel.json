@@ -63,6 +63,14 @@
     {
       "source": "/racking/(.*)",
       "destination": "/"
+    },
+    {
+      "source": "/diy",
+      "destination": "/"
+    },
+    {
+      "source": "/diy/(.*)",
+      "destination": "/"
     }
   ]
 }
