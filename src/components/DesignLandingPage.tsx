@@ -62,7 +62,7 @@ function Nav() {
   return (
     <nav className="nav">
       <div className="wrap">
-        <a href="#top" className="brand">
+        <a href="https://brightify.solar" className="brand">
           <img className="mark" src="/brightify-mark.png" alt="Brightify" />
           <span>BRIGHTIFY</span>
         </a>
