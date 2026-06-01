@@ -350,20 +350,6 @@ export default function DIYPage() {
         onQuote={() => setDrawerOpen(true)}
       />
 
-      <section className="cat-hero">
-        <div className="wrap">
-          <div className="cat-hero-text">
-            <span className="mono" style={{ color: 'var(--amber)', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase' }}>DIY Solar Kits</span>
-            <h1 style={{ fontFamily: 'var(--hdisplay)', margin: '8px 0 12px' }}>
-              Everything in <em className="hgrad-text">one box</em>.
-            </h1>
-            <p className="lead" style={{ maxWidth: '520px' }}>
-              Pre-matched panels, inverters and batteries — sized for your home and shipped together. No guesswork, no compatibility headaches.
-            </p>
-          </div>
-        </div>
-      </section>
-
       <div className="toolbar">
         <div className="wrap">
           <div className="filter-group">
