@@ -141,11 +141,11 @@ function KitCard({ k, inQuote, onToggle }: { k: Kit; inQuote: boolean; onToggle:
   return (
     <article className="prod-card">
       <div style={{ position: 'relative' }}>
-        <div className="prod-media inv-media" style={{ height: '420px', background: '#f5f6f8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ height: '420px', background: '#f5f6f8', borderRadius: '12px 12px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
           <img
             src={k.image}
             alt={k.name}
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            style={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', display: 'block' }}
           />
         </div>
         {k.flag && <span className="prod-flag">{k.flag}</span>}
