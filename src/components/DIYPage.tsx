@@ -111,6 +111,40 @@ const KITS: Kit[] = [
     tags: ['hybrid', 'eg4'],
   },
   {
+    id: 'ruixu-8kw-hybrid-32kwh',
+    name: '8kW Hybrid Solar DIY Kit',
+    tagline: 'RUiXU RX-12K · 2× RUiXU 160U · 18 panels (8.1kW)',
+    type: 'hybrid',
+    solarKw: 8,
+    batteryKwh: 32,
+    // 18 panels × $165 = $2,970 | 2 batteries × $3,250 = $6,500 | inverter $3,299 → $12,769
+    components: [
+      '18× 450W all-black solar panels (8.1 kW)',
+      'RUiXU RX-12K 11.4kW Hybrid Inverter',
+      '2× RUiXU Lithi2-16 (32 kWh total)',
+    ],
+    price: 12769,
+    image: '/kits/kit-ruixu-8kw-hybrid.jpg',
+    tags: ['hybrid', 'ruixu'],
+  },
+  {
+    id: 'ruixu-9kw-hybrid-32kwh',
+    name: '9kW Hybrid Solar DIY Kit',
+    tagline: 'RUiXU RX-12K · 2× RUiXU 160U · 20 panels (9kW)',
+    type: 'hybrid',
+    solarKw: 9,
+    batteryKwh: 32,
+    // 20 panels × $165 = $3,300 | 2 batteries × $3,250 = $6,500 | inverter $3,299 → $13,099
+    components: [
+      '20× 450W all-black solar panels (9 kW)',
+      'RUiXU RX-12K 11.4kW Hybrid Inverter',
+      '2× RUiXU Lithi2-16 (32 kWh total)',
+    ],
+    price: 13099,
+    image: '/kits/kit-ruixu-9kw-hybrid.jpg',
+    tags: ['hybrid', 'ruixu'],
+  },
+  {
     id: 'ruixu-10kw-hybrid-32kwh',
     name: '10kW Hybrid Solar DIY Kit',
     tagline: 'RUiXU RX-12K · 2× RUiXU 160U · 23 panels (10.35kW)',
