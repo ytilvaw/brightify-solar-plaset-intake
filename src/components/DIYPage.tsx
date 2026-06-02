@@ -41,7 +41,7 @@ interface Kit {
   id: string;
   name: string;
   tagline: string;
-  type: 'hybrid' | 'offgrid' | 'battery-backup';
+  type: 'hybrid' | 'offgrid' | 'battery-backup'; // kept for future use
   solarKw: number;
   batteryKwh: number;
   components: string[];
@@ -52,68 +52,107 @@ interface Kit {
   includesInstallation?: boolean;
 }
 
+// Pricing logic:
+// Panel: 450W @ $165 each → panels = ceil(solarKw * 1000 / 450)
+// Battery: RUiXU 16kWh @ $3,250 each → 2 units = 32kWh
+// EG4 FlexBOSS18 inverter: $3,600
+// RUiXU RX-12K inverter: $3,299
+
 const KITS: Kit[] = [
   {
-    id: 'ruixu-10kw-hybrid-32kwh',
+    id: 'eg4-8kw-hybrid-32kwh',
+    name: '8kW Hybrid Solar DIY Kit',
+    tagline: 'EG4 FlexBOSS18 · 2× RUiXU 160U · 18 panels (8.1kW)',
+    type: 'hybrid',
+    solarKw: 8,
+    batteryKwh: 32,
+    // 18 panels × $165 = $2,970 | 2 batteries × $3,250 = $6,500 | inverter $3,600 → $13,070
+    components: [
+      '18× 450W all-black solar panels (8.1 kW)',
+      'EG4 FlexBOSS18 13kW Hybrid Inverter',
+      '2× RUiXU Lithi2-16 (32 kWh total)',
+    ],
+    price: 13070,
+    image: '/kits/kit-eg4-8kw-hybrid.jpg',
+    tags: ['hybrid', 'eg4'],
+  },
+  {
+    id: 'eg4-9kw-hybrid-32kwh',
+    name: '9kW Hybrid Solar DIY Kit',
+    tagline: 'EG4 FlexBOSS18 · 2× RUiXU 160U · 20 panels (9kW)',
+    type: 'hybrid',
+    solarKw: 9,
+    batteryKwh: 32,
+    // 20 panels × $165 = $3,300 | 2 batteries × $3,250 = $6,500 | inverter $3,600 → $13,400
+    components: [
+      '20× 450W all-black solar panels (9 kW)',
+      'EG4 FlexBOSS18 13kW Hybrid Inverter',
+      '2× RUiXU Lithi2-16 (32 kWh total)',
+    ],
+    price: 13400,
+    image: '/kits/kit-eg4-9kw-hybrid.jpg',
+    tags: ['hybrid', 'eg4'],
+  },
+  {
+    id: 'eg4-10kw-hybrid-32kwh',
     name: '10kW Hybrid Solar DIY Kit',
-    tagline: 'RUiXU RX-12K · 2× Lithi2-16 · 10kW panels',
+    tagline: 'EG4 FlexBOSS18 · 2× RUiXU 160U · 23 panels (10.35kW)',
     type: 'hybrid',
     solarKw: 10,
     batteryKwh: 32,
+    // 23 panels × $165 = $3,795 | 2 batteries × $3,250 = $6,500 | inverter $3,600 → $13,895
     components: [
-      '10 kW all-black solar panels',
+      '23× 450W all-black solar panels (10.35 kW)',
+      'EG4 FlexBOSS18 13kW Hybrid Inverter',
+      '2× RUiXU Lithi2-16 (32 kWh total)',
+    ],
+    price: 13895,
+    image: '/kits/kit-eg4-10kw-hybrid.jpg',
+    tags: ['hybrid', 'eg4'],
+  },
+  {
+    id: 'ruixu-10kw-hybrid-32kwh',
+    name: '10kW Hybrid Solar DIY Kit',
+    tagline: 'RUiXU RX-12K · 2× RUiXU 160U · 23 panels (10.35kW)',
+    type: 'hybrid',
+    solarKw: 10,
+    batteryKwh: 32,
+    // 23 panels × $165 = $3,795 | 2 batteries × $3,250 = $6,500 | inverter $3,299 → $13,594
+    components: [
+      '23× 450W all-black solar panels (10.35 kW)',
       'RUiXU RX-12K 11.4kW Hybrid Inverter',
       '2× RUiXU Lithi2-16 (32 kWh total)',
     ],
-    price: 13500,
-    image: '/kits/kit-10kw-hybrid.png',
+    price: 13594,
+    image: '/kits/kit-ruixu-10kw-hybrid.jpg',
     tags: ['hybrid', 'ruixu'],
-    flag: 'Best value',
   },
   {
-    id: 'tesla-powerwall3-6kw',
-    name: 'Tesla Powerwall 3 + 6kW Solar',
-    tagline: 'Tesla Powerwall 3 · 13.5 kWh · Includes installation',
-    type: 'battery-backup',
-    solarKw: 6,
-    batteryKwh: 13.5,
+    id: 'eg4-11kw-hybrid-32kwh',
+    name: '11kW Hybrid Solar DIY Kit',
+    tagline: 'EG4 FlexBOSS18 · 2× RUiXU 160U · 25 panels (11.25kW)',
+    type: 'hybrid',
+    solarKw: 11,
+    batteryKwh: 32,
+    // 25 panels × $165 = $4,125 | 2 batteries × $3,250 = $6,500 | inverter $3,600 → $14,225
     components: [
-      '6 kW all-black solar panels',
-      'Tesla Powerwall 3 (13.5 kWh)',
-      'Professional installation included',
-      'App monitoring & grid-tie ready',
+      '25× 450W all-black solar panels (11.25 kW)',
+      'EG4 FlexBOSS18 13kW Hybrid Inverter',
+      '2× RUiXU Lithi2-16 (32 kWh total)',
     ],
-    price: 10900,
-    image: '/kits/kit-tesla-6kw.png',
-    tags: ['battery-backup', 'tesla'],
-    flag: 'Installed',
-    includesInstallation: true,
-  },
-  {
-    id: 'ruixu-9kw-offgrid-16kwh',
-    name: '9kW Off-Grid Solar DIY Kit',
-    tagline: 'RUiXU SUNON7.2 · Lithi2-16 · 9kW panels',
-    type: 'offgrid',
-    solarKw: 9,
-    batteryKwh: 16,
-    components: [
-      '9 kW all-black solar panels',
-      'RUiXU SUNON7.2 7.2kW Off-Grid Inverter',
-      'RUiXU Lithi2-16 (16 kWh)',
-    ],
-    price: 7800,
-    image: '/kits/kit-9kw-offgrid.png',
-    tags: ['offgrid', 'ruixu'],
+    price: 14225,
+    image: '/kits/kit-eg4-11kw-hybrid.jpg',
+    tags: ['hybrid', 'eg4'],
+    flag: 'Most powerful',
   },
 ];
 
 // ---- filters ----
 
-const TYPE_FILTERS: [string, string][] = [
-  ['all', 'All'],
-  ['hybrid', 'Hybrid'],
-  ['offgrid', 'Off-Grid'],
-  ['battery-backup', 'Battery Backup'],
+const BRAND_FILTERS: [string, string][] = [
+  ['all', 'All Brands'],
+  ['eg4', 'EG4'],
+  ['ruixu', 'RUiXU'],
 ];
 const SORTS: [string, string][] = [
   ['price-asc', 'Price: low to high'],
@@ -266,7 +305,7 @@ function Footer() {
           <ul>
             <li><a href="/solar-panels">Solar Panels</a></li>
             <li><a href="/inverters">Inverters</a></li>
-            <li><a href="/diy">DIY Kits</a></li>
+            <li><a href="/diy-kits">DIY Kits</a></li>
             <li><a href="/batteries">Batteries</a></li>
             <li><a href="/racking">Racking &amp; Mounting</a></li>
           </ul>
@@ -303,7 +342,7 @@ const STORAGE_KEY = 'brightify_diy_quote_v1';
 
 export default function DIYPage() {
   const [search, setSearch] = useState('');
-  const [type, setType] = useState('all');
+  const [brand, setBrand] = useState('all');
   const [sort, setSort] = useState('price-asc');
   const [quote, setQuote] = useState<string[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -321,7 +360,7 @@ export default function DIYPage() {
 
   const filtered = useMemo(() => {
     let list = KITS.filter(k => {
-      if (type !== 'all' && k.type !== type) return false;
+      if (brand !== 'all' && !k.tags.includes(brand)) return false;
       if (search && !k.name.toLowerCase().includes(search.toLowerCase()) &&
           !k.tagline.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
@@ -334,7 +373,7 @@ export default function DIYPage() {
       return 0;
     });
     return list;
-  }, [type, sort, search]);
+  }, [brand, sort, search]);
 
   const quoteItems = KITS.filter(k => quote.includes(k.id));
 
@@ -351,10 +390,10 @@ export default function DIYPage() {
       <div className="toolbar">
         <div className="wrap">
           <div className="filter-group">
-            <span className="filter-label">Type</span>
-            {TYPE_FILTERS.map(([k, l]) => (
-              <button key={k} className={`chip${type === k ? ' active' : ''}`} onClick={() => setType(k)}>{l}</button>
-            ))}
+            <span className="filter-label">Brand</span>
+            <select className="sort-select" value={brand} onChange={e => setBrand(e.target.value)}>
+              {BRAND_FILTERS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+            </select>
           </div>
           <div className="toolbar-right">
             <span className="result-count">{filtered.length} kit{filtered.length === 1 ? '' : 's'}</span>
