@@ -2,19 +2,19 @@
   "rewrites": [
     {
       "source": "/design",
-      "destination": "/"
+      "destination": "/design.html"
     },
     {
       "source": "/design/(.*)",
-      "destination": "/"
+      "destination": "/design.html"
     },
     {
       "source": "/planset",
-      "destination": "/"
+      "destination": "/planset.html"
     },
     {
       "source": "/planset/(.*)",
-      "destination": "/"
+      "destination": "/planset.html"
     },
     {
       "source": "/roof",
@@ -34,43 +34,43 @@
     },
     {
       "source": "/solar-panels",
-      "destination": "/"
+      "destination": "/solar-panels.html"
     },
     {
       "source": "/solar-panels/(.*)",
-      "destination": "/"
+      "destination": "/solar-panels.html"
     },
     {
       "source": "/inverters",
-      "destination": "/"
+      "destination": "/inverters.html"
     },
     {
       "source": "/inverters/(.*)",
-      "destination": "/"
+      "destination": "/inverters.html"
     },
     {
       "source": "/batteries",
-      "destination": "/"
+      "destination": "/batteries.html"
     },
     {
       "source": "/batteries/(.*)",
-      "destination": "/"
+      "destination": "/batteries.html"
     },
     {
       "source": "/racking",
-      "destination": "/"
+      "destination": "/racking.html"
     },
     {
       "source": "/racking/(.*)",
-      "destination": "/"
+      "destination": "/racking.html"
     },
     {
       "source": "/diy-kits",
-      "destination": "/"
+      "destination": "/diy-kits.html"
     },
     {
       "source": "/diy-kits/(.*)",
-      "destination": "/"
+      "destination": "/diy-kits.html"
     }
   ]
 }

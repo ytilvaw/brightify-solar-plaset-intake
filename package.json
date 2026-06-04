@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-route-pages.cjs",
     "preview": "vite preview",
     "check": "tsc --noEmit"
   },
