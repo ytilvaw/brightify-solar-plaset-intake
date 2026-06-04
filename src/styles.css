@@ -24,11 +24,14 @@
 
 html {
   background: #ffffff;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  overflow-x: hidden;
   min-height: 100vh;
   background: #ffffff;
   color: var(--text);

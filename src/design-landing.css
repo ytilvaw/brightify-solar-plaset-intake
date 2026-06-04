@@ -6,6 +6,8 @@
    amber #FFC93C → orange #FF8A3D → coral #FF5577
 ------------------------------------------------------------------- */
 
+html, body { overflow-x: hidden; max-width: 100vw; }
+
 :root {
   /* surfaces */
   --paper: #FFFCF7;            /* warm white */
