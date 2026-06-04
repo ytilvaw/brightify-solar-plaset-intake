@@ -32,7 +32,7 @@ const ROUTES = [
   },
   {
     file: 'racking.html',
-    title: 'Solar Racking & Mounting — SnapNRack | Brightify Solar',
+    title: 'Solar Racking & Mounting | Brightify Solar',
     description:
       'Rails, clamps, anchors and ground-mount hardware from SnapNRack. Roof, ground and ballast mounting systems shipped direct.',
     url: `${BASE_URL}/racking`,
