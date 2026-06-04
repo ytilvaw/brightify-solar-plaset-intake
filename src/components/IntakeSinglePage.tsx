@@ -271,7 +271,7 @@ function Confirmation({ form, photoCount, sheetCount, onReset }: {
       <h2>Intake <em>received</em>.</h2>
       <p>
         Thanks{form.contact ? `, ${form.contact.split(' ')[0]}` : ''} — your planset intake is in the queue.
-        A designer reviews scope next and your stamped, AHJ-ready set follows on the agreed schedule.
+        A designer reviews scope next and your AHJ-ready set follows on the agreed schedule.
       </p>
 
       <div className="isp-confirm-card">
