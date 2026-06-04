@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const BASE_URL = 'https://brightifysolar.com';
-const OG_IMAGE = `${BASE_URL}/brightify-logo.png`;
+const OG_IMAGE = `${BASE_URL}/brightify-og.jpg`;
 
 const ROUTES = [
   {
