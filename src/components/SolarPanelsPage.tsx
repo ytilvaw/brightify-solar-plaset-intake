@@ -814,6 +814,17 @@ export default function SolarPanelsPage() {
         </div>
       </div>
 
+      <div className="wrap" style={{ paddingTop: '14px', paddingBottom: '2px' }}>
+        <p style={{
+          fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '0.05em',
+          color: 'var(--ink-3)', background: 'rgba(255,201,60,0.1)',
+          border: '1px solid rgba(255,201,60,0.35)', borderRadius: '8px',
+          padding: '8px 14px', margin: 0,
+        }}>
+          ⓘ Prices shown are for <strong>pallet quantity</strong>. Orders below pallet quantity will be priced slightly higher — <a href="https://wa.me/14084643739" style={{ color: 'var(--ink-2)', textDecoration: 'underline' }}>contact us</a> for a quote.
+        </p>
+      </div>
+
       <section className="catalog">
         <div className="wrap">
           <div className="prod-grid">
