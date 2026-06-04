@@ -299,8 +299,8 @@ const PRODUCTS: Product[] = [
     use: 'com',
     productWarranty: '12 yr',
     powerWarranty: '30 yr',
-    price: 122.85,    // $0.21/W × 585 (pallet pricing)
-    pricePerW: '$0.21/W',
+    price: 181.35,    // ($0.21 + $0.10) × 585
+    pricePerW: '$0.31/W',
     art: 'silver',
     image: '/panels/jinko-jkm585n.jpg',
     tags: ['topcon', 'bifacial', 'commercial'],
@@ -482,12 +482,12 @@ const PRODUCTS: Product[] = [
     use: 'res',
     productWarranty: '25 yr',
     powerWarranty: '30 yr',
-    price: 101.20,    // $0.23/W × 440 (pallet pricing, 36 pcs/pallet)
-    pricePerW: '$0.23/W',
+    price: 145.20,    // ($0.23 + $0.10) × 440
+    pricePerW: '$0.33/W',
     art: 'silver',
-    image: '/panels/trina-tsm-neg9rc27-450.jpg',
+    image: '/panels/trina-tsm-neg9rc27-440.jpg',
     tags: ['topcon', 'bifacial'],
-    datasheet: '/datasheets/trina-tsm-neg9rc27-450w.pdf',
+    datasheet: '/datasheets/trina-tsm-neg9rc27-440w.pdf',
   },
   {
     id: 'qcells-qpeak-duo-blk-ml-g10-410',
