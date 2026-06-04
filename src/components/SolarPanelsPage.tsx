@@ -299,8 +299,8 @@ const PRODUCTS: Product[] = [
     use: 'com',
     productWarranty: '12 yr',
     powerWarranty: '30 yr',
-    price: 198.90,    // ($0.24 + $0.10) × 585
-    pricePerW: '$0.34/W',
+    price: 122.85,    // $0.21/W × 585 (pallet pricing)
+    pricePerW: '$0.21/W',
     art: 'silver',
     image: '/panels/jinko-jkm585n.jpg',
     tags: ['topcon', 'bifacial', 'commercial'],
@@ -464,6 +464,26 @@ const PRODUCTS: Product[] = [
     powerWarranty: '30 yr',
     price: 153.00,    // ($0.24 + $0.10) × 450 — price TBC with Trina rep
     pricePerW: '$0.34/W',
+    art: 'silver',
+    image: '/panels/trina-tsm-neg9rc27-450.jpg',
+    tags: ['topcon', 'bifacial'],
+    datasheet: '/datasheets/trina-tsm-neg9rc27-450w.pdf',
+  },
+  {
+    id: 'trina-tsm-neg9rc27-440w',
+    brand: 'Trina Solar',
+    model: 'TSM-NEG9RC.27',
+    name: 'Vertex S+ 440W Bifacial',
+    watt: 440,
+    eff: '22.0%',
+    tech: 'N-Type i-TOPCon',
+    dims: '1762×1134×30 mm',
+    weight: '21.0 kg',
+    use: 'res',
+    productWarranty: '25 yr',
+    powerWarranty: '30 yr',
+    price: 101.20,    // $0.23/W × 440 (pallet pricing, 36 pcs/pallet)
+    pricePerW: '$0.23/W',
     art: 'silver',
     image: '/panels/trina-tsm-neg9rc27-450.jpg',
     tags: ['topcon', 'bifacial'],
