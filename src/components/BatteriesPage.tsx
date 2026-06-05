@@ -149,7 +149,7 @@ const BATTERIES: Battery[] = [
     weight: '140 kg',
     ip: 'IP65',
     warranty: '10 yr',
-    price: 3124.99,
+    price: 3400,
     image: '/batteries/eg4-wallmount-280ah-aw.jpg',
     tags: ['lifepo4', 'outdoor', 'wallmount', 'eg4'],
     datasheet: '/datasheets/eg4-wallmount-280ah-aw.pdf',
