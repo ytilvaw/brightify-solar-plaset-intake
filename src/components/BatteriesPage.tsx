@@ -91,7 +91,7 @@ const BATTERIES: Battery[] = [
     weight: '159 kg',
     ip: 'IP55',
     warranty: '10 yr',
-    price: 2750,
+    price: 3000,
     image: '/batteries/lg-resu16h-prime.png',
     tags: ['nmc', 'indoor', 'highvoltage', 'lg'],
     datasheet: '/datasheets/lg-resu16h-prime.pdf',
