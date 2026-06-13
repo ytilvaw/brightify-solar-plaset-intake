@@ -257,7 +257,7 @@ const TRUST_CELLS = [
   { big: '98.3%', sub: '', lbl: 'First-pass AHJ approval rate across 50 states.', grad: true },
   { big: '24', sub: 'hr', lbl: 'Standard turnaround on residential plansets.' },
   { big: '3,200', sub: '+', lbl: 'Plansets shipped to installers since 2021.' },
-  { big: '$179', sub: '', lbl: 'Starts here. Pay per planset or buy a pack.' },
+  { big: '$249', sub: '', lbl: 'Starts here. Pay per planset or buy a pack.' },
 ]
 
 function Trust() {
@@ -409,7 +409,7 @@ const STEPS = [
     time: '24 hours',
     title: 'We draft the planset',
     body: 'Our drafters produce a complete, dimensioned set — site plan, roof plan, electricals, calcs, placards — ready for AHJ submittal.',
-    points: ['NEC + IBC current code', 'PE stamp on request', 'Free revisions', 'Live chat with designer'],
+    points: ['NEC + IBC current code', 'Free revisions', 'Live chat with designer'],
   },
   {
     n: '03',
@@ -508,12 +508,12 @@ const PRICING: Record<PricingKey, PricingCategory> = {
       },
       {
         name: '5-Pack',
-        price: 1249,
-        each: 250,
-        save: '$246',
+        price: 1375,
+        each: 275,
+        save: '$120',
         desc: 'Best value for active installers. Use anytime.',
         feats: [
-          '5 plansets · $250 each',
+          '5 plansets · $275 each',
           'Priority queue · 24 hr or less',
           'Free AHJ revisions',
           'Dedicated project manager',
@@ -525,12 +525,12 @@ const PRICING: Record<PricingKey, PricingCategory> = {
       },
       {
         name: '10-Pack',
-        price: 1999,
-        each: 200,
-        save: '$991',
+        price: 2499,
+        each: 250,
+        save: '$491',
         desc: 'Scale package for high-volume installers.',
         feats: [
-          '10 plansets · $200 each',
+          '10 plansets · $250 each',
           'Same-day expedites available',
           'Free AHJ revisions',
           'Account manager + dedicated line',
@@ -563,12 +563,12 @@ const PRICING: Record<PricingKey, PricingCategory> = {
       },
       {
         name: '5-Pack',
-        price: 1749,
-        each: 350,
-        save: '$246',
+        price: 1849,
+        each: 370,
+        save: '$146',
         desc: 'Battery projects, priority queue.',
         feats: [
-          '5 plansets · $350 each',
+          '5 plansets · $370 each',
           'Priority queue',
           'Free AHJ revisions',
           'Dedicated PM',
@@ -581,12 +581,12 @@ const PRICING: Record<PricingKey, PricingCategory> = {
       },
       {
         name: '10-Pack',
-        price: 2999,
-        each: 300,
-        save: '$991',
+        price: 3399,
+        each: 340,
+        save: '$591',
         desc: 'Volume tier for storage-heavy installers.',
         feats: [
-          '10 plansets · $300 each',
+          '10 plansets · $340 each',
           'Same-day expedites',
           'Free AHJ revisions',
           'Account manager',
@@ -637,11 +637,9 @@ const PRICING: Record<PricingKey, PricingCategory> = {
 }
 
 const ADDON_DISPLAY = [
-  { name: 'PE Stamp', plus: '+ $199' },
-  { name: 'Structural letter', plus: '+ $149' },
   { name: 'Same-day expedite', plus: '+ $99' },
   { name: 'EV charger circuit', plus: '+ $89' },
-  { name: 'Interconnection filing', plus: '+ $149' },
+  { name: 'Interconnection filing', plus: '+ $199' },
 ]
 
 // ── addons modal ──────────────────────────────────────────────────────────
@@ -953,7 +951,7 @@ function Coverage() {
             </div>
             <div className="coverage-stat">
               <div className="big">50</div>
-              <div className="lbl">States licensed for PE stamps</div>
+              <div className="lbl">States covered</div>
             </div>
             <div className="coverage-stat">
               <div className="big">
@@ -1059,24 +1057,46 @@ function Testimonials() {
 
 // ── faq ───────────────────────────────────────────────────────────────────
 
-type FaqItem = { q: string; a: string; featured?: boolean }
+type FaqItem = { q: string; a: string | React.ReactNode; featured?: boolean }
 
 const FAQS: FaqItem[] = [
   {
     q: "What's actually in a Brightify planset?",
-    a: 'A complete AHJ submittal package: cover sheet, site plan, roof plan, attachment detail, single- and three-line diagrams, load + voltage-drop calculations, equipment cut sheets, and NEC-compliant placards/labels. Everything you need to walk into the permit counter and walk out approved.',
+    a: (
+      <div>
+        <p style={{ marginBottom: 8 }}>Plan sets include:</p>
+        <ol style={{ paddingLeft: 20, lineHeight: '1.8', listStyleType: 'decimal' }}>
+          <li>Site plan showing equipment, property lines, and fire setbacks</li>
+          <li>System layout with attachment pattern</li>
+          <li>Structural details for roof or ground mount systems</li>
+          <li>Wire diagrams, 1 or 3-line diagram, wire &amp; conduit sizing</li>
+          <li>System labeling and placards</li>
+          <li>Spec sheets for all major equipment</li>
+          <li>Certification documentation</li>
+          <li>Bill of Materials – includes detailed BOM for PV module, racking system, inverter, rapid shutdown, and roof attachments. Contact us for more information.</li>
+        </ol>
+      </div>
+    ),
   },
   {
     q: 'How fast can I get my planset?',
-    a: 'Standard residential is 24 hours from intake confirmation. Battery and commercial projects run 2–5 business days depending on scope. Same-day expedites are available for $99 extra when you need them.',
+    a: '90% of our residential projects are completed within 24 hours of intake confirmation. Battery and commercial projects run 2–5 business days depending on scope. Same-day expedites are available for $99 extra when you need them.',
   },
   {
     q: 'What happens if my AHJ red-lines the design?',
     a: "Revisions are always free. We'll keep iterating with your AHJ's reviewer until the set is approved — that's the whole point. Our designers handle the back-and-forth so you can stay on the install.",
   },
   {
+    q: 'I have made the payment. What next?',
+    a: "Thanks for choosing Brightify! One of our designers will reach out to you shortly to collect the details we need for your system. Keep an eye on your inbox — we typically follow up within a few hours.",
+  },
+  {
+    q: 'Do you offer structural letter?',
+    a: "At this moment, we are only offering solar planset drafting services. We don't offer structural letter. You should hire a licensed structural engineer when required by the AHJ. If desired, we can provide a referral for qualified electrical or structural PE firms that serves all 50 states.",
+  },
+  {
     q: 'Do you offer PE stamps?',
-    a: 'Yes. We have licensed Professional Engineers in all 50 states for both electrical and structural stamps. Add a stamp to any planset for $199, or include it as part of any commercial package.',
+    a: 'At this moment, we are only offering solar planset drafting services. We don\'t offer PE stamps. You should hire a licensed structural or electrical engineer when required by the AHJ. The licensed PE will provide load calculations and stamp the final plans. If desired, we can provide a referral for qualified electrical or structural PE firms that serves all 50 states.',
   },
   {
     q: 'Do you support battery storage and EV chargers?',
@@ -1092,7 +1112,7 @@ const FAQS: FaqItem[] = [
   },
   {
     q: 'What information do you need to start?',
-    a: "Address, utility, main panel specs, module + inverter + battery selection, and clear site survey photos. If you're missing pieces we'll guide you through it — most projects can kick off in 10 minutes.",
+    a: "Address, utility, main panel specs, module + inverter + battery selection, and clear site survey photos. If you're missing pieces we'll guide you through it.",
   },
   {
     q: "What's your refund policy?",
@@ -1116,8 +1136,7 @@ function FAQ() {
               Questions, <em>answered</em>.
             </h2>
             <p>
-              Still curious? Our team is one click away — WhatsApp, email, or a real human on the
-              phone.
+              Still curious? Our team is one click away — WhatsApp or email.
             </p>
             <a className="btn btn-primary" href="mailto:info@brightifysolar.com">
               Talk to a designer <Arrow />
@@ -1188,9 +1207,6 @@ function Footer() {
             </li>
             <li>
               <a href="#pricing">Commercial</a>
-            </li>
-            <li>
-              <a href="#pricing">PE stamps</a>
             </li>
             <li>
               <a href="#pricing">Interconnection</a>

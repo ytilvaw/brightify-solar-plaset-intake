@@ -667,7 +667,6 @@ function Footer() {
             <li><a href="/design">Permit plansets</a></li>
             <li><a href="/design">Residential PV</a></li>
             <li><a href="/design">PV + Battery</a></li>
-            <li><a href="/design">PE stamps</a></li>
           </ul>
         </div>
         <div className="col">

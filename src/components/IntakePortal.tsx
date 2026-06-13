@@ -38,11 +38,9 @@ const PACKAGES = {
 type PackageKey = keyof typeof PACKAGES
 
 const ADDON_DEFS = [
-  { id: 'pe',           name: 'PE Stamp',              desc: 'Licensed electrical/structural stamp',    price: 199 },
-  { id: 'structural',   name: 'Structural letter',      desc: 'Stamped rafter / load verification',      price: 149 },
   { id: 'expedite',     name: 'Same-day expedite',      desc: 'Jump the queue — out in hours',           price: 99  },
   { id: 'ev',           name: 'EV charger circuit',     desc: 'Add a Level-2 charger branch',            price: 89  },
-  { id: 'interconnect', name: 'Interconnection filing', desc: 'We file the utility application',         price: 149 },
+  { id: 'interconnect', name: 'Interconnection filing', desc: 'We file the utility application',         price: 199 },
 ] as const
 
 type AddonId = (typeof ADDON_DEFS)[number]['id']
