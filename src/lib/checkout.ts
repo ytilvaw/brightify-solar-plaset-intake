@@ -16,11 +16,11 @@ export type AddonId =
 
 export const TIERS: Record<TierId, { label: string; price: number }> = {
   'residential-single':  { label: 'Residential PV — Single',    price: 29900 },
-  'residential-5pack':   { label: 'Residential PV — 5-Pack',    price: 99900 },
-  'residential-10pack':  { label: 'Residential PV — 10-Pack',   price: 179900 },
+  'residential-5pack':   { label: 'Residential PV — 5-Pack',    price: 124900 },
+  'residential-10pack':  { label: 'Residential PV — 10-Pack',   price: 199900 },
   'battery-single':      { label: 'PV + Battery — Single',      price: 39900 },
-  'battery-5pack':       { label: 'PV + Battery — 5-Pack',      price: 150000 },
-  'battery-10pack':      { label: 'PV + Battery — 10-Pack',     price: 270000 },
+  'battery-5pack':       { label: 'PV + Battery — 5-Pack',      price: 174900 },
+  'battery-10pack':      { label: 'PV + Battery — 10-Pack',     price: 299900 },
   'commercial-standard': { label: 'Commercial — Standard',      price: 89900 },
 }
 
