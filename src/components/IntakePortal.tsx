@@ -753,13 +753,14 @@ const STEP_COMPONENTS: Record<StepKey, React.ComponentType<{ form: FormState; se
 export default function IntakePortal() {
   const [step, setStep] = useState(0)
   const [done, setDone] = useState(false)
-  const [form, setForm] = useState<FormState>(() => loadSaved() ?? BLANK)
+  const [form, setForm] = useState<FormState>(BLANK)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'uploading' | 'submitting' | 'error'>('idle')
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   // add body class for background gradient
   useEffect(() => {
     document.body.classList.add('ip-portal')
+    localStorage.removeItem(STORE_KEY)
     return () => document.body.classList.remove('ip-portal')
   }, [])
 
