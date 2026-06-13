@@ -687,6 +687,7 @@ footer .col ul a:hover { color: var(--amber); }
 .media-offgrid { background: radial-gradient(120% 110% at 70% 0%, rgba(255,85,119,0.16), transparent 62%), #FFF6F4; }
 .media-inverter{ background: radial-gradient(120% 110% at 30% 0%, rgba(255,138,61,0.16), transparent 60%), #FFF7F0; }
 .media-battery { background: radial-gradient(120% 110% at 70% 0%, rgba(255,201,60,0.20), rgba(255,138,61,0.08) 55%, transparent 75%), #FFFBEF; }
+.media-planset { background: radial-gradient(120% 110% at 30% 0%, rgba(100,160,255,0.18), transparent 60%), #F5F8FF; }
 
 /* home responsive */
 @media (max-width: 1024px) {

@@ -74,6 +74,13 @@ const IconBattery = () => (
     <path d="M22 19l-3 6h5l-3 6" />
   </svg>
 );
+const IconPlanset = () => (
+  <svg viewBox="0 0 48 48" {...sw}>
+    <rect x="10" y="6" width="28" height="36" rx="2" />
+    <path d="M16 14h16M16 20h16M16 26h10" />
+    <path d="M30 32l5-5 3 3-5 5-3-3ZM33 27l3 3" />
+  </svg>
+);
 
 // ---- categories ----
 
@@ -122,6 +129,12 @@ const CATEGORIES: Category[] = [
     key: 'offgrid', media: 'media-offgrid', Icon: IconOffgrid,
     hook: 'Cabins · RVs · remote', name: 'Off-Grid',
     desc: 'Charge controllers, all-in-one power units and kits for cabins, vans and anywhere the grid isn\'t.',
+  },
+  {
+    key: 'planset', media: 'media-planset', Icon: IconPlanset,
+    hook: 'Permit plansets', name: 'Solar Planset',
+    desc: 'AHJ-ready solar permit designs delivered in 24 hours — built by installers who know every red-line.',
+    page: '/design',
   },
 ];
 
