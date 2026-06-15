@@ -357,7 +357,7 @@ const BATTERIES: Battery[] = [
     ip: 'N/A',
     warranty: '5 yr',
     price: 7999,
-    image: '/batteries/ecoflow-delta-pro-ultra-x-battery-3x.png',
+    image: '/batteries/ecoflow-delta-pro-ultra-x-battery-4x.png',
     tags: ['lifepo4', 'indoor', 'ecoflow'],
     note: '24,576Wh · EV-grade LFP · Plug-and-play · 4×',
     flag: 'Most capacity',
