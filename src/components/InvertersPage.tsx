@@ -311,7 +311,7 @@ const INVERTERS: Inverter[] = [
     type: 'hybrid',
     use: 'res',
     warranty: '10 yr',
-    price: 2816,
+    price: 2950,
     image: '/inverters/growatt-sph-10k.jpg',
     tags: ['hybrid', 'growatt', 'split-phase'],
     datasheet: '/datasheets/growatt-sph-10k.pdf',
