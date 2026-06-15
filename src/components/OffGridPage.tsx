@@ -157,6 +157,23 @@ const PRODUCTS: OffGridProduct[] = [
     flag: 'Most powerful',
   },
   {
+    id: 'ecoflow-dpux-1inv-5bat',
+    brand: 'EcoFlow',
+    name: 'DELTA Pro Ultra X — 1× Inverter + 5× Batteries',
+    tagline: '12kW output · 30kWh capacity · 120/240V · <10ms UPS',
+    outputKw: 12,
+    capacityKwh: 30,
+    components: [
+      '1× EcoFlow DELTA Pro Ultra X Inverter',
+      '5× Smart Extra Battery (6kWh each)',
+      '120/240V split-phase · Online UPS',
+      'Expandable to 180kWh · Up to 3 inverters',
+    ],
+    price: 13600,
+    image: '/offgrid/ecoflow-dpux-1inv-5bat.webp',
+    tags: ['ecoflow', 'whole-home'],
+  },
+  {
     id: 'ecoflow-dpu-1inv-1bat',
     brand: 'EcoFlow',
     name: 'DELTA Pro Ultra — 1× Inverter + 1× Battery',
