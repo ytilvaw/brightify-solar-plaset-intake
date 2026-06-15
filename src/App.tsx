@@ -11,6 +11,7 @@ import BatteriesPage from './components/BatteriesPage'
 import RackingPage from './components/RackingPage'
 import DIYPage from './components/DIYPage'
 import OffGridPage from './components/OffGridPage'
+import SearchPage from './components/SearchPage'
 
 function BackHomeNav() {
   return (
@@ -57,6 +58,16 @@ function RoofPage() {
 }
 
 export default function App() {
+  if (window.location.pathname.startsWith('/search')) {
+    return (
+      <>
+        <SearchPage />
+        <Analytics />
+        <SpeedInsights />
+      </>
+    )
+  }
+
   if (window.location.pathname.startsWith('/design')) {
     return (
       <>

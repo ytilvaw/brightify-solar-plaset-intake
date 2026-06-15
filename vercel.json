@@ -79,6 +79,14 @@
     {
       "source": "/offgrid/(.*)",
       "destination": "/"
+    },
+    {
+      "source": "/search",
+      "destination": "/"
+    },
+    {
+      "source": "/search/(.*)",
+      "destination": "/"
     }
   ]
 }

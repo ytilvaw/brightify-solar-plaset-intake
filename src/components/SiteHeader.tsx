@@ -177,10 +177,12 @@ export default function SiteHeader({
 }: SiteHeaderProps) {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearchSubmit) {
+    const input = (e.currentTarget as HTMLFormElement).querySelector('input[type="text"]') as HTMLInputElement;
+    const q = input?.value?.trim() ?? search.trim();
+    if (q) {
+      window.location.href = `/search?q=${encodeURIComponent(q)}`;
+    } else if (onSearchSubmit) {
       onSearchSubmit();
-    } else {
-      window.location.href = '/solar-panels';
     }
   };
 
