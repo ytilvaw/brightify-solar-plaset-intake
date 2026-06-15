@@ -444,8 +444,8 @@ export default function RackingPage() {
       (type === 'all' || p.tags.includes(type)) &&
       (qq === '' || `${p.name} ${p.partNumber} ${p.description}`.toLowerCase().includes(qq))
     );
-    if (sort === 'price-asc')  list = [...list].sort((a, b) => a.price - b.price);
-    if (sort === 'price-desc') list = [...list].sort((a, b) => b.price - a.price);
+    if (sort === 'price-asc')  list = [...list].sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+    if (sort === 'price-desc') list = [...list].sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
     if (sort === 'name-asc')   list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     return list;
   }, [type, sort, query]);

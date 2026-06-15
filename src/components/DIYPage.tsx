@@ -465,8 +465,8 @@ export default function DIYPage() {
       return true;
     });
     list = [...list].sort((a, b) => {
-      if (sort === 'price-asc') return a.price - b.price;
-      if (sort === 'price-desc') return b.price - a.price;
+      if (sort === 'price-asc') return (a.price ?? Infinity) - (b.price ?? Infinity);
+      if (sort === 'price-desc') return (b.price ?? -Infinity) - (a.price ?? -Infinity);
       if (sort === 'solar-asc') return a.solarKw - b.solarKw;
       if (sort === 'solar-desc') return b.solarKw - a.solarKw;
       return 0;

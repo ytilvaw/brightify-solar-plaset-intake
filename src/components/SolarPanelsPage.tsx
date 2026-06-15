@@ -779,8 +779,8 @@ export default function SolarPanelsPage() {
       (use === 'all' || p.use === use) &&
       (qq === '' || `${p.brand} ${p.model} ${p.name} ${p.tech}`.toLowerCase().includes(qq))
     );
-    if (sort === 'price-asc') list = [...list].sort((a, b) => a.price - b.price);
-    else if (sort === 'price-desc') list = [...list].sort((a, b) => b.price - a.price);
+    if (sort === 'price-asc') list = [...list].sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+    else if (sort === 'price-desc') list = [...list].sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
     else if (sort === 'watt-desc') list = [...list].sort((a, b) => b.watt - a.watt);
     else if (sort === 'eff-desc') list = [...list].sort((a, b) => parseFloat(b.eff) - parseFloat(a.eff));
     return list;
