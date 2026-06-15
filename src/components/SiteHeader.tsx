@@ -106,6 +106,7 @@ function shCatHref(key: string, onHome: boolean): string {
   if (key === 'battery') return '/batteries';
   if (key === 'racking') return '/racking';
   if (key === 'diy') return '/diy-kits';
+  if (key === 'offgrid') return '/offgrid';
   return onHome ? `#shop-${key}` : `/#shop-${key}`;
 }
 
