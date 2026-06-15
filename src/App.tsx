@@ -10,6 +10,7 @@ import InvertersPage from './components/InvertersPage'
 import BatteriesPage from './components/BatteriesPage'
 import RackingPage from './components/RackingPage'
 import DIYPage from './components/DIYPage'
+import OffGridPage from './components/OffGridPage'
 
 function BackHomeNav() {
   return (
@@ -130,6 +131,16 @@ export default function App() {
     return (
       <>
         <DIYPage />
+        <Analytics />
+        <SpeedInsights />
+      </>
+    )
+  }
+
+  if (window.location.pathname.startsWith('/offgrid')) {
+    return (
+      <>
+        <OffGridPage />
         <Analytics />
         <SpeedInsights />
       </>

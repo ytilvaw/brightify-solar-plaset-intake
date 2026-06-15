@@ -129,6 +129,7 @@ const CATEGORIES: Category[] = [
     key: 'offgrid', media: 'media-offgrid', Icon: IconOffgrid,
     hook: 'Cabins · RVs · remote', name: 'Off-Grid',
     desc: 'Charge controllers, all-in-one power units and kits for cabins, vans and anywhere the grid isn\'t.',
+    page: '/offgrid',
   },
   {
     key: 'planset', media: 'media-planset', Icon: IconPlanset,
