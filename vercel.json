@@ -71,6 +71,14 @@
     {
       "source": "/diy-kits/(.*)",
       "destination": "/diy-kits.html"
+    },
+    {
+      "source": "/offgrid",
+      "destination": "/"
+    },
+    {
+      "source": "/offgrid/(.*)",
+      "destination": "/"
     }
   ]
 }
