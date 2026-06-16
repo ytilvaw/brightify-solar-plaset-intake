@@ -691,7 +691,7 @@ function Confirmation({ form, onReset }: { form: FormState; onReset: () => void 
       <h2>Project <em>received</em>.</h2>
       <p>
         Thanks{form.name ? `, ${form.name.split(' ')[0]}` : ''} — your intake is in the queue.
-        A designer will confirm scope shortly and your stamped, AHJ-ready set follows on schedule.
+        A designer will confirm scope shortly and your AHJ-ready set follows on schedule.
       </p>
 
       <div className="confirm-card">
@@ -722,7 +722,7 @@ function Confirmation({ form, onReset }: { form: FormState; onReset: () => void 
         </div>
         <div className="t">
           <div className="when">{turnaround(form)}</div>
-          <div className="what">Stamped set delivered</div>
+          <div className="what">Plans delivered</div>
           <div className="who">Ready to submit</div>
         </div>
       </div>

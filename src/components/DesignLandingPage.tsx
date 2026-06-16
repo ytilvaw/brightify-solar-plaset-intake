@@ -116,7 +116,7 @@ function Hero() {
             the first time.
           </h1>
           <p className="hero-sub">
-            Stamp-ready solar permit designs delivered in 24 hours — built by installers who've
+            AHJ-ready solar permit designs delivered in 24 hours — built by installers who've
             seen every red-line your AHJ throws. Submit. Approve. Install.
           </p>
           <div className="hero-ctas">
@@ -366,7 +366,7 @@ function Deliverables() {
             </h2>
           </div>
           <p className="lead">
-            Each Brightify planset ships as a fully dimensioned, stamped, AHJ-ready PDF — covering
+            Each Brightify planset ships as a fully dimensioned, AHJ-ready PDF — covering
             the entire submittal package from cover sheet to placards. Nothing is ever an upsell.
           </p>
         </div>
@@ -1002,7 +1002,7 @@ const QUOTES = [
     cls: 'a',
   },
   {
-    body: "Cleanest plansets I've ever submitted. Our local AHJ stopped red-lining us — straight stamps for six months.",
+    body: "Cleanest plansets I've ever submitted. Our local AHJ stopped red-lining us — straight approvals for six months.",
     name: 'Jenna Park',
     role: 'Owner · Northstar Solar',
     avatar: 'JP',
@@ -1093,10 +1093,6 @@ const FAQS: FaqItem[] = [
   {
     q: 'Do you offer structural letter?',
     a: "At this moment, we are only offering solar planset drafting services. We don't offer structural letter. You should hire a licensed structural engineer when required by the AHJ. If desired, we can provide a referral for qualified electrical or structural PE firms that serves all 50 states.",
-  },
-  {
-    q: 'Do you offer PE stamps?',
-    a: 'At this moment, we are only offering solar planset drafting services. We don\'t offer PE stamps. You should hire a licensed structural or electrical engineer when required by the AHJ. The licensed PE will provide load calculations and stamp the final plans. If desired, we can provide a referral for qualified electrical or structural PE firms that serves all 50 states.',
   },
   {
     q: 'Do you support battery storage and EV chargers?',
