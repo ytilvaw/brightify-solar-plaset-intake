@@ -116,7 +116,7 @@ function Hero() {
             the first time.
           </h1>
           <p className="hero-sub">
-            AHJ-ready solar permit designs delivered in 24 hours — built by installers who've
+            Stamp-ready solar permit designs delivered in 24 hours — built by installers who've
             seen every red-line your AHJ throws. Submit. Approve. Install.
           </p>
           <div className="hero-ctas">
