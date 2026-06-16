@@ -1095,6 +1095,10 @@ const FAQS: FaqItem[] = [
     a: "At this moment, we are only offering solar planset drafting services. We don't offer structural letter. You should hire a licensed structural engineer when required by the AHJ. If desired, we can provide a referral for qualified electrical or structural PE firms that serves all 50 states.",
   },
   {
+    q: 'Do you offer PE stamps?',
+    a: 'At this moment, we are only offering solar planset drafting services. We don\'t offer PE stamps. You should hire a licensed structural or electrical engineer when required by the AHJ. The licensed PE will provide load calculations and stamp the final plans. If desired, we can provide a referral for qualified electrical or structural PE firms that serves all 50 states.',
+  },
+  {
     q: 'Do you support battery storage and EV chargers?',
     a: 'Yep. We design Tesla Powerwall, Enphase IQ Battery, Franklin Home Power, FranklinWH and most major ESS platforms — plus standalone EV charger circuits. Pricing starts at $399 for PV + ESS.',
   },
