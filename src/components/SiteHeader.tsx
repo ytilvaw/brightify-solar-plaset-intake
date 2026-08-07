@@ -209,6 +209,7 @@ export default function SiteHeader({
               </form>
             </div>
             <div className="site-util">
+              <a className="ulink" href="/price-list">Price List</a>
               <a className="ulink" href="/design">Design</a>
               <a className="ulink" href="https://wa.me/14084643739">Contact</a>
               {quoteCount != null && (
