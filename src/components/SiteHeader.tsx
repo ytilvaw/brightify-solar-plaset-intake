@@ -211,7 +211,8 @@ export default function SiteHeader({
             <div className="site-util">
               <a className="ulink" href="/price-list">Price List</a>
               <a className="ulink" href="/design">Design</a>
-              <a className="ulink" href="https://wa.me/14084643739">Contact</a>
+              <a className="ulink" href="mailto:info@brightifysolar.com">Email</a>
+              <a className="ulink" href="https://wa.me/14084643739">WhatsApp</a>
               {quoteCount != null && (
                 <button className="site-quote" onClick={onQuote}>
                   Quote {quoteCount > 0 && <span className="qn">{quoteCount}</span>}
