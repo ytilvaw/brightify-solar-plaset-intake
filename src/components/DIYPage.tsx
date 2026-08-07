@@ -333,6 +333,14 @@ function Drawer({
     return encodeURIComponent(`Hi Brightify, I'd like a quote on these DIY kits:\n${lines.join('\n')}`);
   }, [items]);
 
+  const emailMsg = useMemo(() => {
+    if (!items.length) return '';
+    const lines = items.map(k => `• ${k.name} — $${k.price.toLocaleString()}`);
+    const body = encodeURIComponent(`Hi Brightify,\n\nI'd like a quote on these DIY kits:\n\n${lines.join('\n')}\n\nThank you.`);
+    const subject = encodeURIComponent('Quote request — DIY Kits');
+    return `mailto:info@brightifysolar.com?subject=${subject}&body=${body}`;
+  }, [items]);
+
   return (
     <>
       <div className={`drawer-scrim${open ? ' show' : ''}`} onClick={onClose}></div>
@@ -364,15 +372,24 @@ function Drawer({
           <p className="drawer-note">
             We'll confirm availability, review your site specs, and include any shipping costs before finalising.
           </p>
-          <a
-            className="btn btn-grad btn-lg"
-            style={{ width: '100%', justifyContent: 'center', pointerEvents: items.length ? 'auto' : 'none', opacity: items.length ? 1 : 0.5 }}
-            href={items.length ? `https://wa.me/14084643739?text=${waMsg}` : undefined}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Request this quote <Arrow />
-          </a>
+          <div style={{ display: 'flex', gap: 8, width: '100%' }}>
+            <a
+              className="btn btn-grad btn-lg"
+              style={{ flex: 1, justifyContent: 'center', pointerEvents: items.length ? 'auto' : 'none', opacity: items.length ? 1 : 0.5 }}
+              href={items.length ? `https://wa.me/14084643739?text=${waMsg}` : undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp <Arrow />
+            </a>
+            <a
+              className="btn btn-grad btn-lg"
+              style={{ flex: 1, justifyContent: 'center', pointerEvents: items.length ? 'auto' : 'none', opacity: items.length ? 1 : 0.5 }}
+              href={items.length ? emailMsg : undefined}
+            >
+              Email <Arrow />
+            </a>
+          </div>
           {items.length > 0 && (
             <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center' }} onClick={onClear}>
               Clear quote
