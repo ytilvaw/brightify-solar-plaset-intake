@@ -9,6 +9,8 @@ Usage:
 import json
 import sys
 import os
+import urllib.request
+import urllib.error
 
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
@@ -447,6 +449,72 @@ def upload_to_gdrive(file_path):
         return None
 
 
+def upload_to_dropbox(file_path):
+    """
+    Uploads the given file to Dropbox via the HTTP API (no SDK needed).
+    Configure via environment variables:
+        DROPBOX_ACCESS_TOKEN   an access token for a Dropbox app with
+                                files.content.write + sharing.write scopes
+                                (generate one at https://www.dropbox.com/developers/apps)
+        DROPBOX_FOLDER         destination folder path, e.g. "/Quotes"
+                                (optional, defaults to "/Quotes")
+    Silently skipped if DROPBOX_ACCESS_TOKEN isn't set, so this has zero
+    effect until you configure it. Returns a shared link on success, or None.
+    """
+    token = os.environ.get("DROPBOX_ACCESS_TOKEN")
+    if not token:
+        return None
+    try:
+        folder = os.environ.get("DROPBOX_FOLDER", "/Quotes").rstrip("/")
+        dest_path = f"{folder}/{os.path.basename(file_path)}"
+
+        with open(file_path, "rb") as f:
+            data = f.read()
+
+        upload_req = urllib.request.Request(
+            "https://content.dropboxapi.com/2/files/upload",
+            data=data,
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/octet-stream",
+                "Dropbox-API-Arg": json.dumps({
+                    "path": dest_path,
+                    "mode": "add",
+                    "autorename": True,
+                    "mute": False,
+                }),
+            },
+        )
+        with urllib.request.urlopen(upload_req) as resp:
+            uploaded_path = json.loads(resp.read()).get("path_display", dest_path)
+
+        link_req = urllib.request.Request(
+            "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings",
+            data=json.dumps({"path": uploaded_path}).encode("utf-8"),
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(link_req) as resp:
+                url = json.loads(resp.read()).get("url")
+        except urllib.error.HTTPError as e:
+            body = json.loads(e.read().decode("utf-8"))
+            if body.get("error", {}).get(".tag") == "shared_link_already_exists":
+                url = body["error"]["shared_link_already_exists"]["metadata"]["url"]
+            else:
+                raise
+
+        print(f"Uploaded to Dropbox: {url}")
+        return url
+    except Exception as e:
+        print(f"Dropbox upload skipped/failed: {e}")
+        return None
+
+
 def generate(doc, output_path):
     c = canvas.Canvas(output_path, pagesize=letter)
     y = draw_header(c, doc)
@@ -464,6 +532,7 @@ def generate(doc, output_path):
     print(f"Wrote {output_path}")
     upload_to_s3(output_path)
     upload_to_gdrive(output_path)
+    upload_to_dropbox(output_path)
 
 
 def main():

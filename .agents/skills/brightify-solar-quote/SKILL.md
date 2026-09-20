@@ -12,6 +12,11 @@ format, and looks up equipment prices from `price_list.json`.
 
 ## Files
 - `generate_quote.py` — renders the PDF from a JSON spec (reportlab-based).
+  Optionally uploads the result to S3, Google Drive, or Dropbox after
+  writing it — each is a no-op unless its env vars are set (see the
+  docstrings on `upload_to_s3` / `upload_to_gdrive` / `upload_to_dropbox`
+  in the script). For Dropbox: set `DROPBOX_ACCESS_TOKEN` (and optionally
+  `DROPBOX_FOLDER`, defaults to `/Quotes`).
 - `price_list.json` — cached copy of the Brightify Solar price list: panels
   (retail + wholesale), inverters, batteries, plus racking/electrical/
   installation/planset defaults. **Re-pull the live Google Sheet before
