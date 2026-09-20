@@ -502,7 +502,13 @@ def upload_to_dropbox(file_path):
             with urllib.request.urlopen(link_req) as resp:
                 url = json.loads(resp.read()).get("url")
         except urllib.error.HTTPError as e:
-            body = json.loads(e.read().decode("utf-8"))
+            raw = e.read().decode("utf-8")
+            try:
+                body = json.loads(raw)
+            except ValueError:
+                # Dropbox returns plain text (not JSON) for some errors,
+                # e.g. a missing OAuth scope.
+                raise Exception(f"HTTP {e.code}: {raw}") from None
             if body.get("error", {}).get(".tag") == "shared_link_already_exists":
                 url = body["error"]["shared_link_already_exists"]["metadata"]["url"]
             else:
