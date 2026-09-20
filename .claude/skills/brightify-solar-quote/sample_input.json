@@ -1,0 +1,19 @@
+{
+  "doc_type": "ESTIMATE",
+  "currency": "USD",
+  "estimate_number": "32",
+  "date": "August 14, 2026",
+  "valid_until": "September 14, 2026",
+  "bill_to": "Salty",
+  "items": [
+    {"name": "Tier 1 solar panels (JA, Jinko, Sunplus, Longi etc)", "qty": 16, "price": 165.00},
+    {"name": "Racking hardware", "qty": 16, "price": 100.00},
+    {"name": "Electrical hardware", "qty": 1, "price": 1470.00},
+    {"name": "Installation", "qty": 1, "price": 7900.00},
+    {"name": "Solar design planset", "qty": 1, "price": 300.00}
+  ],
+  "credits": [
+    {"label": "Planset credit", "amount": 300.00}
+  ],
+  "notes": "Company would provide solar planset that homeowner can use to get owner builder permits from city. Homeowner needs to handle owner builder permit process with the city and cover fees (usually around $200)."
+}

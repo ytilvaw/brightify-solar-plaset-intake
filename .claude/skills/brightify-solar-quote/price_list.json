@@ -1,0 +1,45 @@
+{
+  "_source": "Brightify-solar-price-list Google Sheet (https://docs.google.com/spreadsheets/d/1w2RzHKHuDrhuK8QeRAiPDaKzRqiFkUVwRhYzMMNgWeI)",
+  "_note": "Re-pull this data before generating quotes if the sheet may have changed. Retail = no minimum qty, pickup Milpitas. Wholesale = full pallet (36 count) MOQ, pickup Los Angeles.",
+  "retail_panels": [
+    {"brand": "Risen", "model": "RSM108-11-450BNDG", "watt": 450, "type": "bifacial", "frame": "Black frame", "price_20plus": 140, "price_10_20": 150.00, "price_1_10": 160.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "JA Solar", "model": "JAM54D41-450/LR", "watt": 450, "type": "mono facial", "frame": "All Black", "price_20plus": 145, "price_10_20": 155.00, "price_1_10": 165.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "JA Solar", "model": "JAM54D41-450/LB", "watt": 450, "type": "bifacial", "frame": "All Black", "price_20plus": 150, "price_10_20": 160.00, "price_1_10": 170.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Jinko", "model": "JKM470N-48HL4M-DV", "watt": 470, "type": "mono facial", "frame": "Black frame", "price_20plus": 150, "price_10_20": 160.00, "price_1_10": 170.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Trina", "model": "TSM-445NEG9RC.27", "watt": 445, "type": "bifacial", "frame": "All Black", "price_20plus": 150, "price_10_20": 160.00, "price_1_10": 170.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Jinko", "model": "JKM585N-72HL4-BDV", "watt": 585, "type": "bifacial", "frame": "Silver Frame", "price_20plus": 175, "price_10_20": 185.00, "price_1_10": 195.00, "dimension": "89.69 x 44.65 in"}
+  ],
+  "wholesale_panels": [
+    {"brand": "Sunplus", "model": "SR4-54HTB-445W", "watt": 445, "type": "bifacial", "frame": "All Black", "price_per_panel": 120, "price_pallet": 4320.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "HT Solar", "model": "HT54-18X(ND)-F-435", "watt": 455, "type": "bifacial", "frame": "All Black", "price_per_panel": 123, "price_pallet": 4428.00, "dimension": "67.80 x 44.65 in"},
+    {"brand": "HT Solar", "model": "HT54-18X(ND)-F-455", "watt": 455, "type": "bifacial", "frame": "All Black", "price_per_panel": 125, "price_pallet": 4500.00, "dimension": "67.80 x 44.65 in"},
+    {"brand": "Znshine", "model": "ZXMR-UHLDD96-450N", "watt": 450, "type": "bifacial", "frame": "All Black", "price_per_panel": 130, "price_pallet": 4680.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Trina", "model": "TSM-445NEG9R.28", "watt": 445, "type": "mono facial", "frame": "Black frame", "price_per_panel": 140, "price_pallet": 5040.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Risen", "model": "RSM108-11-435BNDG", "watt": 435, "type": "bifacial", "frame": "Black frame", "price_per_panel": 127, "price_pallet": 4572.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Risen", "model": "RSM108-11-450BNDG", "watt": 450, "type": "bifacial", "frame": "Black frame", "price_per_panel": 130, "price_pallet": 4680.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "JA Solar", "model": "JAM54D41-450/LR", "watt": 450, "type": "mono facial", "frame": "All Black", "price_per_panel": 142, "price_pallet": 5112.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "JA Solar", "model": "JAM54D41-450/LB", "watt": 450, "type": "bifacial", "frame": "All Black", "price_per_panel": 145, "price_pallet": 5220.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Jinko", "model": "JKM470N-48HL4M-DV", "watt": 470, "type": "mono facial", "frame": "Black frame", "price_per_panel": 145, "price_pallet": 5220.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Trina", "model": "TSM-445NEG9RC.27", "watt": 445, "type": "bifacial", "frame": "All Black", "price_per_panel": 145, "price_pallet": 5220.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Trina", "model": "TSM-585NEG18C.20", "watt": 585, "type": "bifacial", "frame": "Silver Frame", "price_per_panel": 175, "price_pallet": 6300.00, "dimension": "89.69 x 44.65 in"},
+    {"brand": "Canadian Solar", "model": "CS6W-585TB-AG", "watt": 585, "type": "bifacial", "frame": "Silver Frame", "price_per_panel": 175, "price_pallet": 6300.00, "dimension": "89.69 x 44.65 in"},
+    {"brand": "Jinko", "model": "JKM585N-72HL4-BDV", "watt": 585, "type": "bifacial", "frame": "Silver Frame", "price_per_panel": 175, "price_pallet": 6300.00, "dimension": "89.69 x 44.65 in"},
+    {"brand": "JA Solar", "model": "JAM72D40-600/MB", "watt": 600, "type": "bifacial", "frame": "Silver Frame", "price_per_panel": 178, "price_pallet": 6408.00, "dimension": "89.69 x 44.65 in"},
+    {"brand": "Trina", "model": "TSM-610NEG19RC.20", "watt": 610, "type": "bifacial", "frame": "Silver Frame", "price_per_panel": 180, "price_pallet": 6480.00, "dimension": "93.78 x 44.65 in"}
+  ],
+  "other_items": {
+    "_note": "These aren't in the sheet's priced tabs yet (inverter/batteries/racking/electrical/installation tabs exist but were empty at last check). Fill in as you get standard pricing, or pass custom line items directly.",
+    "racking_hardware_per_panel": 100.00,
+    "electrical_hardware_flat": 1470.00,
+    "installation_flat": 7900.00,
+    "solar_design_planset": 300.00
+  },
+  "company": {
+    "name": "Brightify Group LLC",
+    "brand": "Brightify Solar",
+    "address": "United States",
+    "email": "yash.tilvawala@brightifysolar.com",
+    "phone": "+1 408-464-3739",
+    "contact_name": "Yash Tilvawala"
+  }
+}
