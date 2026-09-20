@@ -450,29 +450,64 @@ def upload_to_gdrive(file_path):
 def upload_to_dropbox(file_path):
     """
     Uploads the given file to Dropbox.
-    Configure via environment variables:
-        DROPBOX_ACCESS_TOKEN   an access token for your Dropbox app/account
-        DROPBOX_FOLDER_PATH    destination folder path (optional, default
-                                "/Brightify Quotes")
-    Setup (one-time, at https://www.dropbox.com/developers/apps):
+    Configure via environment variables — pick ONE of these two setups:
+
+    A) Permanent (recommended): OAuth2 refresh token. The SDK auto-mints a
+       fresh short-lived access token from this on every run, so it never
+       needs manual renewal.
+        DROPBOX_APP_KEY        your app's key (App Console > Settings)
+        DROPBOX_APP_SECRET     your app's secret (App Console > Settings)
+        DROPBOX_REFRESH_TOKEN  a refresh token for your account (see below)
+
+       One-time setup at https://www.dropbox.com/developers/apps:
         1. Create an app (Scoped access; "App folder" is fine unless you
            want it to land in a specific existing folder).
         2. Under Permissions, enable files.content.write and
-           sharing.write (needed for the shared link).
-        3. Generate an access token under the app's Settings tab (or set up
-           the OAuth2 refresh-token flow for a token that doesn't expire),
-           and set DROPBOX_ACCESS_TOKEN to it.
+           sharing.write (needed for the shared link). Save changes.
+        3. Get an authorization code — open this URL in a browser (swap in
+           your app key), approve access, and copy the code shown:
+             https://www.dropbox.com/oauth2/authorize?client_id=<APP_KEY>&response_type=code&token_access_type=offline
+        4. Exchange it for a refresh token:
+             curl https://api.dropboxapi.com/oauth2/token \
+               -d code=<AUTH_CODE> \
+               -d grant_type=authorization_code \
+               -d client_id=<APP_KEY> \
+               -d client_secret=<APP_SECRET>
+           The JSON response's "refresh_token" field is permanent — set it
+           as DROPBOX_REFRESH_TOKEN, along with DROPBOX_APP_KEY/SECRET.
+
+    B) Quick/temporary: a raw access token from the App Console's "Generate
+       access token" button. Expires in ~4 hours — fine for a one-off test,
+       not for ongoing use.
+        DROPBOX_ACCESS_TOKEN   short-lived access token
+
+    Also optional either way:
+        DROPBOX_FOLDER_PATH    destination folder path (default
+                                "/Brightify Quotes")
+
     Requires: pip install dropbox --break-system-packages
-    Silently skipped if DROPBOX_ACCESS_TOKEN isn't set, so this has zero
-    effect until you configure it. Returns a shared link on success, or None.
+    Silently skipped if neither setup is configured, so this has zero
+    effect until you set it up. Returns a shared link on success, or None.
     """
-    token = os.environ.get("DROPBOX_ACCESS_TOKEN")
-    if not token:
+    refresh_token = os.environ.get("DROPBOX_REFRESH_TOKEN")
+    app_key = os.environ.get("DROPBOX_APP_KEY")
+    app_secret = os.environ.get("DROPBOX_APP_SECRET")
+    access_token = os.environ.get("DROPBOX_ACCESS_TOKEN")
+
+    if not (refresh_token and app_key and app_secret) and not access_token:
         return None
     try:
         import dropbox as dbx_sdk
 
-        dbx = dbx_sdk.Dropbox(token)
+        if refresh_token and app_key and app_secret:
+            dbx = dbx_sdk.Dropbox(
+                oauth2_refresh_token=refresh_token,
+                app_key=app_key,
+                app_secret=app_secret,
+            )
+        else:
+            dbx = dbx_sdk.Dropbox(access_token)
+
         folder = os.environ.get("DROPBOX_FOLDER_PATH", "/Brightify Quotes").rstrip("/")
         dest_path = f"{folder}/{os.path.basename(file_path)}"
 
