@@ -11,6 +11,7 @@ import sys
 import os
 import urllib.request
 import urllib.error
+import urllib.parse
 
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
@@ -449,22 +450,65 @@ def upload_to_gdrive(file_path):
         return None
 
 
+def _get_dropbox_access_token():
+    """
+    Resolves a Dropbox access token from the environment, either directly
+    or by exchanging a long-lived refresh token for a short-lived one
+    (access tokens expire in ~4 hours; refresh tokens don't).
+    Returns None if neither is configured.
+    """
+    token = os.environ.get("DROPBOX_ACCESS_TOKEN")
+    if token:
+        return token
+
+    refresh_token = os.environ.get("DROPBOX_REFRESH_TOKEN")
+    app_key = os.environ.get("DROPBOX_APP_KEY")
+    app_secret = os.environ.get("DROPBOX_APP_SECRET")
+    if not (refresh_token and app_key and app_secret):
+        return None
+
+    req = urllib.request.Request(
+        "https://api.dropboxapi.com/oauth2/token",
+        data=urllib.parse.urlencode({
+            "grant_type": "refresh_token",
+            "refresh_token": refresh_token,
+            "client_id": app_key,
+            "client_secret": app_secret,
+        }).encode("utf-8"),
+        method="POST",
+    )
+    with urllib.request.urlopen(req) as resp:
+        return json.loads(resp.read()).get("access_token")
+
+
 def upload_to_dropbox(file_path):
     """
     Uploads the given file to Dropbox via the HTTP API (no SDK needed).
-    Configure via environment variables:
-        DROPBOX_ACCESS_TOKEN   an access token for a Dropbox app with
-                                files.content.write + sharing.write scopes
-                                (generate one at https://www.dropbox.com/developers/apps)
+    Configure via environment variables — either:
+        DROPBOX_ACCESS_TOKEN   a short-lived access token for a Dropbox app
+                                with files.content.write + sharing.write
+                                scopes (from the OAuth flow, or the App
+                                Console for a temporary token)
+    or, to have this auto-refresh instead of needing a token pasted in
+    every ~4 hours:
+        DROPBOX_REFRESH_TOKEN  a long-lived refresh token (from the
+                                authorization_code OAuth exchange, with
+                                token_access_type=offline)
+        DROPBOX_APP_KEY        the Dropbox app's key
+        DROPBOX_APP_SECRET     the Dropbox app's secret
+    Plus, either way:
         DROPBOX_FOLDER         destination folder path, e.g. "/Quotes"
                                 (optional, defaults to "/Quotes")
-    Silently skipped if DROPBOX_ACCESS_TOKEN isn't set, so this has zero
-    effect until you configure it. Returns a shared link on success, or None.
+    Silently skipped if none of the above are set, so this has zero effect
+    until configured. Returns a shared link on success, or None.
     """
-    token = os.environ.get("DROPBOX_ACCESS_TOKEN")
-    if not token:
+    if not (
+        os.environ.get("DROPBOX_ACCESS_TOKEN")
+        or (os.environ.get("DROPBOX_REFRESH_TOKEN") and os.environ.get("DROPBOX_APP_KEY") and os.environ.get("DROPBOX_APP_SECRET"))
+    ):
         return None
     try:
+        token = _get_dropbox_access_token()
         folder = os.environ.get("DROPBOX_FOLDER", "/Quotes").rstrip("/")
         dest_path = f"{folder}/{os.path.basename(file_path)}"
 
