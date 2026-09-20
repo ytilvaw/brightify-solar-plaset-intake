@@ -163,6 +163,107 @@ function FeaturedKits() {
   );
 }
 
+// ---- featured solar panels ----
+
+interface FeaturedPanel {
+  key: string;
+  brand: string;
+  name: string;
+  image: string;
+  watt: number;
+  eff: string;
+  tech: string;
+  price: number;
+  flag?: string;
+}
+
+const FEATURED_PANELS: FeaturedPanel[] = [
+  {
+    key: 'trina-445',
+    brand: 'Trina Solar',
+    name: 'Vertex S+ 445W',
+    image: '/panels/trina-tsm-445neg9r.jpg',
+    watt: 445,
+    eff: '22.3%',
+    tech: 'N-Type TOPCon',
+    price: 151.30,
+    flag: 'Best seller',
+  },
+  {
+    key: 'trina-610',
+    brand: 'Trina Solar',
+    name: 'Vertex 610W Bifacial',
+    image: '/panels/trina-tsm-610neg19rc.jpg',
+    watt: 610,
+    eff: '22.58%',
+    tech: 'N-Type TOPCon',
+    price: 195.20,
+    flag: 'Max power',
+  },
+  {
+    key: 'ja-455',
+    brand: 'JA Solar',
+    name: 'DeepBlue 4.0 455W',
+    image: '/panels/ja-jam54d40-455lb.jpg',
+    watt: 455,
+    eff: '22.8%',
+    tech: 'N-Type TOPCon',
+    price: 154.70,
+    flag: 'High efficiency',
+  },
+  {
+    key: 'qcells-410',
+    brand: 'Qcells',
+    name: 'Q.PEAK DUO BLK ML-G10+ 410W',
+    image: '/panels/qcells-qpeak-duo-blk-410.jpg',
+    watt: 410,
+    eff: '21.0%',
+    tech: 'Mono PERC',
+    price: 198,
+    flag: 'Popular',
+  },
+];
+
+function FeaturedPanelCard({ p }: { p: FeaturedPanel }) {
+  return (
+    <a className="fp-card" href="/solar-panels">
+      <div className="fp-media">
+        <img src={p.image} alt={`${p.brand} ${p.name}`} />
+        <span className="fp-brand">{p.brand}</span>
+        {p.flag && <span className="fk-flag">{p.flag}</span>}
+      </div>
+      <div className="fk-body">
+        <div className="fk-specs">
+          <span className="fk-spec">{p.watt} W</span>
+          <span className="fk-spec">{p.eff}</span>
+          <span className="fk-spec">{p.tech}</span>
+        </div>
+        <h3 className="fk-name">{p.name}</h3>
+        <div className="fk-foot">
+          <span className="fk-price"><sup>$</sup>{p.price.toFixed(2)}</span>
+          <span className="fk-go">View panel <Arrow /></span>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function FeaturedPanels() {
+  return (
+    <section className="featured-panels" id="featured-panels">
+      <div className="wrap">
+        <div className="explore-head">
+          <h2 style={{ fontFamily: 'var(--hdisplay)' }}>Featured <em className="hgrad-text">solar panels</em></h2>
+          <a className="explore-all" href="/solar-panels">Browse all solar panels <Arrow /></a>
+        </div>
+        <div className="featured-grid">
+          {FEATURED_PANELS.map((p) => <FeaturedPanelCard p={p} key={p.key} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ---- categories ----
 
 interface Category {
@@ -341,6 +442,7 @@ export default function StoreLandingPage() {
         onSearchSubmit={() => { window.location.href = '/solar-panels'; }}
       />
       <FeaturedKits />
+      <FeaturedPanels />
       <Explore />
       <ShopHelp />
       <Footer />

@@ -761,6 +761,35 @@ footer .col ul a:hover { color: var(--amber); }
   .fk-card { width: 78vw; }
 }
 
+/* featured solar panels (homepage, above categories) */
+.featured-panels { background: var(--paper); padding: 8px 0 24px; }
+.featured-panels .explore-head { margin-bottom: 28px; }
+.fp-card {
+  flex: 0 0 auto;
+  width: 240px;
+  scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  border: 1px solid var(--rule-strong); border-radius: 16px;
+  background: var(--paper); overflow: hidden; text-align: left;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .25s ease;
+}
+.fp-card:hover { transform: translateY(-3px); border-color: var(--orange); box-shadow: 0 24px 44px -28px rgba(26,20,16,0.4); }
+.fp-media {
+  position: relative; aspect-ratio: 1 / 1; overflow: hidden;
+  background: #f5f6f8; display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid var(--rule);
+}
+.fp-media img { width: 100%; height: 100%; object-fit: contain; padding: 14px; display: block; }
+.fp-brand {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink); background: rgba(255,252,247,0.92);
+  border: 1px solid var(--rule); padding: 4px 8px; border-radius: 999px;
+}
+@media (max-width: 640px) {
+  .fp-card { width: 62vw; }
+}
+
 /* ------------------------------------------------------------------
    SOLAR PANELS PAGE
 ------------------------------------------------------------------- */
