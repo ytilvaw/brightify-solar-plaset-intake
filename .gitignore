@@ -6,3 +6,6 @@ dist/
 .DS_Store
 __pycache__/
 *.pyc
+.env
+.env.local
+.claude/skills/brightify-solar-quote/.env
