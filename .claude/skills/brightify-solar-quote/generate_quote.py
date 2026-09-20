@@ -447,6 +447,51 @@ def upload_to_gdrive(file_path):
         return None
 
 
+def upload_to_dropbox(file_path):
+    """
+    Uploads the given file to Dropbox.
+    Configure via environment variables:
+        DROPBOX_ACCESS_TOKEN   an access token for your Dropbox app/account
+        DROPBOX_FOLDER_PATH    destination folder path (optional, default
+                                "/Brightify Quotes")
+    Setup (one-time, at https://www.dropbox.com/developers/apps):
+        1. Create an app (Scoped access; "App folder" is fine unless you
+           want it to land in a specific existing folder).
+        2. Under Permissions, enable files.content.write and
+           sharing.write (needed for the shared link).
+        3. Generate an access token under the app's Settings tab (or set up
+           the OAuth2 refresh-token flow for a token that doesn't expire),
+           and set DROPBOX_ACCESS_TOKEN to it.
+    Requires: pip install dropbox --break-system-packages
+    Silently skipped if DROPBOX_ACCESS_TOKEN isn't set, so this has zero
+    effect until you configure it. Returns a shared link on success, or None.
+    """
+    token = os.environ.get("DROPBOX_ACCESS_TOKEN")
+    if not token:
+        return None
+    try:
+        import dropbox as dbx_sdk
+
+        dbx = dbx_sdk.Dropbox(token)
+        folder = os.environ.get("DROPBOX_FOLDER_PATH", "/Brightify Quotes").rstrip("/")
+        dest_path = f"{folder}/{os.path.basename(file_path)}"
+
+        with open(file_path, "rb") as f:
+            dbx.files_upload(f.read(), dest_path, mode=dbx_sdk.files.WriteMode.overwrite)
+
+        try:
+            link = dbx.sharing_create_shared_link_with_settings(dest_path).url
+        except dbx_sdk.exceptions.ApiError:
+            existing = dbx.sharing_list_shared_links(path=dest_path, direct_only=True).links
+            link = existing[0].url if existing else dest_path
+
+        print(f"Uploaded to Dropbox: {link}")
+        return link
+    except Exception as e:
+        print(f"Dropbox upload skipped/failed: {e}")
+        return None
+
+
 def generate(doc, output_path):
     c = canvas.Canvas(output_path, pagesize=letter)
     y = draw_header(c, doc)
@@ -464,6 +509,7 @@ def generate(doc, output_path):
     print(f"Wrote {output_path}")
     upload_to_s3(output_path)
     upload_to_gdrive(output_path)
+    upload_to_dropbox(output_path)
 
 
 def main():
