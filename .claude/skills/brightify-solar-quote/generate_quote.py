@@ -510,6 +510,13 @@ def upload_to_dropbox(file_path):
 
         print(f"Uploaded to Dropbox: {url}")
         return url
+    except urllib.error.HTTPError as e:
+        try:
+            detail = e.read().decode("utf-8")
+        except Exception:
+            detail = str(e)
+        print(f"Dropbox upload skipped/failed: HTTP {e.code}: {detail}")
+        return None
     except Exception as e:
         print(f"Dropbox upload skipped/failed: {e}")
         return None
