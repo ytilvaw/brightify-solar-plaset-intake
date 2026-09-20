@@ -1,8 +1,17 @@
 {
   "_source": "Brightify-solar-price-list Google Sheet (https://docs.google.com/spreadsheets/d/1w2RzHKHuDrhuK8QeRAiPDaKzRqiFkUVwRhYzMMNgWeI)",
   "_note": "Re-pull this data before generating quotes if the sheet may have changed. Retail = no minimum qty, pickup Milpitas. Wholesale = full pallet (36 count) MOQ, pickup Los Angeles.",
+  "default_panel": {
+    "_note": "Use this panel pricing when the user doesn't specify a brand/model. Standard size = flat $165/panel. If the user clearly says 'big panels' (large-format panels, e.g. 585W+), use $195/panel instead, unless the user gives a different price. Do not apply the 10-20 / 20+ tier discounts to either default rate. The actual brand shipped is based on availability at time of order (Trina, JA Solar, Jinko, Znshine, Sunplus, Risen, etc.) — the quote should say this explicitly rather than naming one specific brand.",
+    "display_name": "Tier 1 solar panels (brand based on availability - Trina, JA Solar, Jinko, Znshine, Sunplus, Risen, etc.)",
+    "watt": 450,
+    "flat_price": 165.00,
+    "big_panel_watt": 585,
+    "big_panel_flat_price": 195.00
+  },
   "retail_panels": [
     {"brand": "Risen", "model": "RSM108-11-450BNDG", "watt": 450, "type": "bifacial", "frame": "Black frame", "price_20plus": 140, "price_10_20": 150.00, "price_1_10": 160.00, "dimension": "69.37 x 44.65 in"},
+    {"brand": "Risen", "model": "RSM108-11-435BNDG", "watt": 435, "type": "bifacial", "frame": "Black frame", "price_20plus": 127, "price_10_20": 140.00, "price_1_10": 155.00, "dimension": "69.37 x 44.65 in"},
     {"brand": "JA Solar", "model": "JAM54D41-450/LR", "watt": 450, "type": "mono facial", "frame": "All Black", "price_20plus": 145, "price_10_20": 155.00, "price_1_10": 165.00, "dimension": "69.37 x 44.65 in"},
     {"brand": "JA Solar", "model": "JAM54D41-450/LB", "watt": 450, "type": "bifacial", "frame": "All Black", "price_20plus": 150, "price_10_20": 160.00, "price_1_10": 170.00, "dimension": "69.37 x 44.65 in"},
     {"brand": "Jinko", "model": "JKM470N-48HL4M-DV", "watt": 470, "type": "mono facial", "frame": "Black frame", "price_20plus": 150, "price_10_20": 160.00, "price_1_10": 170.00, "dimension": "69.37 x 44.65 in"},
@@ -27,19 +36,80 @@
     {"brand": "JA Solar", "model": "JAM72D40-600/MB", "watt": 600, "type": "bifacial", "frame": "Silver Frame", "price_per_panel": 178, "price_pallet": 6408.00, "dimension": "89.69 x 44.65 in"},
     {"brand": "Trina", "model": "TSM-610NEG19RC.20", "watt": 610, "type": "bifacial", "frame": "Silver Frame", "price_per_panel": 180, "price_pallet": 6480.00, "dimension": "93.78 x 44.65 in"}
   ],
+  "inverters": [
+    {"brand": "Enphase", "model": "IQ8PLUS", "price": 135, "type": "grid-tied", "warranty": "25 yrs", "outdoor_rated": true},
+    {"brand": "Enphase", "model": "IQ8MC", "price": 145, "type": "grid-tied", "warranty": "25 yrs", "outdoor_rated": true},
+    {"brand": "Enphase", "model": "IQ8HC", "price": 155, "type": "grid-tied", "warranty": "25 yrs", "outdoor_rated": true},
+    {"brand": "Tesla", "model": "Powerwall 3", "price": 7750, "type": "hybrid", "max_pv_input": "19kw", "output_rating": "11kw", "voltage_rating": "high", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "EG4", "model": "Flexboss18", "price": 3350, "type": "hybrid", "max_pv_input": "18kw", "output_rating": "13kw", "voltage_rating": "low", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "EG4", "model": "Flexboss21", "price": 3750, "type": "hybrid", "max_pv_input": "21kw", "output_rating": "16kw", "voltage_rating": "low", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "EG4", "model": "GridBoss", "price": 1900, "type": "load-management-hub", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "EG4", "model": "18KPV", "price": 4100, "type": "hybrid", "max_pv_input": "18kw", "output_rating": "18kw", "voltage_rating": "low", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "EG4", "model": "12000XP", "price": 2050, "type": "offgrid", "max_pv_input": "24kw", "output_rating": "12kw", "voltage_rating": "low", "warranty": "5 yrs", "outdoor_rated": false},
+    {"brand": "EG4", "model": "6000XP", "price": 1850, "type": "offgrid", "max_pv_input": "8kw", "output_rating": "6kw", "voltage_rating": "low", "warranty": "5 yrs", "outdoor_rated": false},
+    {"brand": "Solaredge", "model": "7600H", "price": 1350, "type": "hybrid", "max_pv_input": "11.8kw", "output_rating": "7.6kw", "voltage_rating": "High", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "Ruixu", "model": "RX-12K", "price": 3300, "type": "hybrid", "max_pv_input": "17kw", "output_rating": "11.4kw", "voltage_rating": "low", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "Ruixu", "model": "SUNON7.2", "price": 1350, "type": "offgrid", "max_pv_input": "9kw", "output_rating": "7.2kw", "voltage_rating": "low", "warranty": "5 yrs", "outdoor_rated": true},
+    {"brand": "Ruixu", "model": "SUNON3.6", "price": 550, "type": "offgrid", "max_pv_input": "4.5kw", "output_rating": "3.6kw", "voltage_rating": "low", "warranty": "5 yrs", "outdoor_rated": true},
+    {"brand": "Ruixu", "model": "SUNON12", "price": 1600, "type": "offgrid", "max_pv_input": "24kw", "output_rating": "12kw", "voltage_rating": "low", "warranty": "5 yrs", "outdoor_rated": true}
+  ],
+  "batteries": [
+    {"brand": "Tesla", "model": "Powerwall 3", "price": 7750, "size": "13.5kwh", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "Enphase", "model": "IQ Battery 5P", "price": 3200, "size": "5kwh", "warranty": "15 yrs", "outdoor_rated": true},
+    {"brand": "Enphase", "model": "IQ Battery 10c", "price": 7800, "size": "10kwh", "warranty": "15 yrs", "outdoor_rated": true},
+    {"brand": "EG4", "model": "WallMount AllWeather Battery - 280Ah, 51.2V", "price": 3000, "size": "14.3kwh", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "EG4", "model": "WallMount 314Ah AllWeather Battery - 48V, 314Ah", "price": 3600, "size": "16kwh", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "EG4", "model": "WallMount 314Ah Indoor Battery - 48V, 314Ah", "price": 3400, "size": "16kwh", "warranty": "10 yrs", "outdoor_rated": false},
+    {"brand": "EG4", "model": "WallMount Indoor Battery - 280Ah, 51.2V", "price": 3000, "size": "14.3kwh", "warranty": "10 yrs", "outdoor_rated": false},
+    {"brand": "Ruixu", "model": "Lithi2-16", "price": 3100, "size": "16kwh", "warranty": "10 yrs", "outdoor_rated": true},
+    {"brand": "LG", "model": "RESU 16H", "price": 2850, "size": "16kwh", "warranty": "10 yrs", "outdoor_rated": true}
+  ],
   "other_items": {
-    "_note": "These aren't in the sheet's priced tabs yet (inverter/batteries/racking/electrical/installation tabs exist but were empty at last check). Fill in as you get standard pricing, or pass custom line items directly.",
-    "racking_hardware_per_panel": 100.00,
-    "electrical_hardware_flat": 1470.00,
-    "installation_flat": 7900.00,
-    "solar_design_planset": 300.00
+    "_note": "Installation-dependent pricing rules — see SKILL.md 'Installation pricing rule' section for full logic.",
+    "installation_per_panel": 450.00,
+    "installation_per_panel_small_system": 500.00,
+    "installation_per_panel_small_system_note": "Applies when panel count < 10 (standard panels).",
+    "installation_per_battery_addon": 500.00,
+    "installation_per_battery_addon_ruixu": 750.00,
+    "installation_per_battery_addon_tesla_powerwall": 1000.00,
+    "installation_per_battery_addon_note": "Ruixu batteries use $750/battery. Tesla Powerwall installations use $1000/battery unit (Powerwall + each expansion pack counts as one unit). All other battery brands use $500/battery.",
+    "installation_per_panel_big_panel": 600.00,
+    "racking_per_panel": {
+      "flat_tile_roof": 125.00,
+      "shingle_roof": 125.00,
+      "metal_roof_or_concrete_tile_or_other": 150.00
+    },
+    "electrical_hardware_per_panel": 70.00,
+    "tesla_backup_switch": {
+      "_note": "Whenever a Tesla Powerwall system is quoted, add one Backup Switch by default (qty 1).",
+      "price": 480.00
+    },
+    "tesla_mci2_per_2_panels": {
+      "_note": "Whenever a Tesla Powerwall system is quoted, add one Tesla MCI2 for every 2 panels by default (round up).",
+      "price": 40.00
+    },
+    "tigo_rapid_shutdown_per_panel": {
+      "_note": "Whenever an EG4 system quote includes installation, add one Tigo rapid shutdown device per panel by default.",
+      "price": 55.00
+    },
+    "solaredge_optimizer_per_panel": {
+      "_note": "Whenever a SolarEdge system is quoted, add one optimizer per panel by default.",
+      "standard_panel": 80.00,
+      "big_panel": 110.00
+    },
+    "solar_design_planset": {
+      "_note": "Price depends on whether the system includes a battery.",
+      "without_battery": 300.00,
+      "with_battery": 400.00
+    }
   },
   "company": {
     "name": "Brightify Group LLC",
     "brand": "Brightify Solar",
-    "address": "United States",
-    "email": "yash.tilvawala@brightifysolar.com",
+    "address": "California, United States",
+    "email": "info@brightifysolar.com",
     "phone": "+1 408-464-3739",
-    "contact_name": "Yash Tilvawala"
+    "contact_name": "Yash Tilvawala",
+    "website": "https://brightifysolar.com/"
   }
 }
