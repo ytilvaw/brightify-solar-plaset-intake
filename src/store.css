@@ -766,7 +766,7 @@ footer .col ul a:hover { color: var(--amber); }
 .featured-panels .explore-head { margin-bottom: 28px; }
 .fp-card {
   flex: 0 0 auto;
-  width: 240px;
+  width: 280px;
   scroll-snap-align: start;
   display: flex; flex-direction: column;
   border: 1px solid var(--rule-strong); border-radius: 16px;
@@ -787,7 +787,7 @@ footer .col ul a:hover { color: var(--amber); }
   border: 1px solid var(--rule); padding: 4px 8px; border-radius: 999px;
 }
 @media (max-width: 640px) {
-  .fp-card { width: 62vw; }
+  .fp-card { width: 78vw; }
 }
 
 /* ------------------------------------------------------------------
