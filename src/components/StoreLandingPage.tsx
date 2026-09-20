@@ -82,6 +82,87 @@ const IconPlanset = () => (
   </svg>
 );
 
+// ---- featured DIY kits ----
+
+interface FeaturedKit {
+  key: string;
+  name: string;
+  image: string;
+  specs: string[];
+  price: number;
+  flag?: string;
+}
+
+const FEATURED_KITS: FeaturedKit[] = [
+  {
+    key: 'enphase-3-15kw',
+    name: '3.15kW Enphase Solar DIY Kit',
+    image: '/kits/kit-enphase-3-15kw.jpg',
+    specs: ['3.15 kW Solar', '7× IQ8MC Micros + Combiner 5'],
+    price: 3200,
+  },
+  {
+    key: 'tesla-9kw-27kwh',
+    name: '9kW Tesla Solar DIY Kit',
+    image: '/kits/kit-tesla-9kw-27kwh.jpg',
+    specs: ['9 kW Solar', '27 kWh Battery'],
+    price: 17900,
+    flag: 'Premium pick',
+  },
+  {
+    key: 'eg4-ruixu-9kw-32kwh',
+    name: '9kW EG4 + RUiXU Solar DIY Kit',
+    image: '/kits/kit-eg4-ruixu-9kw-32kwh.jpg',
+    specs: ['9 kW Solar', '32 kWh Battery'],
+    price: 13000,
+  },
+  {
+    key: 'eg4-ruixu-9kw-16kwh',
+    name: '9kW EG4 + RUiXU Solar DIY Kit',
+    image: '/kits/kit-eg4-ruixu-9kw-16kwh.jpg',
+    specs: ['9 kW Solar', '16 kWh Battery'],
+    price: 9750,
+    flag: 'Best value',
+  },
+];
+
+function FeaturedKitCard({ k }: { k: FeaturedKit }) {
+  return (
+    <a className="fk-card" href="/diy-kits">
+      <div className="fk-media">
+        <img src={k.image} alt={k.name} />
+        {k.flag && <span className="fk-flag">{k.flag}</span>}
+      </div>
+      <div className="fk-body">
+        <div className="fk-specs">
+          {k.specs.map((s) => <span className="fk-spec" key={s}>{s}</span>)}
+        </div>
+        <h3 className="fk-name">{k.name}</h3>
+        <div className="fk-foot">
+          <span className="fk-price"><sup>$</sup>{k.price.toLocaleString()}</span>
+          <span className="fk-go">View kit <Arrow /></span>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function FeaturedKits() {
+  return (
+    <section className="featured-kits" id="featured-kits">
+      <div className="wrap">
+        <div className="explore-head">
+          <h2 style={{ fontFamily: 'var(--hdisplay)' }}>Featured <em className="hgrad-text">DIY kits</em></h2>
+          <a className="explore-all" href="/diy-kits">Browse all DIY kits <Arrow /></a>
+        </div>
+        <div className="featured-grid">
+          {FEATURED_KITS.map((k) => <FeaturedKitCard k={k} key={k.key} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ---- categories ----
 
 interface Category {
@@ -259,6 +340,7 @@ export default function StoreLandingPage() {
         onSearchChange={setSearch}
         onSearchSubmit={() => { window.location.href = '/solar-panels'; }}
       />
+      <FeaturedKits />
       <Explore />
       <ShopHelp />
       <Footer />
