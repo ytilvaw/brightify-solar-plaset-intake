@@ -28,7 +28,10 @@ format, and looks up equipment prices from `price_list.json`.
   showing that itemized list instead of the collapsed line item, labeled
   "Internal Breakdown" — this is how the single Dropbox-bound file for a
   no-breakdown quote carries both the customer content and the underlying
-  math, without a second file.
+  math, without a second file. The script hard-fails (raises, no PDF
+  written) if `sum(breakdown_items)` doesn't exactly equal
+  `sum(items)` — the collapsed price and its breakdown must always
+  reconcile; never hand-adjust one without the other.
 - `price_list.json` — cached copy of the Brightify Solar price list: panels
   (retail + wholesale), inverters, batteries, plus racking/electrical/
   installation/planset defaults. **Re-pull the live Google Sheet before

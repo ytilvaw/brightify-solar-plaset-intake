@@ -595,11 +595,22 @@ def generate(doc, output_path, upload=True):
     customer-facing copy that shouldn't land in Dropbox can be generated
     without it.
     """
+    breakdown_items = doc.get("breakdown_items")
+    if breakdown_items:
+        main_subtotal = sum(item["qty"] * item["price"] for item in doc.get("items", []))
+        breakdown_subtotal = sum(item["qty"] * item["price"] for item in breakdown_items)
+        if abs(main_subtotal - breakdown_subtotal) > 0.01:
+            raise ValueError(
+                f"breakdown_items total (${breakdown_subtotal:,.2f}) does not match "
+                f"the collapsed items total (${main_subtotal:,.2f}) — refusing to "
+                f"generate a PDF with mismatched totals. Fix the breakdown_items list "
+                f"so it sums to exactly the same subtotal as the collapsed line item."
+            )
+
     c = canvas.Canvas(output_path, pagesize=letter)
     _draw_document_page(c, doc)
     c.showPage()
 
-    breakdown_items = doc.get("breakdown_items")
     if breakdown_items:
         breakdown_doc = dict(doc)
         breakdown_doc["items"] = breakdown_items
