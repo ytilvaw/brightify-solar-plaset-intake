@@ -58,14 +58,17 @@ Never jump straight to generating the PDF. Before running `generate_quote.py`:
      under the title). Do NOT put sub-item prices in the bullets — only the
      combined total price appears, as qty 1 × the summed price. No
      per-item prices are broken out on the PDF itself.
-3. **Always show the full itemized breakdown** (each line item, qty, unit
-   price, and the grand total) in the chat and ask the user to confirm it's
-   correct before creating the PDF — regardless of whether the PDF itself
-   will show a breakdown or a single collapsed line. The chat confirmation
-   should always be itemized so Yash can verify the math, even if the PDF
-   output will hide it.
+3. **Always show the full itemized breakdown** (each line item/part, qty,
+   unit price, and the grand total) in the chat as a table, and **wait for
+   the user's explicit approval before running `generate_quote.py`** —
+   regardless of whether the PDF itself will show a breakdown or a single
+   collapsed line. The chat confirmation should always be itemized so Yash
+   can verify the math, even if the PDF output will hide it. Never
+   generate the PDF on the same turn as showing the table — always stop
+   and wait for a reply first.
 
-This applies to every quote, not just complex ones.
+This applies to every quote, not just complex ones — including
+racking-only quotes (see "Racking-only quote" below).
 
 ## Notes field — only include what's explicitly instructed
 
@@ -280,10 +283,13 @@ in `price_list.json` instead of the normal panel/inverter/battery flow.
    These are quoting-level estimates, not a stamped structural layout —
    say so if the user seems to want an as-built BOM rather than a price
    estimate.
-3. **Show the itemized quantity breakdown in chat** (same confirm-before-
-   generating rule as any other quote) — call out that quantities are
-   estimated (if estimated, not given directly) and could shift once a
-   real layout/site visit is done.
+3. **Show the itemized quantity breakdown in chat as a table** (part name,
+   qty, unit price, line total) and **wait for the user's explicit
+   approval before running `generate_quote.py`** — same standing rule as
+   every other quote (see "Before generating the PDF" above), never
+   skipped for racking-only quotes. Call out that quantities are estimated
+   (if estimated, not given directly) and could shift once a real
+   layout/site visit is done.
 4. **Never print the SKU/part number on the PDF** — only `name`, `qty`,
    `price` per the `parts` entries above (the `sku` field is for internal
    lookup only). This applies to every quote, not just racking-only ones.
@@ -291,6 +297,11 @@ in `price_list.json` instead of the normal panel/inverter/battery flow.
    JSON input" above) — `doc_type: "ESTIMATE"`, one line item per part.
    No installation/electrical/planset line items apply here since this is
    materials-only racking hardware, not a full install.
+6. **Upload the PDF to Dropbox** — `generate_quote.py` already calls
+   `upload_to_dropbox` unconditionally after writing every PDF (same as
+   any other quote type), so no extra step is needed as long as the
+   Dropbox env vars are set; just confirm the upload URL came back in the
+   script's output and surface it to the user alongside the PDF.
 
 ## Notes
 - Amounts are `qty * price` per line; `credits` subtract from the subtotal.
