@@ -58,6 +58,12 @@ Never jump straight to generating the PDF. Before running `generate_quote.py`:
      under the title). Do NOT put sub-item prices in the bullets — only the
      combined total price appears, as qty 1 × the summed price. No
      per-item prices are broken out on the PDF itself.
+
+     Since the customer-facing PDF hides the breakdown, also generate a
+     **second, internal-reference PDF** from the same itemized data used
+     for the chat confirmation (see "Generate the PDF" step below for the
+     filename convention and Dropbox behavior) — this itemized copy is for
+     Yash's own records, never sent to the customer.
 3. **Always show the full itemized breakdown** (each line item/part, qty,
    unit price, and the grand total) in the chat as a table, and **wait for
    the user's explicit approval before running `generate_quote.py`** —
@@ -247,7 +253,24 @@ as a note.
    python3 generate_quote.py input.json /mnt/user-data/outputs/<Customer>_<description>_Estimate_<number>.pdf
    ```
 
-8. **Present the file** to the user with `present_files`.
+   **For a no-breakdown quote**, also build a second JSON input — same
+   `estimate_number`, `bill_to`, `credits`/`shipping`/`tax`/`notes`, but
+   with `items` expanded to the full itemized list (the same one already
+   shown and approved in chat) instead of the single collapsed line — and
+   run `generate_quote.py` on it too, writing to a second file with
+   `_Breakdown` appended before `.pdf`:
+   ```bash
+   python3 generate_quote.py input_breakdown.json /mnt/user-data/outputs/<Customer>_<description>_Estimate_<number>_Breakdown.pdf
+   ```
+   Both PDFs upload to Dropbox automatically (the script's unconditional
+   `upload_to_dropbox` call) — the breakdown copy is Yash's own reference
+   and is never sent to the customer.
+
+8. **Present the file(s)** to the user with `present_files` — only the
+   customer-facing PDF (single collapsed line, when no breakdown was
+   requested). For a no-breakdown quote, do NOT also send the internal
+   breakdown PDF as a delivered file; just mention its Dropbox link once
+   the upload completes, so Yash can grab it if needed.
 
 ## Racking-only quote (SnapNRack materials, no panels/inverter/battery)
 
