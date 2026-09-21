@@ -103,6 +103,19 @@
       "with_battery": 400.00
     }
   },
+  "snapnrack_racking_parts": {
+    "_note": "SnapNRack UR-45 Ultra Rail racking system components, for 'racking quote only' requests (materials-only racking BOM, no panels/inverter/battery/labor). SKUs are for internal reference only — never print the SKU/part number on the quote PDF, only the part name. See SKILL.md 'Racking-only quote' section for the quantity-estimation formulas.",
+    "parts": [
+      {"key": "ultrafoot_structural_screw", "name": "SnapNRack Ultrafoot Structural Screw", "sku": "242-10010", "price": 1.20, "unit": "each"},
+      {"key": "omnilug", "name": "SnapNRack OmniLug", "sku": "242-10034", "price": 3.50, "unit": "each"},
+      {"key": "ultra_rail_mid_clamp", "name": "SnapNRack Ultra Rail Mid Clamp", "sku": "242-02071", "price": 4.50, "unit": "each"},
+      {"key": "universal_end_clamp", "name": "SnapNRack Universal End Clamp", "sku": "242-02215", "price": 4.50, "unit": "each"},
+      {"key": "ur_splice", "name": "SnapNRack UR-40 & UR-45 Splice", "sku": "242-01214", "price": 7.50, "unit": "each"},
+      {"key": "ultrafoot_anchor", "name": "SnapNRack UltraFoot Anchor", "sku": "242-10058", "price": 8.00, "unit": "each"},
+      {"key": "adjustable_tile_hook", "name": "SnapNRack Adjustable Tile Hook (USA)", "sku": "242-02729-USA", "price": 12.50, "unit": "each"},
+      {"key": "ur45_rail_172", "name": "SnapNRack UR-45 Rail 172\"", "sku": "232-10095", "price": 45.00, "unit": "per rail", "length_in": 172}
+    ]
+  },
   "company": {
     "name": "Brightify Group LLC",
     "brand": "Brightify Solar",

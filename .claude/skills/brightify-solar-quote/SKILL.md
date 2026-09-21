@@ -242,6 +242,57 @@ as a note.
 
 8. **Present the file** to the user with `present_files`.
 
+## Racking-only quote (SnapNRack materials, no panels/inverter/battery)
+
+When the user asks for a **racking quote only** (just the SnapNRack UR-45
+mounting hardware, not a full system), use `snapnrack_racking_parts.parts`
+in `price_list.json` instead of the normal panel/inverter/battery flow.
+
+1. **Get panel count and roof type** from the user (or the quantities
+   directly, if they give them — always prefer explicit quantities the
+   user provides over estimating).
+2. **If estimating quantities**, assume a single rail row spanning all
+   panels, portrait orientation (panel width ≈ 44.65in, i.e. the
+   `dimension` width already used elsewhere in this file), and apply:
+   - **Row length (ft)** = panel_count × 44.65in ÷ 12 (ignore small
+     inter-panel gaps — not material to a quote-level estimate).
+   - **UR-45 Rails (172in = 14.33ft each)**: 2 rail lines (top + bottom) ×
+     `ceil(row_length_ft / 14.33)` rails per line.
+   - **Splices**: 2 × (`rails_per_line` − 1) — one per joint, on both rail
+     lines. Zero if only 1 rail per line is needed.
+   - **Mid clamps**: 2 × (panel_count − 1) — one per panel-to-panel joint,
+     on both rail lines.
+   - **End clamps**: 4 — one at each end of each of the 2 rail lines,
+     regardless of panel count.
+   - **Roof attachments** (spaced ~4ft/48in on-center along each rail
+     line, minimum 2 per line): `attachments_per_line` =
+     `ceil(row_length_ft / 4) + 1`; total = 2 × `attachments_per_line`.
+     - Shingle/composition roof (or wood decking) → **UltraFoot Anchor**,
+       plus **2 Ultrafoot Structural Screws per anchor** (lag-screws the
+       anchor to the rafter/decking).
+     - Tile roof (concrete/clay) → **Adjustable Tile Hook** instead of
+       UltraFoot Anchor (tile hooks have their own integrated hardware —
+       do not add structural screws for these).
+     - Metal roof or anything else unspecified → ask the user; neither
+       anchor type in this list is rated for it, so don't guess.
+   - **Grounding**: 1 OmniLug per rail row (i.e. 1 per system for a
+     single-row array; add 1 more per additional row if the user
+     describes a multi-row layout).
+   These are quoting-level estimates, not a stamped structural layout —
+   say so if the user seems to want an as-built BOM rather than a price
+   estimate.
+3. **Show the itemized quantity breakdown in chat** (same confirm-before-
+   generating rule as any other quote) — call out that quantities are
+   estimated (if estimated, not given directly) and could shift once a
+   real layout/site visit is done.
+4. **Never print the SKU/part number on the PDF** — only `name`, `qty`,
+   `price` per the `parts` entries above (the `sku` field is for internal
+   lookup only). This applies to every quote, not just racking-only ones.
+5. Build the JSON input the same way as any other quote (see "Build the
+   JSON input" above) — `doc_type: "ESTIMATE"`, one line item per part.
+   No installation/electrical/planset line items apply here since this is
+   materials-only racking hardware, not a full install.
+
 ## Notes
 - Amounts are `qty * price` per line; `credits` subtract from the subtotal.
 - Long item names auto-wrap in the Items column; bullets also auto-wrap.
