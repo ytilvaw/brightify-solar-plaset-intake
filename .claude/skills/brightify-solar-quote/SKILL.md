@@ -161,6 +161,10 @@ as a note.
        - Flat tile roof → `$125/panel`
        - Shingle roof → `$125/panel`
        - Metal roof, concrete tile, or anything else/unspecified → `$150/panel`
+       - **SolarEdge or Enphase system** → add `other_items.module_attachment_kit_per_panel`
+         ($3/panel) on top of the roof-type rate above (fold into the same
+         racking hardware line item total — do not add it as a separate
+         line item). Does not apply to other inverter brands.
      - Electrical hardware: `$70 per panel`
      - **Solar design planset is included by default** whenever installation
        is included — see the Solar design planset rule below for pricing

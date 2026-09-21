@@ -97,6 +97,10 @@
       "standard_panel": 80.00,
       "big_panel": 110.00
     },
+    "module_attachment_kit_per_panel": {
+      "_note": "Whenever a SolarEdge or Enphase system is quoted (installation included), add one module attachment kit per panel by default (the optimizer/microinverter mounting kit that attaches to the panel). Folded into the racking hardware line item total, not its own separate line item.",
+      "price": 3.00
+    },
     "solar_design_planset": {
       "_note": "Price depends on whether the system includes a battery.",
       "without_battery": 300.00,
