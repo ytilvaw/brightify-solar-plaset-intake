@@ -267,14 +267,13 @@ in `price_list.json` instead of the normal panel/inverter/battery flow.
    - **Roof attachments** (spaced ~4ft/48in on-center along each rail
      line, minimum 2 per line): `attachments_per_line` =
      `ceil(row_length_ft / 4) + 1`; total = 2 × `attachments_per_line`.
-     - Shingle/composition roof (or wood decking) → **UltraFoot Anchor**,
-       plus **2 Ultrafoot Structural Screws per anchor** (lag-screws the
-       anchor to the rafter/decking).
-     - Tile roof (concrete/clay) → **Adjustable Tile Hook** instead of
-       UltraFoot Anchor (tile hooks have their own integrated hardware —
-       do not add structural screws for these).
-     - Metal roof or anything else unspecified → ask the user; neither
-       anchor type in this list is rated for it, so don't guess.
+     Pick the mount type from the roof type mentioned:
+     - **Shingle** (or composition/wood decking) roof → **UltraFoot Anchor**.
+     - **Tile** roof (concrete/clay) → **Adjustable Tile Hook (USA)**.
+     - **Metal** roof → **Metal Roof Attachment** ($15/each).
+     - Anything else/unspecified → ask the user; don't guess a mount type.
+     - **Always add 1 Ultrafoot Structural Screw per mount**, regardless of
+       which of the three mount types above was used.
    - **Grounding**: 1 OmniLug per rail row (i.e. 1 per system for a
      single-row array; add 1 more per additional row if the user
      describes a multi-row layout).

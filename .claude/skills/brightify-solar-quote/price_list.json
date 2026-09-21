@@ -113,7 +113,8 @@
       {"key": "ur_splice", "name": "SnapNRack UR-40 & UR-45 Splice", "sku": "242-01214", "price": 7.50, "unit": "each"},
       {"key": "ultrafoot_anchor", "name": "SnapNRack UltraFoot Anchor", "sku": "242-10058", "price": 8.00, "unit": "each"},
       {"key": "adjustable_tile_hook", "name": "SnapNRack Adjustable Tile Hook (USA)", "sku": "242-02729-USA", "price": 12.50, "unit": "each"},
-      {"key": "ur45_rail_172", "name": "SnapNRack UR-45 Rail 172\"", "sku": "232-10095", "price": 45.00, "unit": "per rail", "length_in": 172}
+      {"key": "ur45_rail_172", "name": "SnapNRack UR-45 Rail 172\"", "sku": "232-10095", "price": 45.00, "unit": "per rail", "length_in": 172},
+      {"key": "metal_roof_attachment", "name": "SnapNRack Metal Roof Attachment", "sku": null, "price": 15.00, "unit": "each"}
     ]
   },
   "company": {
