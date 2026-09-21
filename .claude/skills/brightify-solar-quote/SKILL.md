@@ -12,14 +12,23 @@ format, and looks up equipment prices from `price_list.json`.
 
 ## Files
 - `generate_quote.py` — renders the PDF from a JSON spec (reportlab-based).
-  Optionally uploads the result to S3, Google Drive, or Dropbox after
-  writing it — each is a no-op unless its env vars are set (see the
-  docstrings on `upload_to_s3` / `upload_to_gdrive` / `upload_to_dropbox`
-  in the script). For Dropbox, either set `DROPBOX_ACCESS_TOKEN` directly,
-  or set `DROPBOX_REFRESH_TOKEN` + `DROPBOX_APP_KEY` + `DROPBOX_APP_SECRET`
-  to have it auto-refresh (access tokens expire in ~4 hours; the refresh
-  token doesn't, so this avoids re-authing before every run). Both paths
-  also accept `DROPBOX_FOLDER` (optional, defaults to `/Quotes`).
+  Usage: `generate_quote.py input.json output.pdf [--no-upload]`. Uploads
+  the result to S3, Google Drive, and Dropbox after writing it — each is a
+  no-op unless its env vars are set (see the docstrings on `upload_to_s3` /
+  `upload_to_gdrive` / `upload_to_dropbox` in the script) — unless
+  `--no-upload` is passed, which skips all three uploads regardless of env
+  vars (used for the customer-facing copy of a no-breakdown quote — see
+  "Before generating the PDF" / step 7 below). For Dropbox, either set
+  `DROPBOX_ACCESS_TOKEN` directly, or set `DROPBOX_REFRESH_TOKEN` +
+  `DROPBOX_APP_KEY` + `DROPBOX_APP_SECRET` to have it auto-refresh (access
+  tokens expire in ~4 hours; the refresh token doesn't, so this avoids
+  re-authing before every run). Both paths also accept `DROPBOX_FOLDER`
+  (optional, defaults to `/Quotes`). If the input JSON has a
+  `breakdown_items` array, a second page is appended to the same PDF
+  showing that itemized list instead of the collapsed line item, labeled
+  "Internal Breakdown" — this is how the single Dropbox-bound file for a
+  no-breakdown quote carries both the customer content and the underlying
+  math, without a second file.
 - `price_list.json` — cached copy of the Brightify Solar price list: panels
   (retail + wholesale), inverters, batteries, plus racking/electrical/
   installation/planset defaults. **Re-pull the live Google Sheet before
@@ -60,10 +69,11 @@ Never jump straight to generating the PDF. Before running `generate_quote.py`:
      per-item prices are broken out on the PDF itself.
 
      Since the customer-facing PDF hides the breakdown, also generate a
-     **second, internal-reference PDF** from the same itemized data used
-     for the chat confirmation (see "Generate the PDF" step below for the
-     filename convention and Dropbox behavior) — this itemized copy is for
-     Yash's own records, never sent to the customer.
+     **second PDF for Dropbox only** containing the same collapsed line
+     item *plus* an appended itemized breakdown page from the same data
+     used for the chat confirmation — see "Generate the PDF" step below
+     for exactly how (one extra page via `breakdown_items`, not a
+     separate customer-style document).
 3. **Always show the full itemized breakdown** (each line item/part, qty,
    unit price, and the grand total) in the chat as a table, and **wait for
    the user's explicit approval before running `generate_quote.py`** —
@@ -249,28 +259,38 @@ as a note.
    Keep the description short (system size, key inverter/battery brand,
    panel-only vs full install) — just enough to identify the quote at a
    glance in a file listing.
+   For a **breakdown-needed** quote, generate exactly one file, and let it
+   upload to Dropbox normally (the default):
    ```bash
    python3 generate_quote.py input.json /mnt/user-data/outputs/<Customer>_<description>_Estimate_<number>.pdf
    ```
 
-   **For a no-breakdown quote**, also build a second JSON input — same
-   `estimate_number`, `bill_to`, `credits`/`shipping`/`tax`/`notes`, but
-   with `items` expanded to the full itemized list (the same one already
-   shown and approved in chat) instead of the single collapsed line — and
-   run `generate_quote.py` on it too, writing to a second file with
-   `_Breakdown` appended before `.pdf`:
-   ```bash
-   python3 generate_quote.py input_breakdown.json /mnt/user-data/outputs/<Customer>_<description>_Estimate_<number>_Breakdown.pdf
-   ```
-   Both PDFs upload to Dropbox automatically (the script's unconditional
-   `upload_to_dropbox` call) — the breakdown copy is Yash's own reference
-   and is never sent to the customer.
+   For a **no-breakdown** quote, generate **two files from two JSON
+   inputs that are otherwise identical** (same `bill_to`,
+   `estimate_number`, `credits`/`shipping`/`tax`/`notes`, and the same
+   single collapsed `items` entry):
+   1. **Customer copy** — the JSON as-is (no `breakdown_items` key), with
+      `--no-upload` so it never touches Dropbox:
+      ```bash
+      python3 generate_quote.py input.json /mnt/user-data/outputs/<Customer>_<description>_Estimate_<number>.pdf --no-upload
+      ```
+   2. **Dropbox copy** — the same JSON plus a `breakdown_items` array (the
+      full itemized list already shown and approved in chat) — this adds
+      one extra internal-reference page to the *same* PDF (collapsed line
+      on page 1, itemized breakdown on page 2), uploaded normally so it's
+      the only file that reaches Dropbox for this quote:
+      ```bash
+      python3 generate_quote.py input_with_breakdown.json /tmp/<same-filename-as-above>.pdf
+      ```
+      Write this one to a scratch/temp path (not `/mnt/user-data/outputs/`)
+      using the exact same filename as the customer copy, so the file
+      Dropbox receives is named identically to the customer-facing one —
+      there is still only ever one file per quote in Dropbox.
 
-8. **Present the file(s)** to the user with `present_files` — only the
-   customer-facing PDF (single collapsed line, when no breakdown was
-   requested). For a no-breakdown quote, do NOT also send the internal
-   breakdown PDF as a delivered file; just mention its Dropbox link once
-   the upload completes, so Yash can grab it if needed.
+8. **Present the file** to the user with `present_files` — only the
+   customer-facing PDF. Never deliver the Dropbox copy as a file; just
+   confirm its Dropbox link came back from the script's output once it
+   uploads.
 
 ## Racking-only quote (SnapNRack materials, no panels/inverter/battery)
 

@@ -572,8 +572,7 @@ def upload_to_dropbox(file_path):
         return None
 
 
-def generate(doc, output_path):
-    c = canvas.Canvas(output_path, pagesize=letter)
+def _draw_document_page(c, doc):
     y = draw_header(c, doc)
     draw_divider(c, y)
     y -= 20
@@ -584,22 +583,53 @@ def generate(doc, output_path):
     if doc.get("signature_block"):
         draw_signature_block(c, y)
     draw_footer(c)
+
+
+def generate(doc, output_path, upload=True):
+    """
+    Renders `doc` (the customer-facing page) to output_path. If doc has a
+    `breakdown_items` list (used for no-breakdown quotes), a second page is
+    appended showing that itemized breakdown instead of the collapsed line
+    item, for internal reference only — same PDF file, not a separate one.
+    Uploads (S3/Drive/Dropbox) are skipped entirely when upload=False, so a
+    customer-facing copy that shouldn't land in Dropbox can be generated
+    without it.
+    """
+    c = canvas.Canvas(output_path, pagesize=letter)
+    _draw_document_page(c, doc)
     c.showPage()
+
+    breakdown_items = doc.get("breakdown_items")
+    if breakdown_items:
+        breakdown_doc = dict(doc)
+        breakdown_doc["items"] = breakdown_items
+        breakdown_doc["doc_type"] = "Internal Breakdown"
+        breakdown_doc["signature_block"] = False
+        breakdown_doc["notes"] = ["INTERNAL REFERENCE ONLY — not for the customer. Shows how the single-line quote on the previous page was calculated."] + list(doc.get("notes") or [])
+        _draw_document_page(c, breakdown_doc)
+        c.showPage()
+
     c.save()
     print(f"Wrote {output_path}")
-    upload_to_s3(output_path)
-    upload_to_gdrive(output_path)
-    upload_to_dropbox(output_path)
+    if upload:
+        upload_to_s3(output_path)
+        upload_to_gdrive(output_path)
+        upload_to_dropbox(output_path)
+    else:
+        print("Upload skipped (customer-facing copy)")
 
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: python3 generate_quote.py input.json output.pdf")
+    args = sys.argv[1:]
+    upload = "--no-upload" not in args
+    args = [a for a in args if a != "--no-upload"]
+    if len(args) != 2:
+        print("Usage: python3 generate_quote.py input.json output.pdf [--no-upload]")
         sys.exit(1)
-    input_path, output_path = sys.argv[1], sys.argv[2]
+    input_path, output_path = args
     with open(input_path) as f:
         doc = json.load(f)
-    generate(doc, output_path)
+    generate(doc, output_path, upload=upload)
 
 
 if __name__ == "__main__":
