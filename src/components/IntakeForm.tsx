@@ -231,6 +231,7 @@ export default function IntakeForm() {
     useState<'idle' | 'uploading' | 'submitting' | 'success'>('idle')
   const [progressLabel, setProgressLabel] = useState('Ready')
   const [submissionId, setSubmissionId] = useState<string | null>(null)
+  const [uploadWarning, setUploadWarning] = useState<string | null>(null)
   const selectedFilesRef = useRef(selectedFiles)
   const siteAddressInputRef = useRef<HTMLInputElement | null>(null)
   const placesLibraryRef = useRef<PlacesLibrary | null>(null)
@@ -471,42 +472,51 @@ export default function IntakeForm() {
     })
 
     if (!pendingUploads.length) {
-      return [] satisfies UploadedAsset[]
+      return { uploadedAssets: [] as UploadedAsset[], failedUploadLabels: [] as string[] }
     }
 
     const uploadedAssets: UploadedAsset[] = []
+    const failedUploadLabels: string[] = []
 
     for (const item of pendingUploads) {
       const file = item.file!
       setProgressLabel(`Uploading ${item.label.toLowerCase()}...`)
 
-      const uploadedAsset = await uploadIntakeFile({
-        field: item.field,
-        file,
-        label: item.label,
-        onUploadProgress: (progress) => {
-          setProgressLabel(
-            `Uploading ${item.label.toLowerCase()} (${Math.round(progress.percentage)}%)...`,
-          )
-        },
-      })
+      try {
+        const uploadedAsset = await uploadIntakeFile({
+          field: item.field,
+          file,
+          label: item.label,
+          onUploadProgress: (progress) => {
+            setProgressLabel(
+              `Uploading ${item.label.toLowerCase()} (${Math.round(progress.percentage)}%)...`,
+            )
+          },
+        })
 
-      uploadedAssets.push(uploadedAsset)
+        uploadedAssets.push(uploadedAsset)
+      } catch (uploadError) {
+        console.error(`Upload failed for ${item.label}`, uploadError)
+        failedUploadLabels.push(item.label)
+      }
+
+      const completed = uploadedAssets.length + failedUploadLabels.length
 
       setProgressLabel(
-        uploadedAssets.length === pendingUploads.length
+        completed === pendingUploads.length
           ? 'Uploads complete'
-          : `Uploaded ${uploadedAssets.length} of ${pendingUploads.length} files`,
+          : `Uploaded ${completed} of ${pendingUploads.length} files`,
       )
     }
 
-    return uploadedAssets
+    return { uploadedAssets, failedUploadLabels }
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError(null)
     setSubmissionId(null)
+    setUploadWarning(null)
 
     const form = event.currentTarget
     const formData = new FormData(form)
@@ -533,7 +543,7 @@ export default function IntakeForm() {
     try {
       setStatus('uploading')
 
-      const uploads = await uploadAssets()
+      const { uploadedAssets: uploads, failedUploadLabels } = await uploadAssets()
       const payload: IntakePayload = {
         battery: getText(formData, 'battery'),
         companyName: getText(formData, 'companyName'),
@@ -582,6 +592,11 @@ export default function IntakeForm() {
       setStatus('success')
       setSubmissionId(result?.submissionId ?? null)
       setProgressLabel('Submission received')
+      setUploadWarning(
+        failedUploadLabels.length
+          ? `${formatFieldList(failedUploadLabels)} could not be uploaded automatically. Please email ${failedUploadLabels.length > 1 ? 'these files' : 'this file'} separately and reference your submission ID.`
+          : null,
+      )
       form.reset()
       setSiteAddress('')
       setAddressPredictions([])
@@ -852,6 +867,12 @@ export default function IntakeForm() {
         {status === 'success' ? (
           <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm leading-6 text-emerald-700">
             Submission received{submissionId ? ` with ID ${submissionId}` : ''}. The intake packet and any uploaded files are ready for review.
+          </div>
+        ) : null}
+
+        {status === 'success' && uploadWarning ? (
+          <div className="rounded-[24px] border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-800">
+            {uploadWarning}
           </div>
         ) : null}
 

@@ -217,16 +217,6 @@ export async function POST(request: Request) {
   try {
     const payload = submissionSchema.parse(await request.json())
 
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
-      return Response.json(
-        {
-          error:
-            'Vercel Blob is not configured. Attach a Blob store to this project or set BLOB_READ_WRITE_TOKEN locally.',
-        },
-        { status: 500 },
-      )
-    }
-
     const requestUrl = new URL(request.url)
     const appBaseUrl =
       process.env.APP_BASE_URL?.trim() ||
@@ -241,18 +231,44 @@ export async function POST(request: Request) {
       userAgent: request.headers.get('user-agent') ?? '',
     }
 
-    const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], {
-      type: 'application/json',
-    })
+    let manifestSaved = false
 
-    await put(`submissions/${submissionId}.json`, manifestBlob, {
-      access: 'private',
-    })
+    try {
+      const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], {
+        type: 'application/json',
+      })
 
-    const emailResult = await sendNotificationEmail({ appBaseUrl, manifest })
+      await put(`submissions/${submissionId}.json`, manifestBlob, {
+        access: 'private',
+      })
+
+      manifestSaved = true
+    } catch (manifestError) {
+      console.error('failed to save intake manifest to blob', manifestError)
+    }
+
+    let emailSent = false
+
+    try {
+      const emailResult = await sendNotificationEmail({ appBaseUrl, manifest })
+      emailSent = emailResult.sent
+    } catch (emailError) {
+      console.error('failed to send intake notification email', emailError)
+    }
+
+    if (!manifestSaved && !emailSent) {
+      return Response.json(
+        {
+          error:
+            'Could not save the intake package right now. Please try again shortly.',
+        },
+        { status: 502 },
+      )
+    }
 
     return Response.json({
-      emailSent: emailResult.sent,
+      emailSent,
+      manifestSaved,
       ok: true,
       submissionId,
       submittedAt,
