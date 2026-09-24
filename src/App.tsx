@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import AdminPage from './components/AdminPage'
+import OrdersPage from './components/OrdersPage'
 import DesignLandingPage from './components/DesignLandingPage'
 import IntakeSinglePage from './components/IntakeSinglePage'
 import RoofEvaluationForm from './components/RoofEvaluationForm'
@@ -82,6 +83,16 @@ export default function App() {
     return (
       <>
         <AdminPage />
+        <Analytics />
+        <SpeedInsights />
+      </>
+    )
+  }
+
+  if (window.location.pathname.startsWith('/orders')) {
+    return (
+      <>
+        <OrdersPage />
         <Analytics />
         <SpeedInsights />
       </>

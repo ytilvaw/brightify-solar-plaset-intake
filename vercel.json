@@ -40,6 +40,14 @@
       "destination": "/"
     },
     {
+      "source": "/orders",
+      "destination": "/"
+    },
+    {
+      "source": "/orders/(.*)",
+      "destination": "/"
+    },
+    {
       "source": "/solar-panels",
       "destination": "/solar-panels.html"
     },
