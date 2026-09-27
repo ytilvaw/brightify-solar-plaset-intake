@@ -257,6 +257,12 @@ export default function AdminPage() {
           </div>
 
           <div className="flex gap-3">
+            <a
+              className="rounded-full border border-[#ececf0] px-4 py-2 text-sm text-[#666674] transition hover:border-[#d7d7dd] hover:text-[#18181b]"
+              href="/orders"
+            >
+              Orders
+            </a>
             <button
               className="rounded-full border border-[#ececf0] px-4 py-2 text-sm text-[#666674] transition hover:border-[#d7d7dd] hover:text-[#18181b]"
               onClick={() => {
