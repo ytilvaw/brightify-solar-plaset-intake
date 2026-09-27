@@ -71,8 +71,8 @@
     "installation_per_panel_small_system_note": "Applies when panel count < 10 (standard panels).",
     "installation_per_battery_addon": 500.00,
     "installation_per_battery_addon_ruixu": 750.00,
-    "installation_per_battery_addon_tesla_powerwall": 1000.00,
-    "installation_per_battery_addon_note": "Ruixu batteries use $750/battery. Tesla Powerwall installations use $1000/battery unit (Powerwall + each expansion pack counts as one unit). All other battery brands use $500/battery.",
+    "installation_per_battery_addon_tesla_powerwall": 1500.00,
+    "installation_per_battery_addon_note": "Ruixu batteries use $750/battery. Tesla Powerwall installations use $1500/battery unit (Powerwall + each expansion pack counts as one unit). All other battery brands use $500/battery.",
     "installation_per_panel_big_panel": 600.00,
     "racking_per_panel": {
       "flat_tile_roof": 125.00,

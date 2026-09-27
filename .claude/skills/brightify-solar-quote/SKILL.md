@@ -163,7 +163,7 @@ as a note.
        remain **$600 per panel** regardless of count.
      - Installation, battery add-on:
        - **Ruixu** battery → **$750 per battery**
-       - **Tesla Powerwall** → **$1,000 per battery unit** (Powerwall +
+       - **Tesla Powerwall** → **$1,500 per battery unit** (Powerwall +
          each expansion pack each count as one unit)
        - All other battery brands → **$500 per battery**
        This is on top of the per-panel labor cost above. Combine into a
