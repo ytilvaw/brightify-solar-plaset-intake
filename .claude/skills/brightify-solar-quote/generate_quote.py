@@ -34,6 +34,7 @@ PAGE_W, PAGE_H = letter
 MARGIN_L = 0.55 * inch
 MARGIN_R = 0.55 * inch
 CONTENT_W = PAGE_W - MARGIN_L - MARGIN_R
+FOOTER_MIN_Y = 0.95 * inch  # content below this would collide with the footer
 
 
 def load_company():
@@ -283,6 +284,22 @@ def draw_totals(c, doc, y):
     return y
 
 
+def _break_page_if_needed(c, y, needed):
+    """
+    If drawing `needed` more points of content at the current y would run
+    into the footer, draws the footer on the current page, starts a new
+    page, and returns a fresh y near the top of it. Otherwise returns y
+    unchanged. Callers must use this before every line they draw in a
+    variable-length section (notes, signature block), since those are the
+    sections long enough to run into the fixed-position footer.
+    """
+    if y - needed < FOOTER_MIN_Y:
+        draw_footer(c)
+        c.showPage()
+        return PAGE_H - 0.75 * inch
+    return y
+
+
 def draw_notes(c, doc, y):
     notes = doc.get("notes", "")
     if not notes:
@@ -293,6 +310,7 @@ def draw_notes(c, doc, y):
         note_items = notes
 
     y -= 40
+    y = _break_page_if_needed(c, y, 14)
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(DARK)
     c.drawString(MARGIN_L, y, "Notes / Terms")
@@ -308,6 +326,7 @@ def draw_notes(c, doc, y):
         for word in words:
             test = f"{line} {word}".strip()
             if c.stringWidth(test, "Helvetica", 8.5) > max_width and line:
+                y = _break_page_if_needed(c, y, 12)
                 prefix = u"\u2022 " if first_line else "  "
                 c.drawString(MARGIN_L, y, prefix + line)
                 y -= 12
@@ -316,6 +335,7 @@ def draw_notes(c, doc, y):
             else:
                 line = test
         if line:
+            y = _break_page_if_needed(c, y, 12)
             prefix = u"\u2022 " if first_line else "  "
             c.drawString(MARGIN_L, y, prefix + line)
             y -= 12
@@ -325,6 +345,7 @@ def draw_notes(c, doc, y):
 
 def draw_signature_block(c, y):
     y -= 50
+    y = _break_page_if_needed(c, y, 85)
     c.setFont("Helvetica", 8.5)
     c.setFillColor(GREY_LABEL)
     ack_text = "I acknowledge receipt of the above item(s) in good condition."
