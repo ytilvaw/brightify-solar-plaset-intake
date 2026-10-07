@@ -116,7 +116,6 @@ function SiteAnnounce() {
   return (
     <div className="site-announce">
       <div className="wrap">
-        <div className="left"><span className="dot"></span>Free shipping on orders over $2,500</div>
         <div className="right">Solar from panel to permit</div>
       </div>
     </div>
