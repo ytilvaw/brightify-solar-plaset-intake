@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState, type DragEvent, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import '../intake-single-page.css'
-import { uploadIntakeFile } from '../lib/uploads'
 import type { IntakePayload, UploadedAsset } from '../lib/intake'
 
 // ── Google Maps ───────────────────────────────────────────────────────────────
@@ -79,16 +78,6 @@ type FormState = {
   notes: string
 }
 
-type UploadedFile = {
-  id: string
-  name: string
-  size: number
-  isImg: boolean
-  url: string | null
-  ext: string
-  file: File
-}
-
 const BLANK: FormState = {
   requesterType: '', contact: '', email: '', phone: '', address: '',
   mainPanel: '', roofType: '', numPanels: '', panelModel: '',
@@ -103,24 +92,7 @@ function loadSaved(): FormState | null {
   } catch { return null }
 }
 
-function fmtSize(bytes: number) {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
 // ── icon ──────────────────────────────────────────────────────────────────────
-
-function UploadIcon() {
-  return (
-    <svg width={18} height={18} viewBox="0 0 18 18" fill="none">
-      <path
-        d="M9 2.5v8m0-8L5.5 6M9 2.5 12.5 6M3 11.5v2A1.5 1.5 0 0 0 4.5 15h9a1.5 1.5 0 0 0 1.5-1.5v-2"
-        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
 
 function IArrow() {
   return (
@@ -157,108 +129,10 @@ function TextField({ label, optional, hint, ...props }: {
   )
 }
 
-// ── file drop zone ────────────────────────────────────────────────────────────
-
-function FileDrop({ sub, files, onAdd, onRemove, field }: {
-  sub: string
-  files: UploadedFile[]
-  onAdd: (items: UploadedFile[]) => void
-  onRemove: (id: string) => void
-  field: 'sitePhotos' | 'datasheets'
-}) {
-  const [drag, setDrag] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const handleFiles = (list: FileList | null) => {
-    if (!list) return
-    const mapped: UploadedFile[] = Array.from(list).map((f) => ({
-      id: Math.random().toString(36).slice(2),
-      name: f.name,
-      size: f.size,
-      isImg: f.type.startsWith('image/'),
-      url: f.type.startsWith('image/') ? URL.createObjectURL(f) : null,
-      ext: (f.name.split('.').pop() ?? 'FILE').toUpperCase().slice(0, 4),
-      file: f,
-    }))
-    onAdd(mapped)
-  }
-
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDrag(false)
-    handleFiles(e.dataTransfer.files)
-  }
-
-  return (
-    <div>
-      <div className="upload-head">
-        <div className="ut">
-          <span className="ut-sub">{sub}</span>
-        </div>
-        <button
-          type="button"
-          className="isp-btn isp-btn-ghost isp-btn-sm"
-          onClick={() => inputRef.current?.click()}
-        >
-          Add files
-        </button>
-      </div>
-
-      <div
-        className={`isp-dropzone${drag ? ' drag' : ''}`}
-        onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
-        onDragLeave={() => setDrag(false)}
-        onDrop={handleDrop}
-      >
-        <span className="dz-icon"><UploadIcon /></span>
-        <span className="dz-cta">Drag &amp; drop, or <b>browse files</b></span>
-        <span className="dz-formats">PDF, JPG, PNG, WEBP, HEIC, or HEIF up to 100 MB</span>
-      </div>
-
-      {files.length > 0 && (
-        <div className="dz-files">
-          {files.map((f) => (
-            <div className="dz-file" key={f.id}>
-              <span
-                className="thumb"
-                style={f.isImg && f.url ? { backgroundImage: `url(${f.url})` } : undefined}
-              >
-                {!f.isImg && f.ext}
-              </span>
-              <div className="meta">
-                <div className="nm" title={f.name}>{f.name}</div>
-                <div className="sz">{fmtSize(f.size)}</div>
-              </div>
-              <button
-                type="button"
-                className="rm"
-                onClick={(e) => { e.stopPropagation(); onRemove(f.id) }}
-                aria-label="Remove"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <input
-        ref={inputRef}
-        type="file"
-        multiple
-        accept={field === 'sitePhotos' ? 'image/*,.heic,.heif' : '.pdf,image/*,.heic,.heif'}
-        style={{ display: 'none' }}
-        onChange={(e) => { handleFiles(e.target.files); e.target.value = '' }}
-      />
-    </div>
-  )
-}
-
 // ── confirmation ──────────────────────────────────────────────────────────────
 
-function Confirmation({ form, photoCount, sheetCount, onReset }: {
-  form: FormState; photoCount: number; sheetCount: number; onReset: () => void
+function Confirmation({ form, onReset }: {
+  form: FormState; onReset: () => void
 }) {
   const ref = `BR-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
   const system = form.numPanels && form.panelModel
@@ -284,7 +158,6 @@ function Confirmation({ form, photoCount, sheetCount, onReset }: {
           <div className="cc-row"><span className="k">Contact</span><span className="v">{form.contact || '—'}</span></div>
           <div className="cc-row"><span className="k">Site</span><span className="v">{form.address || '—'}</span></div>
           <div className="cc-row"><span className="k">System</span><span className="v">{system}</span></div>
-          <div className="cc-row"><span className="k">Files</span><span className="v">{photoCount + sheetCount} uploaded</span></div>
         </div>
       </div>
 
@@ -311,10 +184,8 @@ type PaymentSession = { paid: boolean; tierLabel: string; amount: number }
 
 export default function IntakeSinglePage() {
   const [form, setForm] = useState<FormState>(() => loadSaved() ?? BLANK)
-  const [photos, setPhotos] = useState<UploadedFile[]>([])
-  const [datasheets, setDatasheets] = useState<UploadedFile[]>([])
   const [done, setDone] = useState(false)
-  const [status, setStatus] = useState<'idle' | 'uploading' | 'submitting' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
 
   // Stripe session from redirect
@@ -366,14 +237,6 @@ export default function IntakeSinglePage() {
   useEffect(() => {
     try { localStorage.setItem(STORE_KEY, JSON.stringify({ form })) } catch { /* ignore */ }
   }, [form])
-
-  // revoke object URLs on unmount
-  useEffect(() => {
-    return () => {
-      ;[...photos, ...datasheets].forEach((f) => { if (f.url) URL.revokeObjectURL(f.url) })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   // cleanup blur timer
   useEffect(() => {
@@ -475,14 +338,11 @@ export default function IntakeSinglePage() {
   }
 
   const set = (patch: Partial<FormState>) => setForm((f) => ({ ...f, ...patch }))
-  const isWorking = status === 'uploading' || status === 'submitting'
+  const isWorking = status === 'submitting'
   const ready = !!(form.requesterType && form.contact && form.email && form.address && emailStatus === 'ok')
 
   const reset = () => {
-    ;[...photos, ...datasheets].forEach((f) => { if (f.url) URL.revokeObjectURL(f.url) })
     setForm(BLANK)
-    setPhotos([])
-    setDatasheets([])
     setDone(false)
     setStatus('idle')
     setError(null)
@@ -495,22 +355,9 @@ export default function IntakeSinglePage() {
     if (honeypot) { setDone(true); return }
 
     setError(null)
-    setStatus('uploading')
+    setStatus('submitting')
 
     try {
-      const uploads: UploadedAsset[] = []
-
-      for (const f of photos) {
-        const asset = await uploadIntakeFile({ field: 'sitePhotos', file: f.file, label: f.name })
-        uploads.push(asset)
-      }
-      for (const f of datasheets) {
-        const asset = await uploadIntakeFile({ field: 'datasheets', file: f.file, label: f.name })
-        uploads.push(asset)
-      }
-
-      setStatus('submitting')
-
       const requesterType = form.requesterType === 'Homeowner' ? 'Homeowner' : 'Installer'
 
       const noteLines: string[] = []
@@ -534,7 +381,7 @@ export default function IntakeSinglePage() {
         battery: form.battery,
         racking: form.racking,
         notes: noteLines.join('\n'),
-        uploads,
+        uploads: [] as UploadedAsset[],
         ...(stripeSessionId ? { stripeSessionId } : {}),
       }
 
@@ -576,8 +423,6 @@ export default function IntakeSinglePage() {
         <div className="intake-card">
           <Confirmation
             form={form}
-            photoCount={photos.length}
-            sheetCount={datasheets.length}
             onReset={reset}
           />
         </div>
@@ -625,7 +470,7 @@ export default function IntakeSinglePage() {
         <img className="intake-logo" src="/brightify-logo.png" alt="Brightify" />
         <h1>Solar planset <em>intake</em>.</h1>
         <p className="sub">
-          Submit the project details, equipment assumptions, and site photos needed to start planset design.
+          Submit the project details, and equipment assumptions needed to start planset design.
         </p>
       </header>
 
@@ -805,35 +650,8 @@ export default function IntakeSinglePage() {
         </div>
       </section>
 
-      {/* ── site photos ── */}
+      {/* ── submit ── */}
       <section className="intake-card">
-        <div className="isp-sec-label">
-          Site photos <span className="opt">(optional)</span>
-        </div>
-        <FileDrop
-          field="sitePhotos"
-          sub="Upload site photos of the main electrical panel, utility meter, front of house, roof areas, and anything unusual that may affect the design."
-          files={photos}
-          onAdd={(items) => setPhotos((p) => [...p, ...items])}
-          onRemove={(id) => setPhotos((p) => p.filter((f) => f.id !== id))}
-        />
-      </section>
-
-      {/* ── datasheets + submit ── */}
-      <section className="intake-card">
-        <div className="isp-sec-label">
-          Datasheets <span className="opt">(optional)</span>
-        </div>
-        <FileDrop
-          field="datasheets"
-          sub="Upload equipment datasheets here: solar panels, inverter, battery, racking, and any other spec sheets you already have."
-          files={datasheets}
-          onAdd={(items) => setDatasheets((d) => [...d, ...items])}
-          onRemove={(id) => setDatasheets((d) => d.filter((f) => f.id !== id))}
-        />
-
-        <div className="isp-divider" />
-
         {error && <div className="isp-error">{error}</div>}
 
         <div className="submit-bar">
@@ -849,10 +667,7 @@ export default function IntakeSinglePage() {
             }}
             disabled={!ready || isWorking}
           >
-            {isWorking
-              ? (status === 'uploading' ? 'Uploading files…' : 'Submitting…')
-              : <>Submit intake <IArrow /></>
-            }
+            {isWorking ? 'Submitting…' : <>Submit intake <IArrow /></>}
           </button>
         </div>
       </section>
