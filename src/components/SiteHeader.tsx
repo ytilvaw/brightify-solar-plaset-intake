@@ -110,19 +110,6 @@ function shCatHref(key: string, onHome: boolean): string {
   return onHome ? `#shop-${key}` : `/#shop-${key}`;
 }
 
-// ---- announce strip ----
-
-function SiteAnnounce() {
-  return (
-    <div className="site-announce">
-      <div className="wrap">
-        <div className="left"><span className="dot"></span>Free shipping on orders over $2,500</div>
-        <div className="right">Solar from panel to permit</div>
-      </div>
-    </div>
-  );
-}
-
 // ---- All Products mega dropdown ----
 
 function AllProducts({ onHome }: { onHome: boolean }) {
@@ -188,7 +175,6 @@ export default function SiteHeader({
 
   return (
     <>
-      <SiteAnnounce />
       <div className="site-head" id="top">
         <div className="site-row1">
           <div className="wrap">
