@@ -11,44 +11,44 @@ const OG_IMAGE = `${BASE_URL}/brightify-og.jpg`;
 const ROUTES = [
   {
     file: 'solar-panels.html',
-    title: 'Solar Panels — TOPCon, HJT & PERC | Brightify Solar',
+    title: 'Buy Solar Panels — TOPCon & Bifacial | Brightify Solar',
     description:
-      'Shop 400–585W mono solar panels from Trina, JA Solar, Jinko, Qcells, Risen and more. Residential all-black and commercial bifacial modules in stock.',
+      'Buy 400–585W monocrystalline solar panels from Trina, JA Solar, Jinko, Qcells and Risen. All-black residential and bifacial commercial solar modules, shipped direct.',
     url: `${BASE_URL}/solar-panels`,
   },
   {
     file: 'inverters.html',
-    title: 'Solar Inverters — String, Micro & Hybrid | Brightify Solar',
+    title: 'Hybrid & String Solar Inverters | Brightify Solar',
     description:
-      'String, microinverter and hybrid inverters from EG4, RUiXU, Growatt, SolarEdge and Enphase. Off-grid and grid-tie options for every system size.',
+      'Buy hybrid, string and microinverters from EG4, RUiXU, Growatt, SolarEdge and Enphase. Off-grid, grid-tie and split-phase solar inverters for every system size.',
     url: `${BASE_URL}/inverters`,
   },
   {
     file: 'batteries.html',
-    title: 'Solar Batteries — LiFePO4 & NMC Storage | Brightify Solar',
+    title: 'Solar Batteries — LiFePO4 Home Battery Storage | Brightify Solar',
     description:
-      'Whole-home battery storage from EG4, RUiXU, Tesla Powerwall, LG and Enphase. LiFePO4 and NMC options for indoor and outdoor install.',
+      'Buy whole-home solar battery storage from EG4, RUiXU, Tesla Powerwall, LG and Enphase. LiFePO4 and NMC server-rack and wall-mount batteries for backup power.',
     url: `${BASE_URL}/batteries`,
   },
   {
     file: 'racking.html',
     title: 'Solar Racking & Mounting | Brightify Solar',
     description:
-      'Rails, clamps, anchors and ground-mount hardware from SnapNRack. Roof, ground and ballast mounting systems shipped direct.',
+      'Buy solar panel racking from SnapNRack: rails, clamps, flashing, anchors and ground-mount hardware. Roof mount, ground mount and ballast systems shipped direct.',
     url: `${BASE_URL}/racking`,
   },
   {
     file: 'diy-kits.html',
-    title: 'DIY Solar Kits — 8–11kW Hybrid Systems | Brightify Solar',
+    title: 'DIY Solar Kits with Battery | Brightify Solar',
     description:
-      'Pre-matched DIY hybrid solar kits starting at $12,769. EG4 FlexBOSS18 and RUiXU RX-12K systems with panels and 32 kWh battery included.',
+      'Complete DIY solar kits with battery from $12,769. Pre-matched EG4 FlexBOSS18 and RUiXU RX-12K hybrid systems with panels and 32 kWh storage included.',
     url: `${BASE_URL}/diy-kits`,
   },
   {
     file: 'design.html',
-    title: 'Solar Permit Plansets — AHJ-Ready | Brightify Solar',
+    title: 'Solar Permit Plansets — All 50 States | Brightify Solar',
     description:
-      'AHJ-compliant solar permit designs for all 50 states. Residential PV, PV+Battery and commercial plansets. Permit-ready PDF delivered fast.',
+      'Order AHJ-compliant solar permit plansets for all 50 states. Residential PV, PV+battery and commercial permit drawings with single-line diagrams, delivered fast as PDF.',
     url: `${BASE_URL}/design`,
   },
   {
