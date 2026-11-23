@@ -73,7 +73,8 @@ for (const route of ROUTES) {
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="Brightify Solar" />`,
     `<meta property="og:image" content="${OG_IMAGE}" />`,
-    `<meta name="twitter:card" content="summary" />`,
+    `<meta name="twitter:card" content="summary_large_image" />`,
+    `<link rel="canonical" href="${route.url}" />`,
     `<meta name="twitter:title" content="${route.title}" />`,
     `<meta name="twitter:description" content="${route.description}" />`,
   ].join('\n    ');
@@ -85,6 +86,7 @@ for (const route of ROUTES) {
     .replace(/<meta\s+name="description"[^>]*\/?>/, '')
     .replace(/<meta\s+property="og:[^"]*"[^>]*\/?>/g, '')
     .replace(/<meta\s+name="twitter:[^"]*"[^>]*\/?>/g, '')
+    .replace(/<link\s+rel="canonical"[^>]*\/?>/, '')
     .replace(/\n\s*\n/g, '\n') // collapse blank lines left behind
     .replace('</head>', `    ${ogTags}\n  </head>`);
 

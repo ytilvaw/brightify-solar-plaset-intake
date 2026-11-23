@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /orders
+Disallow: /api/
+
+Sitemap: https://brightifysolar.com/sitemap.xml
