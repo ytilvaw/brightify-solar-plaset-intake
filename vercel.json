@@ -25,11 +25,11 @@
     },
     {
       "source": "/roof",
-      "destination": "/"
+      "destination": "/roof.html"
     },
     {
       "source": "/roof/(.*)",
-      "destination": "/"
+      "destination": "/roof.html"
     },
     {
       "source": "/admin",
@@ -89,11 +89,11 @@
     },
     {
       "source": "/offgrid",
-      "destination": "/"
+      "destination": "/offgrid.html"
     },
     {
       "source": "/offgrid/(.*)",
-      "destination": "/"
+      "destination": "/offgrid.html"
     },
     {
       "source": "/search",

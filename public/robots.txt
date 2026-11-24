@@ -1,7 +1,26 @@
+# Brightify Solar — all search and AI crawlers are welcome on public pages.
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /orders
 Disallow: /api/
+
+# AI search / assistant crawlers (ChatGPT, Perplexity, Claude, Gemini, Apple)
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: GPTBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
 
 Sitemap: https://brightifysolar.com/sitemap.xml

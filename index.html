@@ -18,7 +18,10 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/brightify-mark.png" />
     <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"Organization","name":"Brightify Solar","url":"https://brightifysolar.com","logo":"https://brightifysolar.com/brightify-logo.png","description":"Solar panels, inverters, batteries, racking, DIY kits and permit plansets for all 50 states."}
+      {"@context":"https://schema.org","@graph":[
+        {"@type":"Organization","@id":"https://brightifysolar.com/#org","name":"Brightify Solar","legalName":"Brightify Solar, LLC","url":"https://brightifysolar.com","logo":"https://brightifysolar.com/brightify-logo.png","image":"https://brightifysolar.com/brightify-og.jpg","description":"Online solar store in California selling solar panels, inverters, batteries, racking and DIY solar kits, plus AHJ-ready solar permit plansets for all 50 states.","email":"info@brightifysolar.com","telephone":"+1-408-464-3739","areaServed":{"@type":"Country","name":"United States"},"address":{"@type":"PostalAddress","addressRegion":"CA","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"info@brightifysolar.com","telephone":"+1-408-464-3739","availableLanguage":"English"}]},
+        {"@type":"WebSite","@id":"https://brightifysolar.com/#website","url":"https://brightifysolar.com","name":"Brightify Solar","publisher":{"@id":"https://brightifysolar.com/#org"},"potentialAction":{"@type":"SearchAction","target":"https://brightifysolar.com/search?q={search_term_string}","query-input":"required name=search_term_string"}}
+      ]}
     </script>
     <!-- Meta Pixel -->
     <script>
@@ -39,19 +42,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div id="root"></div>
-    <noscript>
-      <h1>Brightify Solar — Panels, Inverters, Batteries &amp; DIY Kits</h1>
-      <p>Shop solar panels, inverters, batteries, racking and complete DIY kits. Permit plansets for all 50 states.</p>
-      <ul>
-        <li><a href="/solar-panels">Solar Panels</a></li>
-        <li><a href="/inverters">Inverters</a></li>
-        <li><a href="/batteries">Batteries</a></li>
-        <li><a href="/racking">Racking</a></li>
-        <li><a href="/diy-kits">DIY Kits</a></li>
-        <li><a href="/design">Permit Plansets</a></li>
-      </ul>
-    </noscript>
+    <div id="root"><!--ssr-start--><!--ssr-end--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
   </html>

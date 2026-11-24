@@ -1,0 +1,21 @@
+# Brightify Solar
+
+> Brightify Solar, LLC is a California-based online solar store. It sells solar panels, inverters, batteries, racking and pre-matched DIY solar kits shipped across the United States, and designs AHJ-ready solar permit plansets for all 50 states.
+
+Contact: info@brightifysolar.com · WhatsApp +1 (408) 464-3739
+
+## Shop
+- [Solar panels](https://brightifysolar.com/solar-panels): 400–600W TOPCon, HJT and PERC modules from Trina Solar, JA Solar, Jinko, Qcells and Risen.
+- [Inverters](https://brightifysolar.com/inverters): string, micro and hybrid inverters from EG4, RUiXU, Growatt, SolarEdge and Enphase.
+- [Batteries](https://brightifysolar.com/batteries): LiFePO4 and NMC home storage from EG4, RUiXU, Tesla Powerwall, LG and Enphase.
+- [Racking & mounting](https://brightifysolar.com/racking): SnapNRack rails, clamps, anchors and ground-mount hardware.
+- [DIY solar kits](https://brightifysolar.com/diy-kits): pre-matched hybrid kits (EG4, RUiXU, Tesla, Enphase) with panels, inverter and battery.
+- [Off-grid solar](https://brightifysolar.com/offgrid): off-grid kits, inverters and battery banks.
+
+## Permit design services
+- [Solar permit plansets](https://brightifysolar.com/design): AHJ-compliant plansets for residential PV (from $299), PV + battery (from $399) and commercial projects in all 50 states. Most residential sets delivered within 24 hours; free revisions until approved. Drafting only — no PE stamps or structural letters.
+- [Sample planset (PDF)](https://brightifysolar.com/sample-planset.pdf)
+- [Start a planset](https://brightifysolar.com/planset)
+
+## Tools
+- [Free roof evaluation](https://brightifysolar.com/roof): enter an address to estimate how many panels fit on your roof.
